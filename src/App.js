@@ -4,8 +4,9 @@ import CssBaseline from '@material-ui/core/CssBaseline'
 import { makeStyles } from '@material-ui/core/styles'
 import '@fortawesome/fontawesome-free/css/all.css'
 
-import Home from './Home'
-import Footer from './Footer'
+import Home from './Home/'
+import Connect from './Connect'
+import About from './About'
 import Header from './Header'
 import { useScrollRestoration } from './utils'
 
@@ -23,7 +24,7 @@ const useStyles = makeStyles(theme => ({
   },
   container: {
     //padding: '15px 15px 60px 15px',
-    top: 100,
+    top: 64,
     position: 'relative',
     width: '100%',
     zIndex: 10,
@@ -49,9 +50,11 @@ const App = () => {
 
           <Switch>
             <Route path="/" exact component={Home} />
+            <Route path="/about" exact component={About} />
+            <Route path="/connect" exact component={Connect} />
             <Redirect to="/" />
           </Switch>
-          <Footer />
+          {/* <Footer /> */}
         </main>
       </div>
     </div>

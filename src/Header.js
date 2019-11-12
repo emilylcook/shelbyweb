@@ -4,8 +4,7 @@ import AppBar from '@material-ui/core/AppBar'
 import Hidden from '@material-ui/core/Hidden'
 import Toolbar from '@material-ui/core/Toolbar'
 
-import DesktopNav from './DesktopNav'
-import MobileNav from './MobileNav'
+import { MobileNav, DesktopNav } from './Navigation'
 import WidthContainer from './WidthContainer'
 
 const useStyles = makeStyles(theme => ({
