@@ -113,7 +113,7 @@ export default function ButtonAppBar() {
               })}
             >
               {subItems ? (
-                <div>
+                <div key={key}>
                   <Typography className={classes.listItem} onMouseEnter={() => setHoverOn(key)}>
                     {label}
                   </Typography>
@@ -133,7 +133,12 @@ export default function ButtonAppBar() {
                   </div>
                 </div>
               ) : (
-                <Link to={to} onMouseEnter={() => setHoverOn(key)} className={classes.listItem}>
+                <Link
+                  key={key}
+                  to={to}
+                  onMouseEnter={() => setHoverOn(key)}
+                  className={classes.listItem}
+                >
                   {label}
                 </Link>
               )}

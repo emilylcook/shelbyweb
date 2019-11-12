@@ -1,13 +1,16 @@
 import React from 'react'
-import Button from '@material-ui/core/Button'
-import MenuIcon from '@material-ui/icons/Menu'
 import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
 import ListItemText from '@material-ui/core/ListItemText'
 import SwipeableDrawer from '@material-ui/core/SwipeableDrawer'
 import { HashLink as Link } from 'react-router-hash-link'
 import { makeStyles } from '@material-ui/core/styles'
-import { Typography } from '@material-ui/core'
+import { Typography, Collapse } from '@material-ui/core'
+import Button from '@material-ui/core/Button'
+import MenuIcon from '@material-ui/icons/Menu'
+import ExpandLess from '@material-ui/icons/ExpandLess'
+import ExpandMore from '@material-ui/icons/ExpandMore'
+import clsx from 'clsx'
 
 import { navItems } from '../utils'
 
@@ -22,7 +25,7 @@ const useStyles = makeStyles(theme => ({
     textAlign: 'right'
   },
   list: {
-    width: 150
+    width: 200
   },
   paper: {
     // backgroundColor: theme.palette.primary.main,
@@ -34,6 +37,15 @@ const useStyles = makeStyles(theme => ({
   listItemText: {
     marginLeft: 10,
     color: theme.palette.text.primary
+  },
+  subItemList: {
+    marginLeft: 30
+  },
+  isOpen: {
+    borderTop: 'thin solid #d8d8d8'
+  },
+  subMenuContainer: {
+    borderBottom: 'thin solid #d8d8d8'
   }
 }))
 
@@ -41,6 +53,20 @@ export default function MobileNav() {
   const classes = useStyles()
   //   const commonClasses = useHeaderStyles()
   const [drawerOpenState, setDrawerOpenState] = React.useState(false)
+  const [open, setOpen] = React.useState(new Set())
+
+  function handleClick(name) {
+    const isOpen = open.has(name)
+    let newSet = open
+
+    if (isOpen) {
+      newSet.delete(name)
+    } else {
+      newSet.add(name)
+    }
+
+    setOpen(new Set(newSet))
+  }
 
   return (
     <>
@@ -72,15 +98,53 @@ export default function MobileNav() {
         >
           <List id="MobileNavItems">
             {/* main nav items */}
-            {Object.entries(navItems).map(([key, { to, label }]) => (
-              <ListItem button>
-                <ListItemText>
-                  <Link smooth to={to} className={classes.listItem}>
-                    <Typography className={classes.listItemText}>{label}</Typography>
-                  </Link>
-                </ListItemText>
-              </ListItem>
-            ))}
+            {Object.entries(navItems).map(([key, { to, label, subItems }]) => {
+              const isOpen = open.has(key)
+
+              return subItems ? (
+                <div key={key}>
+                  <ListItem
+                    button
+                    onClick={e => {
+                      e.stopPropagation()
+                      handleClick(key)
+                    }}
+                    classes={{ root: classes.listItemContainer }}
+                    className={clsx({ [classes.isOpen]: isOpen })}
+                  >
+                    <ListItemText primary={label} classes={{ root: classes.listItemText }} />
+                    {isOpen ? <ExpandLess /> : <ExpandMore />}
+                  </ListItem>
+                  <Collapse
+                    in={isOpen}
+                    timeout="auto"
+                    unmountOnExit
+                    className={classes.subMenuContainer}
+                  >
+                    <List component="div" disablePadding className={classes.subItemList}>
+                      {/* foreach item in subnav */}
+                      {Object.entries(subItems).map(([key, { to, label }]) => (
+                        <ListItem key={key} button>
+                          <ListItemText>
+                            <Link smooth to={to} className={classes.listItem}>
+                              <Typography className={classes.listItemText}>{label}</Typography>
+                            </Link>
+                          </ListItemText>
+                        </ListItem>
+                      ))}
+                    </List>
+                  </Collapse>
+                </div>
+              ) : (
+                <ListItem key={key} button>
+                  <ListItemText>
+                    <Link smooth to={to} className={classes.listItem}>
+                      <Typography className={classes.listItemText}>{label}</Typography>
+                    </Link>
+                  </ListItemText>
+                </ListItem>
+              )
+            })}
           </List>
         </div>
       </SwipeableDrawer>
