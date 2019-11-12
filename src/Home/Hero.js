@@ -2,14 +2,10 @@ import React from 'react'
 import { makeStyles } from '@material-ui/styles'
 import Grid from '@material-ui/core/Grid'
 import Typography from '@material-ui/core/Typography'
-import clsx from 'clsx'
 
 import WidthContainer from '../WidthContainer'
 
 import HeroImg from '../assets/hero/hero_02.jpg'
-// import HeroCard from './HeroCard'
-// import LinkField from '../common/LinkField'
-// import config from '../config'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -25,11 +21,6 @@ const useStyles = makeStyles(theme => ({
     display: 'flex',
     backgroundSize: 'cover',
     flexDirection: 'column'
-  },
-  container: {
-    [theme.breakpoints.down('xs')]: {
-      padding: 25
-    }
   },
   heroOverlay: {
     backgroundColor: 'rgba(255, 255, 255, .9)',

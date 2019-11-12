@@ -1,10 +1,7 @@
 import React from 'react'
-import Grid from '@material-ui/core/Grid'
 import { makeStyles } from '@material-ui/core/styles'
-import clsx from 'clsx'
 
 import Hero from './Hero'
-import WidthContainer from '../WidthContainer'
 
 const useStyles = makeStyles(theme => ({
   root: {

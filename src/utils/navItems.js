@@ -3,9 +3,27 @@ const navItems = {
     to: '/',
     label: 'Home'
   },
-  interersts: {
+  about: {
     to: '/About',
     label: 'About'
+  },
+  artwork: {
+    // to: '/About',
+    label: 'Artwork',
+    subItems: [
+      {
+        to: '/artwork/2019',
+        label: '2019 '
+      },
+      {
+        to: '/artwork/2018-2019',
+        label: '2018-2019'
+      },
+      {
+        to: '/artwork/earlier-works',
+        label: 'Earlier Works'
+      }
+    ]
   },
   contact: {
     to: '/connect',
