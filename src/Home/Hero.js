@@ -31,6 +31,12 @@ const useStyles = makeStyles(theme => ({
     // [theme.breakpoints.down('xs')]: {
     //   padding: 25
     // },
+    [theme.breakpoints.up('md')]: {
+      minWidth: 430
+    },
+    [theme.breakpoints.down('sm')]: {
+      minWidth: 360
+    },
     '&:after': {
       zIndex: -1,
       position: 'absolute',
@@ -43,6 +49,9 @@ const useStyles = makeStyles(theme => ({
     }
   },
   heroTitle: {
+    [theme.breakpoints.down('sm')]: {
+      fontSize: '2.5rem'
+    },
     [theme.breakpoints.down('xs')]: {
       fontSize: '3.0rem'
     }
@@ -64,7 +73,7 @@ function Hero() {
     <div className={classes.root}>
       <WidthContainer fullWidth={true} className={classes.columnWrapper}>
         <Grid container spacing={0} className={classes.container}>
-          <Grid item md={5} xs={11} className={classes.heroOverlay}>
+          <Grid item md={5} sm={6} xs={11} className={classes.heroOverlay}>
             <Typography variant="h2" paragraph className={classes.heroTitle}>
               Shelby&nbsp;Cook
             </Typography>
