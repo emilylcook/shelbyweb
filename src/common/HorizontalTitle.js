@@ -37,13 +37,13 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-const HorizontalTitle = ({ title, includeSpacer }) => {
+const HorizontalTitle = ({ title, includeSpacer, titleClass }) => {
   const classes = useStyles()
 
   return (
     <div className={clsx(classes.horizontalTtileContainer, { [classes.spacer]: includeSpacer })}>
-      <Typography className={clsx(classes.horizontalLine)}>
-        <span className={classes.horizontalTitle}>{title}</span>
+      <Typography className={classes.horizontalLine}>
+        <span className={clsx(classes.horizontalTitle, titleClass)}>{title}</span>
       </Typography>
     </div>
   )

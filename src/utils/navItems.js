@@ -13,11 +13,11 @@ const navItems = {
     subItems: [
       {
         to: '/artwork/2019',
-        label: '2019 '
+        label: '2019'
       },
       {
-        to: '/artwork/2018-2019',
-        label: '2018-2019'
+        to: '/artwork/2018',
+        label: '2018'
       },
       {
         to: '/artwork/earlier-works',

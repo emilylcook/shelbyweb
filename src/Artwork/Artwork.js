@@ -4,11 +4,10 @@ import { makeStyles } from '@material-ui/core/styles'
 import { Typography } from '@material-ui/core'
 import clsx from 'clsx'
 
+import { HorizontalTitle } from '../common/'
 import WidthContainer from '../WidthContainer'
-// import Hero from '../Hero'
-// import { HorizontalTitle } from '../common/'
 
-import { allArt } from './collection'
+import getCollection from './collections'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -16,7 +15,6 @@ const useStyles = makeStyles(theme => ({
     minHeight: '100%'
   },
   masonaryContainer: {
-    marginTop: 50,
     columns: '3 300px',
     columnGap: '1rem'
     // display: 'flex',
@@ -91,7 +89,14 @@ const useStyles = makeStyles(theme => ({
     transitionDelay: '0.35s'
   },
   content: {
+    marginTop: 50,
     marginBottom: 100
+  },
+  pageTitle: {
+    fontSize: 25
+  },
+  titleSection: {
+    marginBottom: 50
   }
 }))
 
@@ -99,21 +104,17 @@ const Artwork = ({ match }) => {
   const classes = useStyles()
   const [hoverOn, setHoverOn] = useState(null)
 
-  const collectionName = match.params.collection
-  console.log(collectionName)
-
-  let collection = allArt
+  // console.log(match.params.collection)
+  const { collection, title } = getCollection(match.params.collection)
 
   return (
     <div className={classes.content}>
-      {/* <Hero heroImg={heroImg} grayscale={false} /> */}
-      {/* <Hero heroImg={heroImg} grayscale={false} title="About&nbsp;me" subText="" /> */}
       <WidthContainer className={classes.mainContent}>
+        <div className={classes.titleSection}>
+          <HorizontalTitle title={title} includeSpacer titleClass={classes.pageTitle} />
+        </div>
         <div className={classes.masonaryContainer}>
           {Object.entries(collection).map(([key, { path, name, info }]) => {
-            // <div key={key}>{path}</div>
-            // console.log(path)
-            // const t = require(path)
             const isHovered = hoverOn === key
             return (
               <div
