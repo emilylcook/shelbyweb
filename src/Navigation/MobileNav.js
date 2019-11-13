@@ -42,10 +42,13 @@ const useStyles = makeStyles(theme => ({
     marginLeft: 30
   },
   isOpen: {
-    borderTop: 'thin solid #d8d8d8'
+    borderTop: 'thin solid #f5f5f5',
+    background: '#f5f5f5'
   },
   subMenuContainer: {
-    borderBottom: 'thin solid #d8d8d8'
+    borderBottom: 'thin solid #f5f5f5',
+    paddingBottom: 10,
+    background: '#f5f5f5'
   }
 }))
 
