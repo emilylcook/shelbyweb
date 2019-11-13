@@ -132,7 +132,7 @@ const About = () => {
                 <HorizontalTitle title="Contact Me" includeSpacer />
                 <Typography paragraph>
                   <a
-                    href="https://www.instagram.com/fulminee/"
+                    href="https://www.instagram.com/shelbykcook/"
                     className={classes.iconContainer}
                     rel="noopener noreferrer"
                     target="_blank"
