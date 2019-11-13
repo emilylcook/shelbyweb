@@ -133,6 +133,7 @@ const Artwork = ({ match }) => {
                 key={key}
                 className={clsx(classes.tile, { [classes.tileHover]: isHovered })}
                 onMouseEnter={() => setHoverOn(key)}
+                onClick={() => setHoverOn(key)}
                 onMouseLeave={() => setHoverOn(null)}
               >
                 <img className={classes.masonaryItem} alt={'temporary '} src={path} />
