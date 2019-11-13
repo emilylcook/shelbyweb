@@ -36,6 +36,9 @@ const useStyles = makeStyles(theme => ({
     opacity: 0.99,
     borderRadius: 3,
     // boxShadow: '0 0 20px 0 rgba(0, 0, 0, 0.2)',
+    [theme.breakpoints.down('xs')]: {
+      margin: 10
+    },
     '&:before': {
       content: "''",
       background: 'linear-gradient(to bottom,rgba(0,0,0,0) 0%, rgba(0,0,0,1) 100%)',
@@ -90,13 +93,22 @@ const useStyles = makeStyles(theme => ({
   },
   content: {
     marginTop: 50,
-    marginBottom: 100
+    marginBottom: 100,
+    [theme.breakpoints.down('sm')]: {
+      marginTop: 100
+    },
+    [theme.breakpoints.down('xs')]: {
+      marginTop: 80
+    }
   },
   pageTitle: {
     fontSize: 25
   },
   titleSection: {
-    marginBottom: 50
+    marginBottom: 50,
+    [theme.breakpoints.down('xs')]: {
+      marginBottom: 10
+    }
   }
 }))
 
