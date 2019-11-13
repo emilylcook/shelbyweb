@@ -71,7 +71,8 @@ function Hero({ heroImg, grayscale = '74%', subText, title }) {
     heroImageStyle: {
       height: 700,
       maxHeight: '80%',
-      width: 'calc(100vw)',
+      // width: 'calc(100vw)',
+      width: '100%',
       filter: `grayscale(${grayscale})`,
       justifyContent: 'center',
       alignItems: 'center',

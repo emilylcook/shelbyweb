@@ -8,6 +8,7 @@ const useStyles = makeStyles(theme => ({
     width: '100%',
     display: 'flex',
     justifyContent: 'center'
+    // overflow: 'hidden'
   },
   container: {
     [theme.breakpoints.down('lg')]: {

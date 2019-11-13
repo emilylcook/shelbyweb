@@ -94,6 +94,10 @@ const useStyles = makeStyles(theme => ({
       width: 'calc(100% - 4px)',
       marginLeft: '-50%'
     }
+  },
+  homeLink: {
+    textDecoration: 'none',
+    color: 'inherit'
   }
 }))
 
@@ -103,7 +107,9 @@ export default function ButtonAppBar() {
 
   return (
     <>
-      <Typography>SHELBYART</Typography>
+      <a href="/" className={classes.homeLink}>
+        <Typography>SHELBYART</Typography>
+      </a>
       <Grid justify="flex-end" container spacing={2}>
         {Object.entries(navItems).map(([key, { to, label, subItems }]) => (
           <Grid key={key} item className={classes.navItem}>
