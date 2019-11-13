@@ -24,11 +24,11 @@ const navItems = {
         label: 'Earlier Works'
       }
     ]
-  },
-  contact: {
-    to: '/connect',
-    label: 'Connect'
   }
+  //   contact: {
+  //     to: '/connect',
+  //     label: 'Connect'
+  //   }
 }
 
 export default navItems

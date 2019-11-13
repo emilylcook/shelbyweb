@@ -1,7 +1,7 @@
 import React from 'react'
 import Grid from '@material-ui/core/Grid'
-import { makeStyles } from '@material-ui/core/styles'
-import { Typography, Avatar } from '@material-ui/core'
+import { makeStyles, lighten } from '@material-ui/core/styles'
+import { Icon, Typography, Avatar } from '@material-ui/core'
 import clsx from 'clsx'
 
 import WidthContainer from './WidthContainer'
@@ -69,6 +69,21 @@ const useStyles = makeStyles(theme => ({
       width: 300,
       height: 300
     }
+  },
+  iconContainer: {
+    margin: '5px 10px'
+  },
+  icon: {
+    color: theme.palette.text.primary,
+    // margin: '0 10px',
+    fontSize: '2rem',
+    transition: '1s all',
+    '&:hover': {
+      color: lighten(theme.palette.text.primary, 0.25)
+    }
+  },
+  contactMeSection: {
+    textAlign: 'center'
   }
 }))
 
@@ -112,6 +127,27 @@ const About = () => {
             <Grid container className={classes.rightContainer}>
               <Grid item xs={12} className={clsx(classes.avatarContainer)}>
                 <Avatar alt="Shelby Cook" src={avatarImg} className={classes.avatar} />
+              </Grid>
+              <Grid item xs={12} md={10} className={classes.contactMeSection}>
+                <HorizontalTitle title="Contact Me" includeSpacer />
+                <Typography paragraph>
+                  <a
+                    href="https://www.instagram.com/fulminee/"
+                    className={classes.iconContainer}
+                    rel="noopener noreferrer"
+                    target="_blank"
+                  >
+                    <Icon className={clsx(classes.icon, 'fab fa-instagram')} />
+                  </a>
+                  <a
+                    href="mailto:shelbykcook19@gmail.com"
+                    className={classes.iconContainer}
+                    rel="noopener noreferrer"
+                    target="_blank"
+                  >
+                    <Icon className={clsx(classes.icon, 'fa fa-envelope')} />
+                  </a>
+                </Typography>
               </Grid>
               <Grid item xs={12} md={10}>
                 <HorizontalTitle title="Sub Title" includeSpacer />
