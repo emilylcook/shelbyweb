@@ -7,6 +7,7 @@ import '@fortawesome/fontawesome-free/css/all.css'
 import Home from './Home/'
 import Connect from './Connect'
 import About from './About'
+import Artwork from './Artwork/'
 import Header from './Header'
 import { useScrollRestoration } from './utils'
 
@@ -52,6 +53,7 @@ const App = () => {
             <Route path="/" exact component={Home} />
             <Route path="/about" exact component={About} />
             <Route path="/connect" exact component={Connect} />
+            <Route path="/artwork/:collection" component={Artwork} />
             <Redirect to="/" />
           </Switch>
           {/* <Footer /> */}
