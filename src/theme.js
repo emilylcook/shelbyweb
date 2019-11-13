@@ -8,6 +8,7 @@ const theme = {
     },
     background: {
       default: '#EDEDED'
+      // default: 'white'
     },
     gray: {
       main: '#414141'

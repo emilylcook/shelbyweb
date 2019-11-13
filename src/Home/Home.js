@@ -1,7 +1,8 @@
 import React from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 
-import Hero from './Hero'
+import Hero from '../Hero'
+import heroImg from '../assets/hero/hero_02.jpg'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -20,12 +21,7 @@ const Home = () => {
 
   return (
     <div className={classes.content}>
-      <Hero />
-      {/* <WidthContainer className={classes.columnWrapper}>
-        <Grid container>
-          <Grid item xs={12} className={clsx(classes.section)}></Grid>
-        </Grid>
-      </WidthContainer> */}
+      <Hero heroImg={heroImg} title="Shelby&nbsp;Art" subText="I like cats, and&nbsp;art." />
     </div>
   )
 }
