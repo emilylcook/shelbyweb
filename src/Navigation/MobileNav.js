@@ -49,6 +49,10 @@ const useStyles = makeStyles(theme => ({
     borderBottom: 'thin solid #f5f5f5',
     paddingBottom: 10,
     background: '#f5f5f5'
+  },
+  homeLink: {
+    textDecoration: 'none',
+    color: 'inherit'
   }
 }))
 
@@ -73,7 +77,9 @@ export default function MobileNav() {
 
   return (
     <>
-      <Typography>SHELBYART</Typography>
+      <a href="/" className={classes.homeLink}>
+        <Typography>SHELBYART</Typography>
+      </a>
       <div className={classes.menuButtonContainer}>
         <Button
           aria-label="Navigation Menu"
