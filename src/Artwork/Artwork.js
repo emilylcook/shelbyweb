@@ -88,7 +88,7 @@ const useStyles = makeStyles(theme => ({
     lineHeight: 1.2,
     marginTop: 5,
     fontSize: 12,
-    transitionDelay: '0.25s'
+    transitionDelay: '0.35s'
   },
   content: {
     marginBottom: 100
@@ -110,45 +110,38 @@ const Artwork = ({ match }) => {
       {/* <Hero heroImg={heroImg} grayscale={false} title="About&nbsp;me" subText="" /> */}
       <WidthContainer className={classes.mainContent}>
         <div className={classes.masonaryContainer}>
-          {Object.entries(collection).map(
-            ([key, { path }]) => {
-              // <div key={key}>{path}</div>
-              // console.log(path)
-              // const t = require(path)
-              const isHovered = hoverOn === key
-              return (
-                <div
-                  key={key}
-                  className={clsx(classes.tile, { [classes.tileHover]: isHovered })}
-                  onMouseEnter={() => setHoverOn(key)}
-                  onMouseLeave={() => setHoverOn(null)}
-                >
-                  <img className={classes.masonaryItem} alt={'temporary '} src={path} />
-                  <div className={classes.details}>
-                    <Typography
-                      className={clsx(classes.paragraph, classes.title, {
-                        [classes.paragraphHover]: isHovered
-                      })}
-                    >
-                      Title
-                    </Typography>
-                    <Typography
-                      className={clsx(classes.paragraph, classes.info, {
-                        [classes.paragraphHover]: isHovered
-                      })}
-                    >
-                      Info
-                    </Typography>
-                  </div>
+          {Object.entries(collection).map(([key, { path, name, info }]) => {
+            // <div key={key}>{path}</div>
+            // console.log(path)
+            // const t = require(path)
+            const isHovered = hoverOn === key
+            return (
+              <div
+                key={key}
+                className={clsx(classes.tile, { [classes.tileHover]: isHovered })}
+                onMouseEnter={() => setHoverOn(key)}
+                onMouseLeave={() => setHoverOn(null)}
+              >
+                <img className={classes.masonaryItem} alt={'temporary '} src={path} />
+                <div className={classes.details}>
+                  <Typography
+                    className={clsx(classes.paragraph, classes.title, {
+                      [classes.paragraphHover]: isHovered
+                    })}
+                  >
+                    {name}
+                  </Typography>
+                  <Typography
+                    className={clsx(classes.paragraph, classes.info, {
+                      [classes.paragraphHover]: isHovered
+                    })}
+                  >
+                    {info}
+                  </Typography>
                 </div>
-              )
-            }
-            // <div key={key} className={classes.subMenuItemContainer}>
-            //   <Link to={to} className={classes.subMenuItem}>
-            //     {label}
-            //   </Link>
-            // </div>
-          )}
+              </div>
+            )
+          })}
         </div>
         {/* <Grid container className={classes.container}></Grid> */}
       </WidthContainer>
