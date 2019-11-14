@@ -24,7 +24,6 @@ const Artwork = ({ match }) => {
   const hideModal = useMediaQuery(theme.breakpoints.down('xs'))
 
   useEffect(() => {
-    console.log('hi')
     setHideArtwork(true)
     setTimeout(function() {
       setHideArtwork(false)
@@ -186,10 +185,10 @@ const useStyles = makeStyles(theme => ({
     marginTop: 50,
     marginBottom: 100,
     [theme.breakpoints.down('sm')]: {
-      marginTop: 100
+      marginTop: 45
     },
     [theme.breakpoints.down('xs')]: {
-      marginTop: 80
+      marginTop: 30
     }
   },
   pageTitle: {
