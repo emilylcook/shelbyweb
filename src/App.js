@@ -7,6 +7,7 @@ import '@fortawesome/fontawesome-free/css/all.css'
 import Home from './Home/'
 import Connect from './Connect'
 import About from './About'
+import Footer from './Footer'
 import Artwork from './Artwork/'
 import Header from './Header'
 import { useScrollRestoration } from './utils'
@@ -32,6 +33,9 @@ const useStyles = makeStyles(theme => ({
     [theme.breakpoints.down('sm')]: {
       top: -10
     }
+  },
+  body: {
+    minHeight: 'calc(100vh - 50px)'
   }
 }))
 
@@ -49,14 +53,16 @@ const App = () => {
 
           {/* <NavSpacer /> */}
 
-          <Switch>
-            <Route path="/" exact component={Home} />
-            <Route path="/about" exact component={About} />
-            <Route path="/connect" exact component={Connect} />
-            <Route path="/artwork/:collection" component={Artwork} />
-            <Redirect to="/" />
-          </Switch>
-          {/* <Footer /> */}
+          <div className={classes.body}>
+            <Switch>
+              <Route path="/" exact component={Home} />
+              <Route path="/about" exact component={About} />
+              <Route path="/connect" exact component={Connect} />
+              <Route path="/artwork/:collection" component={Artwork} />
+              <Redirect to="/" />
+            </Switch>
+          </div>
+          <Footer />
         </main>
       </div>
     </div>

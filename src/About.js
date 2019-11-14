@@ -1,7 +1,6 @@
 import React from 'react'
-import Grid from '@material-ui/core/Grid'
 import { makeStyles, lighten } from '@material-ui/core/styles'
-import { Icon, Typography, Avatar } from '@material-ui/core'
+import { Icon, Typography, Avatar, Grid } from '@material-ui/core'
 import clsx from 'clsx'
 
 import WidthContainer from './WidthContainer'
