@@ -28,6 +28,7 @@ const useStyles = makeStyles(theme => ({
   container: {
     //padding: '15px 15px 60px 15px',
     top: 64,
+    overflow: 'hidden',
     position: 'relative',
     width: '100%',
     zIndex: 10,
