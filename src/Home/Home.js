@@ -12,7 +12,6 @@ const useStyles = makeStyles(theme => ({
   subTitle: {
     marginBottom: '15px'
   },
-
   content: {
     [theme.breakpoints.down('xs')]: {
       // marginBottom: 100
@@ -25,7 +24,7 @@ const Home = () => {
 
   return (
     <div className={classes.content}>
-      <Hero heroImg={heroImg} title="Shelby&nbsp;Art" subText="I like cats, and&nbsp;art." />
+      <Hero heroImg={heroImg} title="Shelby&nbsp;Cook" subText="I like cats, and&nbsp;art." />
     </div>
   )
 }

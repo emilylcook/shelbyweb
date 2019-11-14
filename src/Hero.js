@@ -49,11 +49,14 @@ const useStyles = makeStyles(theme => ({
     }
   },
   heroTitle: {
+    fontVariant: 'small-caps',
+    letterSpacing:3,
+      fontSize: '3.4rem',
     [theme.breakpoints.down('sm')]: {
-      fontSize: '2.5rem'
+      fontSize: '3rem'
     },
     [theme.breakpoints.down('xs')]: {
-      fontSize: '3.0rem'
+      fontSize: '3rem'
     }
   },
   subTitle: {
@@ -66,7 +69,7 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-function Hero({ heroImg, grayscale = '74%', subText, title }) {
+function Hero({ heroImg, grayscale = '74%', subText, title}) {
   const useHeroStyles = makeStyles(theme => ({
     heroImageStyle: {
       height: 700,
