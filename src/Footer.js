@@ -37,6 +37,7 @@ export default function ButtonAppBar() {
 const useStyles = makeStyles(theme => ({
   footer: {
     height: 50,
+    paddingTop: 6,
     backgroundColor: '#e8e8e8',
     alignItems: 'center',
     display: 'flex'

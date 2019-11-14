@@ -13,7 +13,11 @@ const useStyles = makeStyles(theme => ({
     marginBottom: '15px'
   },
 
-  section: {}
+  content: {
+    [theme.breakpoints.down('xs')]: {
+      marginBottom: 100
+    }
+  }
 }))
 
 const Home = () => {
