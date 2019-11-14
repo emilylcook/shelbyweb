@@ -1,13 +1,91 @@
 import React, { useState } from 'react'
 // import Grid from '@material-ui/core/Grid'
 import { makeStyles } from '@material-ui/core/styles'
-import { Typography } from '@material-ui/core'
+import { Typography, useMediaQuery } from '@material-ui/core'
+import { useTheme } from '@material-ui/core/styles'
 import clsx from 'clsx'
 
 import { HorizontalTitle } from '../common/'
 import WidthContainer from '../WidthContainer'
+import ImageModal from './ImageModal'
 
 import getCollection from './collections'
+
+const Artwork = ({ match }) => {
+  const classes = useStyles()
+  const [hoverOn, setHoverOn] = useState(null)
+  const theme = useTheme()
+
+  const [imageModalOpen, setImageModalOpen] = useState(false)
+  const [imageModalDetails, setImageModalDetails] = useState({})
+  const { collection, title } = getCollection(match.params.collection)
+
+  const hideModal = useMediaQuery(theme.breakpoints.down('xs'))
+
+  return (
+    <>
+      <div className={classes.content}>
+        <WidthContainer className={classes.mainContent}>
+          <div className={classes.titleSection}>
+            <HorizontalTitle title={title} includeSpacer titleClass={classes.pageTitle} />
+          </div>
+          <div className={classes.masonaryContainer}>
+            {Object.entries(collection).map(([key, { path, name, info }]) => {
+              const isHovered = hoverOn === key
+              return (
+                <div
+                  key={key}
+                  className={clsx(classes.tile, { [classes.tileHover]: isHovered })}
+                  onMouseEnter={() => setHoverOn(key)}
+                  onClick={() => {
+                    if (hideModal) {
+                      setHoverOn(key)
+                    } else {
+                      setImageModalDetails({ path, name, info })
+                      setImageModalOpen(true)
+                    }
+                  }}
+                  onMouseLeave={() => setHoverOn(null)}
+                >
+                  <img className={classes.masonaryItem} alt={name} src={path} />
+                  <div className={classes.details}>
+                    <Typography
+                      className={clsx(classes.paragraph, classes.title, {
+                        [classes.paragraphHover]: isHovered
+                      })}
+                    >
+                      {name}
+                    </Typography>
+                    <div
+                      className={clsx(classes.paragraph, classes.info, {
+                        [classes.paragraphHover]: isHovered
+                      })}
+                    >
+                      {info.type && <Typography>{info.type}</Typography>}
+                      {info.size && <Typography>{info.size}</Typography>}
+                      {info.status && <Typography>{info.status}</Typography>}
+                    </div>
+                  </div>
+                </div>
+              )
+            })}
+          </div>
+          {/* <Grid container className={classes.container}></Grid> */}
+        </WidthContainer>
+      </div>
+      <ImageModal
+        handleClose={() => {
+          setImageModalOpen(false)
+          setImageModalDetails({})
+        }}
+        details={imageModalDetails}
+        open={imageModalOpen}
+      />
+    </>
+  )
+}
+
+export default Artwork
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -29,6 +107,7 @@ const useStyles = makeStyles(theme => ({
     // boxShadow: '0 0 20px 0 rgba(0, 0, 0, 0.2)'
   },
   tile: {
+    cursor: 'pointer',
     position: 'relative',
     overflow: 'hidden',
     margin: '0 1rem 1rem 0',
@@ -71,7 +150,7 @@ const useStyles = makeStyles(theme => ({
     display: 'block',
     opacity: 1,
     position: 'relative',
-    top: 100,
+    top: 120,
     transitionProperty: 'top, opacity',
     transitionDuration: '.3s',
     transitionDelay: '0s'
@@ -111,56 +190,3 @@ const useStyles = makeStyles(theme => ({
     }
   }
 }))
-
-const Artwork = ({ match }) => {
-  const classes = useStyles()
-  const [hoverOn, setHoverOn] = useState(null)
-
-  // console.log(match.params.collection)
-  const { collection, title } = getCollection(match.params.collection)
-
-  return (
-    <div className={classes.content}>
-      <WidthContainer className={classes.mainContent}>
-        <div className={classes.titleSection}>
-          <HorizontalTitle title={title} includeSpacer titleClass={classes.pageTitle} />
-        </div>
-        <div className={classes.masonaryContainer}>
-          {Object.entries(collection).map(([key, { path, name, info }]) => {
-            const isHovered = hoverOn === key
-            return (
-              <div
-                key={key}
-                className={clsx(classes.tile, { [classes.tileHover]: isHovered })}
-                onMouseEnter={() => setHoverOn(key)}
-                onClick={() => setHoverOn(key)}
-                onMouseLeave={() => setHoverOn(null)}
-              >
-                <img className={classes.masonaryItem} alt={'temporary '} src={path} />
-                <div className={classes.details}>
-                  <Typography
-                    className={clsx(classes.paragraph, classes.title, {
-                      [classes.paragraphHover]: isHovered
-                    })}
-                  >
-                    {name}
-                  </Typography>
-                  <Typography
-                    className={clsx(classes.paragraph, classes.info, {
-                      [classes.paragraphHover]: isHovered
-                    })}
-                  >
-                    {info}
-                  </Typography>
-                </div>
-              </div>
-            )
-          })}
-        </div>
-        {/* <Grid container className={classes.container}></Grid> */}
-      </WidthContainer>
-    </div>
-  )
-}
-
-export default Artwork

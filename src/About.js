@@ -140,7 +140,7 @@ const About = () => {
                     <Icon className={clsx(classes.icon, 'fab fa-instagram')} />
                   </a>
                   <a
-                    href="mailto:shelbykcook19@gmail.com"
+                    href="mailto:shelbykcook.art@gmail.com"
                     className={classes.iconContainer}
                     rel="noopener noreferrer"
                     target="_blank"

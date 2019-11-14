@@ -30,7 +30,8 @@
     "build": "react-app-rewired build",
     "test": "react-app-rewired test",
     "eject": "react-scripts eject",
-    "deploy": "npm run build && firebase deploy"
+    "deploy": "npm run build && firebase deploy",
+    "prettier": "./node_modules/.bin/prettier --config ./package.json --write \"src/**/*.{js,jsx,json,css}\""
   },
   "eslintConfig": {
     "extends": "react-app"
