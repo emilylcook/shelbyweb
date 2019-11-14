@@ -6,8 +6,65 @@ import { Grid, Typography } from '@material-ui/core'
 import clsx from 'clsx'
 
 import { navItems } from '../utils'
+import Logo from './Logo'
+
+export default function ButtonAppBar() {
+  const classes = useStyles()
+  const [hoverOn, setHoverOn] = useState(null)
+
+  return (
+    <>
+      <Logo/>
+      <Grid justify="flex-end" container spacing={2}>
+        {Object.entries(navItems).map(([key, { to, label, subItems }]) => (
+          <Grid key={key} item className={classes.navItem}>
+            <div
+              className={clsx(classes.listItemContainer, {
+                [classes.listItemContainerBefore]: key !== 'home'
+              })}
+            >
+              {subItems ? (
+                <div key={key}>
+                  <Typography className={classes.listItem} onMouseEnter={() => setHoverOn(key)}>
+                    {label}
+                  </Typography>
+                  <div
+                    onMouseLeave={() => setHoverOn('')}
+                    className={clsx(classes.subMenu, {
+                      [classes.subMenuHidden]: hoverOn !== key
+                    })}
+                  >
+                    {Object.entries(subItems).map(([key, { to, label }]) => (
+                      <div key={key} className={classes.subMenuItemContainer}>
+                        <Link to={to} className={classes.subMenuItem}>
+                          {label}
+                        </Link>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ) : (
+                <Link
+                  key={key}
+                  to={to}
+                  onMouseEnter={() => setHoverOn(key)}
+                  className={classes.listItem}
+                >
+                  {label}
+                </Link>
+              )}
+            </div>
+          </Grid>
+        ))}
+      </Grid>
+    </>
+  )
+}
 
 const useStyles = makeStyles(theme => ({
+  logo:{
+    height: 50
+  },
   navButton: {
     padding: '10px 5px',
     borderRadius: 5,
@@ -100,58 +157,3 @@ const useStyles = makeStyles(theme => ({
     color: 'inherit'
   }
 }))
-
-export default function ButtonAppBar() {
-  const classes = useStyles()
-  const [hoverOn, setHoverOn] = useState(null)
-
-  return (
-    <>
-      <a href="/" className={classes.homeLink}>
-        <Typography>SHELBYART</Typography>
-      </a>
-      <Grid justify="flex-end" container spacing={2}>
-        {Object.entries(navItems).map(([key, { to, label, subItems }]) => (
-          <Grid key={key} item className={classes.navItem}>
-            <div
-              className={clsx(classes.listItemContainer, {
-                [classes.listItemContainerBefore]: key !== 'home'
-              })}
-            >
-              {subItems ? (
-                <div key={key}>
-                  <Typography className={classes.listItem} onMouseEnter={() => setHoverOn(key)}>
-                    {label}
-                  </Typography>
-                  <div
-                    onMouseLeave={() => setHoverOn('')}
-                    className={clsx(classes.subMenu, {
-                      [classes.subMenuHidden]: hoverOn !== key
-                    })}
-                  >
-                    {Object.entries(subItems).map(([key, { to, label }]) => (
-                      <div key={key} className={classes.subMenuItemContainer}>
-                        <Link to={to} className={classes.subMenuItem}>
-                          {label}
-                        </Link>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              ) : (
-                <Link
-                  key={key}
-                  to={to}
-                  onMouseEnter={() => setHoverOn(key)}
-                  className={classes.listItem}
-                >
-                  {label}
-                </Link>
-              )}
-            </div>
-          </Grid>
-        ))}
-      </Grid>
-    </>
-  )
-}

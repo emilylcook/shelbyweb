@@ -13,8 +13,12 @@ import ExpandMore from '@material-ui/icons/ExpandMore'
 import clsx from 'clsx'
 
 import { navItems } from '../utils'
+import Logo from './Logo'
 
 const useStyles = makeStyles(theme => ({
+  logo:{
+    height: 50
+  },
   menuIcon: {
     color: theme.palette.text.primary,
     fontSize: '2.5rem !important'
@@ -58,7 +62,6 @@ const useStyles = makeStyles(theme => ({
 
 export default function MobileNav() {
   const classes = useStyles()
-  //   const commonClasses = useHeaderStyles()
   const [drawerOpenState, setDrawerOpenState] = React.useState(false)
   const [open, setOpen] = React.useState(new Set())
 
@@ -77,9 +80,7 @@ export default function MobileNav() {
 
   return (
     <>
-      <a href="/" className={classes.homeLink}>
-        <Typography>SHELBYART</Typography>
-      </a>
+      <Logo/>
       <div className={classes.menuButtonContainer}>
         <Button
           aria-label="Navigation Menu"
