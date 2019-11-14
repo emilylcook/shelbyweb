@@ -129,7 +129,7 @@ const useStyles = makeStyles(theme => ({
       left: 0,
       zIndex: 2,
       transitionProperty: 'top, opacity',
-      transitionDuration: '.3s'
+      transitionDuration: '.4s'
     }
   },
   tileHover: {
@@ -152,7 +152,7 @@ const useStyles = makeStyles(theme => ({
     position: 'relative',
     top: 120,
     transitionProperty: 'top, opacity',
-    transitionDuration: '.3s',
+    transitionDuration: '.4s',
     transitionDelay: '0s'
   },
   paragraphHover: {
@@ -168,7 +168,7 @@ const useStyles = makeStyles(theme => ({
     lineHeight: 1.2,
     marginTop: 5,
     fontSize: 12,
-    transitionDelay: '0.35s'
+    transitionDelay: '0.4s'
   },
   content: {
     marginTop: 50,
