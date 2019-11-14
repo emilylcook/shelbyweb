@@ -18,6 +18,7 @@ const useStyles = makeStyles(theme => ({
     flexDirection: 'column',
     minHeight: '100vh',
     zIndex: 10
+    // backgroundColor: '#e8e8e8'
   },
   content: {
     display: 'flex',
@@ -31,7 +32,7 @@ const useStyles = makeStyles(theme => ({
     width: '100%',
     zIndex: 10,
     [theme.breakpoints.down('sm')]: {
-      top: -10
+      top: 54
     }
   },
   body: {

@@ -40,7 +40,11 @@ const useStyles = makeStyles(theme => ({
     paddingTop: 6,
     backgroundColor: '#e8e8e8',
     alignItems: 'center',
-    display: 'flex'
+    display: 'flex',
+    [theme.breakpoints.down('xs')]: {
+      height: 40,
+      paddingTop: 12
+    }
   },
   iconContainer: {
     margin: '5px 10px'
@@ -55,6 +59,7 @@ const useStyles = makeStyles(theme => ({
     }
   },
   contactMeSection: {
-    textAlign: 'right'
+    textAlign: 'right',
+    backgroundColor: '#e8e8e8'
   }
 }))
