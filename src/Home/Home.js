@@ -15,7 +15,7 @@ const useStyles = makeStyles(theme => ({
 
   content: {
     [theme.breakpoints.down('xs')]: {
-      marginBottom: 100
+      // marginBottom: 100
     }
   }
 }))
