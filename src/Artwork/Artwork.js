@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 // import Grid from '@material-ui/core/Grid'
 import { makeStyles } from '@material-ui/core/styles'
 import { Typography, useMediaQuery } from '@material-ui/core'
@@ -18,9 +18,18 @@ const Artwork = ({ match }) => {
 
   const [imageModalOpen, setImageModalOpen] = useState(false)
   const [imageModalDetails, setImageModalDetails] = useState({})
+  const [hideArtwork, setHideArtwork] = useState(true)
   const { collection, title } = getCollection(match.params.collection)
 
   const hideModal = useMediaQuery(theme.breakpoints.down('xs'))
+
+  useEffect(() => {
+    console.log('hi')
+    setHideArtwork(true)
+    setTimeout(function() {
+      setHideArtwork(false)
+    }, 100)
+  }, [match])
 
   return (
     <>
@@ -29,7 +38,7 @@ const Artwork = ({ match }) => {
           <div className={classes.titleSection}>
             <HorizontalTitle title={title} includeSpacer titleClass={classes.pageTitle} />
           </div>
-          <div className={classes.masonaryContainer}>
+          <div className={clsx(classes.masonaryContainer, { [classes.hidden]: hideArtwork })}>
             {Object.entries(collection).map(([key, { path, name, info }]) => {
               const isHovered = hoverOn === key
               return (
@@ -136,6 +145,9 @@ const useStyles = makeStyles(theme => ({
     '&:before': {
       opacity: 1
     }
+  },
+  hidden: {
+    display: 'none'
   },
   details: {
     fontSize: 16,
