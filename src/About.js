@@ -96,7 +96,7 @@ const About = () => {
       <WidthContainer className={classes.mainContent}>
         <Grid container className={classes.container}>
           <Grid item xs={12} sm={12} md={7} className={clsx(classes.section)}>
-            <HorizontalTitle title="About Me" includeSpacer />
+            <HorizontalTitle title="About" includeSpacer />
             <Typography paragraph>
               Shelby Cook was born and raised in the Pacific Northwest. She has enjoyed drawing and
               painting since she was young, inspired by the landscape she grew up in. She studied
