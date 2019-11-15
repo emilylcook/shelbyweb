@@ -98,28 +98,22 @@ const About = () => {
           <Grid item xs={12} sm={12} md={7} className={clsx(classes.section)}>
             <HorizontalTitle title="About Me" includeSpacer />
             <Typography paragraph>
-              Adipiscing commodo elit at imperdiet dui. Ut porttitor leo a diam sollicitudin tempor
-              id. Duis tristique sollicitudin nibh sit amet commodo nulla facilisi. Urna condimentum
-              mattis pellentesque id nibh. In hac habitasse platea dictumst vestibulum rhoncus est.
-              Cursus mattis molestie a iaculis at. Aliquam purus sit amet luctus venenatis lectus
-              magna. Nam libero justo laoreet sit amet cursus. Varius quam quisque id diam vel quam
-              elementum pulvinar etiam. Egestas quis ipsum suspendisse ultrices gravida. Et netus et
-              malesuada fames ac turpis egestas. Sit amet commodo nulla facilisi nullam vehicula
-              ipsum. Vestibulum lorem sed risus ultricies. Risus in hendrerit gravida rutrum
-              quisque. Ipsum dolor sit amet consectetur. Ut pharetra sit amet aliquam id diam
-              maecenas. Pellentesque sit amet porttitor eget. Pellentesque habitant morbi tristique
-              senectus. Nisi vitae suscipit tellus mauris a diam maecenas. Turpis tincidunt id
-              aliquet risus feugiat in.
+              Shelby Cook was born and raised in the Pacific Northwest. She has enjoyed drawing and
+              painting since she was young, inspired by the landscape she grew up in. She studied
+              fine art in college, earning her BFA from Western Washington University along with a
+              BA in Art History. Specializing in painting, Cook uses contemporary realism to capture
+              moments and tell stories about the landscapes and cities she visits.
             </Typography>
             <Typography paragraph>
-              Condimentum vitae sapien pellentesque habitant morbi tristique senectus et. Aenean
-              pharetra magna ac placerat vestibulum lectus mauris. Lobortis feugiat vivamus at augue
-              eget arcu dictum varius duis. Nisi scelerisque eu ultrices vitae auctor eu augue ut
-              lectus. Dictum sit amet justo donec enim diam. Eget nunc lobortis mattis aliquam
-              faucibus purus in massa tempor. Enim diam vulputate ut pharetra sit amet aliquam id.
-              Pretium viverra suspendisse potenti nullam. Mattis aliquam faucibus purus in massa
-              tempor nec feugiat. Sed turpis tincidunt id aliquet risus feugiat in ante. Dictumst
-              vestibulum rhoncus est pellentesque.xs
+              Cook frequently paints en plein air, relying on the changes of light and temperature
+              of the landscape around her to help her capture the feeling of being in the
+              environment. Her studio work focuses more on exploring the visual representation of
+              insomnia. She uses nocturnes to capture the isolation associated, as well as bars and
+              streets as subject matter to showcase the variety of human interactions that take
+              place when people are either choosing not to sleep or are physically unable to.
+            </Typography>
+            <Typography paragraph>
+              Cook currently works and resides in Seattle, WA, with her cat, Psycho.
             </Typography>
           </Grid>
           <Grid item xs={12} sm={12} md={5} className={clsx(classes.section)}>
@@ -149,14 +143,9 @@ const About = () => {
                 </Typography>
               </Grid>
               <Grid item xs={12} md={10}>
-                <HorizontalTitle title="Sub Title" includeSpacer />
                 <Typography paragraph>
-                  Nam libero justo laoreet sit amet cursus. Varius quam quisque id diam vel quam
-                  elementum pulvinar etiam. Egestas quis ipsum suspendisse ultrices gravida. Et
-                  netus et malesuada fames ac turpis egestas. Sit amet commodo nulla facilisi nullam
-                  vehicula ipsum. Vestibulum lorem sed risus ultricies. Risus in hendrerit gravida
-                  rutrum quisque. Ipsum dolor sit amet consectetur. Ut pharetra sit amet aliquam id
-                  diam maecenas.
+                  If you are interested in available pieces or commissioning a painting, please
+                  reach out via email or Instagram.
                 </Typography>
               </Grid>
             </Grid>
