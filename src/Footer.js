@@ -42,8 +42,7 @@ const useStyles = makeStyles(theme => ({
     alignItems: 'center',
     display: 'flex',
     [theme.breakpoints.down('xs')]: {
-      height: 40,
-      paddingTop: 12
+      height: 50
     }
   },
   iconContainer: {
