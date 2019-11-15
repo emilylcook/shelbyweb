@@ -33,7 +33,7 @@ const useStyles = makeStyles(theme => ({
     }
   },
   rightContainer: {
-    marginTop: 50,
+    // marginTop: 50,
     display: 'flex',
     justifyContent: 'center',
     [theme.breakpoints.down('md')]: {
