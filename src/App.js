@@ -47,11 +47,11 @@ const useStyles = makeStyles(theme => ({
 }))
 
 const PreloadImages = classes => {
-  let allArt = getCollection('all')
+  let allArt = getCollection('all').collection
   return (
     <div id="preload" className={classes.hidden}>
       {Object.entries(allArt).map(([key, { path, name, info }]) => (
-        <img className={classes.masonaryItem} alt={name} src={path} />
+        <img className={classes.hidden} alt={name} src={path} />
       ))}
     </div>
   )
