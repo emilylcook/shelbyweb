@@ -12,6 +12,8 @@ import Artwork from './Artwork/'
 import Header from './Header'
 import { useScrollRestoration } from './utils'
 
+import getCollection from './Artwork/collections'
+
 const useStyles = makeStyles(theme => ({
   root: {
     display: 'flex',
@@ -38,8 +40,22 @@ const useStyles = makeStyles(theme => ({
   },
   body: {
     minHeight: 'calc(100vh - 50px)'
+  },
+  hidden: {
+    display: 'none'
   }
 }))
+
+const PreloadImages = classes => {
+  let allArt = getCollection('all')
+  return (
+    <div id="preload" className={classes.hidden}>
+      {Object.entries(allArt).map(([key, { path, name, info }]) => (
+        <img className={classes.masonaryItem} alt={name} src={path} />
+      ))}
+    </div>
+  )
+}
 
 const App = () => {
   useScrollRestoration()
@@ -64,6 +80,7 @@ const App = () => {
               <Redirect to="/" />
             </Switch>
           </div>
+          <PreloadImages classes={classes} />
           <Footer />
         </main>
       </div>

@@ -182,6 +182,14 @@ export default function getCollection(name) {
         title: 'Treelines',
         collection: treelines
       }
+    case 'all':
+      return {
+        title: 'all',
+        collection: c2019
+          .concat(c2018)
+          .concat(earlierWorks)
+          .concat(treelines)
+      }
     default:
       return {
         title: 'not found',
