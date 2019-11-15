@@ -123,9 +123,34 @@ const earlierWorks = [
 
 const treelines = [
   {
-    path: '/artwork/art10.jpg',
-    name: 'Title 10',
-    info: { type: '', size: '', status: 'Available' }
+    path: '/artwork/treelines/Ascent.jpg',
+    name: 'Ascent',
+    info: { type: 'Acrylic on Canvas', size: '36x48”', status: 'Sold' }
+  },
+  {
+    path: '/artwork/treelines/Portal.jpg',
+    name: 'Portal',
+    info: { type: 'Acrylic on Canvas', size: '30x48”', status: 'Available' }
+  },
+  {
+    path: '/artwork/treelines/Merge.jpg',
+    name: 'Merge',
+    info: { type: 'Acrylic on Canvas', size: '30x48”', status: 'Available' }
+  },
+  {
+    path: '/artwork/treelines/Autumn.jpg',
+    name: 'Autumn',
+    info: { type: 'Acrylic on Canvas', size: '36x48”', status: 'Available' }
+  },
+  {
+    path: '/artwork/treelines/Mist.jpg',
+    name: 'Mist',
+    info: { type: 'Acrylic on Canvas', size: '48x60”', status: 'Available' }
+  },
+  {
+    path: '/artwork/treelines/Filter.jpg',
+    name: 'Filter',
+    info: { type: 'Acrylic on Canvas', size: '48x120”', status: 'Available' }
   }
 ]
 

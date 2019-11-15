@@ -20,6 +20,10 @@ const navItems = {
         label: '2018'
       },
       {
+        to: '/artwork/treelines',
+        label: 'Treelines'
+      },
+      {
         to: '/artwork/earlier-works',
         label: 'Earlier Works'
       }
