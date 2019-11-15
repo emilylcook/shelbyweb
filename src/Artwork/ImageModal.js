@@ -14,7 +14,13 @@ const useStyles = makeStyles(theme => ({
     maxHeight: '70vh',
     width: 'auto',
     margin: 'auto',
-    height: 'auto'
+    height: 'auto',
+    [theme.breakpoints.down('md')]: {
+        maxHeight: '60vh'
+    },
+    [theme.breakpoints.down('sm')]: {
+        maxHeight: '50vh'
+    }
   },
   button: {
     marginBottom: 30
@@ -25,7 +31,12 @@ const useStyles = makeStyles(theme => ({
     top: 0,
     color: theme.palette.grey[500]
   },
-  details: {}
+  details: {
+      
+    [theme.breakpoints.down('sm')]: {
+       fontSize: 14
+    }
+  }
 }))
 
 function DialogTitle({ children, onClose }) {
