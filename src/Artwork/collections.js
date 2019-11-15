@@ -1,10 +1,5 @@
 const c2019 = [
   {
-    path: '/artwork/2019/Botanical Bench.jpg',
-    name: 'Botanical Bench',
-    info: { type: 'Acrylic on Canvas Board', size: '6x8”', status: 'Available' }
-  },
-  {
     path: '/artwork/2019/Cat Nap.png',
     name: 'Cat Nap',
     info: { type: 'Acrylic on Panel', size: null, status: 'Sold' }
@@ -43,6 +38,11 @@ const c2019 = [
     path: '/artwork/2019/Self-Portrait.png',
     name: 'Self Portrait',
     info: { type: 'Acrylic on Canvas', size: '12” Round', status: 'Available' }
+  },
+  {
+    path: '/artwork/2019/Botanical Bench.jpg',
+    name: 'Botanical Bench',
+    info: { type: 'Acrylic on Canvas Board', size: '6x8”', status: 'Available' }
   }
 ]
 
@@ -50,12 +50,17 @@ const c2018 = [
   {
     path: '/artwork/2018/cutts_island.jpg',
     name: 'Cutts Island',
-    info: { type: 'Acrylic on Canvas Board', size: '', status: 'Available' }
+    info: { type: 'Oil on Canvas Board', size: '9x12”', status: 'Available' }
+  },
+  {
+    path: '/artwork/2018/Pacific Crest Trail.jpg',
+    name: 'Pacific Crest Trail',
+    info: { type: 'Acrylic on Canvas', size: '36x24”', status: 'Sold' }
   },
   {
     path: '/artwork/2018/deception_pass.jpg',
     name: 'Deception Pass',
-    info: { type: 'Acrylic on Panel', size: '6x12”', status: 'Available' }
+    info: { type: 'Acrylic on Panel', size: '6x12”', status: 'Sold' }
   },
   {
     path: '/artwork/2018/lopez_island.jpg',

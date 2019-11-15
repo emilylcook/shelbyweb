@@ -3,6 +3,7 @@ import { makeStyles } from '@material-ui/core/styles'
 
 import Hero from '../Hero'
 import heroImg from '../assets/hero/hero_02.jpg'
+import nameImg from '../assets/name.png'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -11,6 +12,13 @@ const useStyles = makeStyles(theme => ({
   },
   subTitle: {
     marginBottom: '15px'
+  },
+  image: {
+    height: 'auto',
+    width: '250px',
+    [theme.breakpoints.down('xs')]: {
+      // marginBottom: 100
+    }
   },
   content: {
     [theme.breakpoints.down('xs')]: {
@@ -24,7 +32,10 @@ const Home = () => {
 
   return (
     <div className={classes.content}>
-      <Hero heroImg={heroImg} title="Shelby&nbsp;Cook" subText="I like cats, and&nbsp;art." />
+      <Hero
+        heroImg={heroImg}
+        title={<img alt="shelby cook" src={nameImg} className={classes.image} />}
+      />
     </div>
   )
 }

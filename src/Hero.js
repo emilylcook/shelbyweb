@@ -7,30 +7,14 @@ import clsx from 'clsx'
 import WidthContainer from './WidthContainer'
 
 const useStyles = makeStyles(theme => ({
-  root: {
-    // height: 'calc(100vh - 64px)',
-    // height: 700,
-    // maxHeight: '80%',
-    // width: 'calc(100vw)',
-    // filter: 'grayscale(74%)',
-    // justifyContent: 'center',
-    // alignItems: 'center',
-    // alignContent: 'center',
-    // background: `url(${HeroImg}) center center no-repeat rgb(217, 217, 217)`,
-    // display: 'flex',
-    // backgroundSize: 'cover',
-    // flexDirection: 'column'
-  },
+  root: {},
   heroOverlay: {
-    backgroundColor: 'rgba(255, 255, 255, .9)',
+    backgroundColor: 'rgba(255, 255, 255, .7)',
     color: 'black',
-    textAlign: 'left',
-    padding: 35,
-    minHeight: 180,
+    padding: 25,
+    paddingBottom: 10,
     position: 'sticky',
-    // [theme.breakpoints.down('xs')]: {
-    //   padding: 25
-    // },
+    textAlign: 'center',
     [theme.breakpoints.up('md')]: {
       minWidth: 430
     },
@@ -50,8 +34,8 @@ const useStyles = makeStyles(theme => ({
   },
   heroTitle: {
     fontVariant: 'small-caps',
-    letterSpacing:3,
-      fontSize: '3.4rem',
+    letterSpacing: 3,
+    fontSize: '3.4rem',
     [theme.breakpoints.down('sm')]: {
       fontSize: '3rem'
     },
@@ -60,7 +44,7 @@ const useStyles = makeStyles(theme => ({
     }
   },
   subTitle: {
-    marginBottom: '15px'
+    // marginBottom: '15px'
   },
   container: {
     justifyContent: 'center',
@@ -69,7 +53,7 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-function Hero({ heroImg, grayscale = '74%', subText, title}) {
+function Hero({ heroImg, grayscale = '74%', subText, title }) {
   const useHeroStyles = makeStyles(theme => ({
     heroImageStyle: {
       height: 700,
@@ -96,12 +80,14 @@ function Hero({ heroImg, grayscale = '74%', subText, title}) {
         <WidthContainer fullWidth={true} className={classes.columnWrapper}>
           <Grid container spacing={0} className={classes.container}>
             <Grid item md={5} sm={6} xs={11} className={classes.heroOverlay}>
-              <Typography variant="h2" paragraph className={classes.heroTitle}>
+              <Typography variant="h2" className={classes.heroTitle}>
                 {title}
               </Typography>
-              <Typography variant="body2" className={classes.subTitle}>
-                {subText}
-              </Typography>
+              {subText && (
+                <Typography variant="body2" className={classes.subTitle}>
+                  {subText}
+                </Typography>
+              )}
             </Grid>
           </Grid>
         </WidthContainer>
