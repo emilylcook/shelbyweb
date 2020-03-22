@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { makeStyles } from '@material-ui/styles'
 import MuiDialogTitle from '@material-ui/core/DialogTitle'
 import { IconButton, Typography, Dialog, DialogContent, useMediaQuery } from '@material-ui/core'
@@ -16,10 +16,10 @@ const useStyles = makeStyles(theme => ({
     margin: 'auto',
     height: 'auto',
     [theme.breakpoints.down('md')]: {
-        maxHeight: '60vh'
+      maxHeight: '60vh'
     },
     [theme.breakpoints.down('sm')]: {
-        maxHeight: '50vh'
+      maxHeight: '50vh'
     }
   },
   button: {
@@ -32,10 +32,18 @@ const useStyles = makeStyles(theme => ({
     color: theme.palette.grey[500]
   },
   details: {
-      
     [theme.breakpoints.down('sm')]: {
-       fontSize: 14
+      fontSize: 14
     }
+  },
+  changeSlide: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    padding: '0px 10px',
+    borderTop: 'thin solid #d5d5d5'
+  },
+  slideControl: {
+    fontSize: 10
   }
 }))
 
@@ -51,11 +59,61 @@ function DialogTitle({ children, onClose }) {
   )
 }
 
-function ImageModal({ open, handleClose, details: { path, name, info = {} } }) {
+function ImageModal({ open, handleClose, collection, details = {} }) {
   const classes = useStyles()
   const theme = useTheme()
   const fullScreen = useMediaQuery(theme.breakpoints.down('xs'))
+  const [modalDetais, setDetails] = useState(details)
 
+  const { path, key, name, info = {} } = modalDetais
+
+  useEffect(() => {
+    setDetails(details)
+  }, [details])
+
+  function setNext() {
+    let nextKey = parseInt(key) + 1
+
+    if (collection.length <= nextKey) {
+      nextKey = 0
+    }
+
+    const nextImage = collection[nextKey]
+
+    setDetails({
+      path: nextImage.path,
+      key: nextKey,
+      name: nextImage.name,
+      info: nextImage.info || {}
+    })
+  }
+
+  function setPrevious() {
+    let prevKey = parseInt(key) - 1
+
+    if (prevKey < 0) {
+      prevKey = collection.length - 1
+    }
+
+    const nextImage = collection[prevKey]
+
+    setDetails({
+      path: nextImage.path,
+      key: prevKey,
+      name: nextImage.name,
+      info: nextImage.info || {}
+    })
+  }
+
+  function onKeyPress(event) {
+    if (event.keyCode === 37) {
+      // left arrow
+      setPrevious()
+    } else if (event.keyCode === 39) {
+      // right arrow
+      setNext()
+    }
+  }
   return (
     <Dialog
       fullScreen={fullScreen}
@@ -63,6 +121,7 @@ function ImageModal({ open, handleClose, details: { path, name, info = {} } }) {
       open={open}
       onClose={handleClose}
       maxWidth="xl"
+      onKeyDown={onKeyPress}
     >
       <DialogTitle className={classes.title} onClose={handleClose}>
         {/* Request Info */}
@@ -78,6 +137,14 @@ function ImageModal({ open, handleClose, details: { path, name, info = {} } }) {
           </div>
         </div>
       </DialogContent>
+      <div className={classes.changeSlide}>
+        <Typography className={classes.slideControl} onClick={() => setPrevious()}>
+          {'<'} previous
+        </Typography>
+        <Typography className={classes.slideControl} onClick={() => setNext()}>
+          next {'>'}
+        </Typography>
+      </div>
     </Dialog>
   )
 }

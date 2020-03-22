@@ -49,7 +49,7 @@ const Artwork = ({ match }) => {
                     if (hideModal) {
                       setHoverOn(key)
                     } else {
-                      setImageModalDetails({ path, name, info })
+                      setImageModalDetails({ path, key, name, info })
                       setImageModalOpen(true)
                     }
                   }}
@@ -86,6 +86,7 @@ const Artwork = ({ match }) => {
           setImageModalOpen(false)
           setImageModalDetails({})
         }}
+        collection={collection}
         details={imageModalDetails}
         open={imageModalOpen}
       />
