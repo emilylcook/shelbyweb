@@ -5,11 +5,12 @@ import { makeStyles } from '@material-ui/core/styles'
 import '@fortawesome/fontawesome-free/css/all.css'
 
 import Home from './Home/'
-import Connect from './Connect'
+// import Connect from './Connect'
 import About from './About'
 import Footer from './Footer'
 import Artwork from './Artwork/'
 import Header from './Header'
+import Commissions from './Commissions'
 import { useScrollRestoration } from './utils'
 
 import getCollection from './Artwork/collections'
@@ -51,7 +52,13 @@ const PreloadImages = classes => {
   return (
     <div id="preload" className={classes.hidden} style={{ display: 'none' }}>
       {Object.entries(allArt).map(([key, { path, name, info }]) => (
-        <img className={classes.hidden} style={{ display: 'none' }} alt={name} src={path} />
+        <img
+          key={key}
+          className={classes.hidden}
+          style={{ display: 'none' }}
+          alt={name}
+          src={path}
+        />
       ))}
     </div>
   )
@@ -75,7 +82,8 @@ const App = () => {
             <Switch>
               <Route path="/" exact component={Home} />
               <Route path="/about" exact component={About} />
-              <Route path="/connect" exact component={Connect} />
+              {/* <Route path="/connect" exact component={Connect} /> */}
+              <Route path="/commissions" exact component={Commissions} />
               <Route path="/artwork/:collection" component={Artwork} />
               <Redirect to="/" />
             </Switch>

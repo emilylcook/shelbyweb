@@ -7,6 +7,10 @@ const navItems = {
     to: '/About',
     label: 'About'
   },
+  commissions: {
+    to: '/Commissions',
+    label: 'Commissions'
+  },
   artwork: {
     // to: '/About',
     label: 'Artwork',
@@ -29,10 +33,6 @@ const navItems = {
       }
     ]
   }
-  //   contact: {
-  //     to: '/connect',
-  //     label: 'Connect'
-  //   }
 }
 
 export default navItems
