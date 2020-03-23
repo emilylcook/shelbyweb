@@ -43,7 +43,8 @@ const useStyles = makeStyles(theme => ({
     borderTop: 'thin solid #d5d5d5'
   },
   slideControl: {
-    fontSize: 10
+    fontSize: 10,
+    cursor: 'pointer'
   }
 }))
 

@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react'
-// import Grid from '@material-ui/core/Grid'
+
 import { makeStyles } from '@material-ui/core/styles'
 import { Typography, useMediaQuery } from '@material-ui/core'
 import { useTheme } from '@material-ui/core/styles'
+
 import clsx from 'clsx'
 
 import { HorizontalTitle } from '../common/'
@@ -18,6 +19,7 @@ const Artwork = ({ match }) => {
 
   const [imageModalOpen, setImageModalOpen] = useState(false)
   const [imageModalDetails, setImageModalDetails] = useState({})
+  const [selectedFilters, setSelectedFilters] = useState(new Set())
   const [hideArtwork, setHideArtwork] = useState(true)
   const { collection, title } = getCollection(match.params.collection)
 
@@ -27,8 +29,39 @@ const Artwork = ({ match }) => {
     setHideArtwork(true)
     setTimeout(function() {
       setHideArtwork(false)
+      setSelectedFilters(new Set())
     }, 100)
   }, [match])
+
+  function handleFilter(filter) {
+    const selected = selectedFilters.has(filter)
+    let newSet = selectedFilters
+
+    if (selected) {
+      newSet.delete(filter)
+    } else {
+      newSet.add(filter)
+    }
+
+    setSelectedFilters(new Set(newSet))
+  }
+
+  function clearFilters() {
+    setSelectedFilters(new Set())
+  }
+
+  const { filters } = collection
+  let art = collection.art
+
+  function filteredArt(art) {
+    return art.filter(a => {
+      // must contain all set
+      const array = [...selectedFilters]
+      return array.every(f => a.tags.includes(f))
+    })
+  }
+
+  art = selectedFilters.size > 0 ? filteredArt(art) : art
 
   return (
     <>
@@ -37,8 +70,33 @@ const Artwork = ({ match }) => {
           <div className={classes.titleSection}>
             <HorizontalTitle title={title} includeSpacer titleClass={classes.pageTitle} />
           </div>
+          {filters && (
+            <div className={classes.filterSection}>
+              <div
+                className={clsx(classes.filter, {
+                  [classes.activeFilter]: selectedFilters.size === 0
+                })}
+                onClick={() => clearFilters()}
+              >
+                All
+              </div>
+              {filters.map(filter => {
+                const isActive = selectedFilters.has(filter.toLowerCase())
+
+                return (
+                  <div
+                    key={filter}
+                    className={clsx(classes.filter, { [classes.activeFilter]: isActive })}
+                    onClick={() => handleFilter(filter.toLowerCase())}
+                  >
+                    {filter}
+                  </div>
+                )
+              })}
+            </div>
+          )}
           <div className={clsx(classes.masonaryContainer, { [classes.hidden]: hideArtwork })}>
-            {Object.entries(collection).map(([key, { path, name, info }]) => {
+            {Object.entries(art).map(([key, { path, name, info }]) => {
               const isHovered = hoverOn === key
               return (
                 <div
@@ -86,7 +144,7 @@ const Artwork = ({ match }) => {
           setImageModalOpen(false)
           setImageModalDetails({})
         }}
-        collection={collection}
+        collection={art}
         details={imageModalDetails}
         open={imageModalOpen}
       />
@@ -101,19 +159,33 @@ const useStyles = makeStyles(theme => ({
     display: 'flex' /* or inline-flex */,
     minHeight: '100%'
   },
+  filterSection: {
+    display: 'flex',
+    justifyContent: 'center'
+  },
+  filter: {
+    // width: 100,
+    margin: '0px 10px',
+    fontSize: 17,
+    letterSpacing: 1,
+    fontVariant: 'small-caps',
+    cursor: 'pointer'
+  },
+  activeFilter: {
+    fontWeight: 600
+  },
   masonaryContainer: {
     columns: '3 300px',
-    columnGap: '1rem'
-    // display: 'flex',
-    // flexDirection: 'column',
-    // flexWrap: 'wrap',
-    // maxHeight: 1300
+    columnGap: '1rem',
+    marginTop: 40,
+    [theme.breakpoints.down('xs')]: {
+      marginTop: 10
+    }
   },
   masonaryItem: {
     color: 'white',
     display: 'block',
     width: '100%'
-    // boxShadow: '0 0 20px 0 rgba(0, 0, 0, 0.2)'
   },
   tile: {
     cursor: 'pointer',
@@ -196,9 +268,9 @@ const useStyles = makeStyles(theme => ({
     fontSize: 25
   },
   titleSection: {
-    marginBottom: 50,
+    marginBottom: 10,
     [theme.breakpoints.down('xs')]: {
-      marginBottom: 10
+      marginBottom: 0
     }
   }
 }))
