@@ -112,9 +112,7 @@ const About = () => {
               streets as subject matter to showcase the variety of human interactions that take
               place when people are either choosing not to sleep or are physically unable to.
             </Typography>
-            <Typography paragraph>
-              Cook currently works and resides in Seattle, WA, with her cat, Psycho.
-            </Typography>
+            <Typography paragraph>Cook currently works and resides in Seattle, WA.</Typography>
           </Grid>
           <Grid item xs={12} sm={12} md={5} className={clsx(classes.section)}>
             <Grid container className={classes.rightContainer}>
@@ -144,8 +142,8 @@ const About = () => {
               </Grid>
               <Grid item xs={12} md={10}>
                 <Typography paragraph>
-                  If you are interested in available pieces or commissioning a painting, please
-                  reach out via email or Instagram.
+                  If you are interested in available pieces, please reach out via email or
+                  Instagram.
                 </Typography>
               </Grid>
             </Grid>

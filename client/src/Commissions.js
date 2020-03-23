@@ -119,17 +119,17 @@ const Commissions = () => {
       <WidthContainer className={classes.columnWrapper}>
         <Grid container>
           <Grid item xs={12} className={clsx(classes.header)}>
-            <HorizontalTitle title="The Commission Process" titleClass={classes.horizontalTitle} />
+            <HorizontalTitle title="Commissions" titleClass={classes.horizontalTitle} />
           </Grid>
 
           <Grid item xs={12} className={classes.section}>
-            <Typography variant="h5" className={classes.title}>
-              Size
-            </Typography>
             <Typography paragraph>
-              First thing is to decide the best size canvas for your custom project. At this time I
-              am only accepting commissions 24" x 30" and larger. If you are unsure the perfect size
-              for your space, I’m happy to help you decide!
+              I am happy to work with you to create a custom painting to fit your space. I can do
+              landscapes, portraits, or pet portrait commissions. Along with the desired size and
+              subject matter, I appreciate any and all inspiration you can provide –
+              photographs/images/locations that you would like me to work from, color schemes, etc.
+              If you have any particular paintings or styles of mine that you favor, include that
+              information too!
             </Typography>
           </Grid>
 
@@ -139,27 +139,19 @@ const Commissions = () => {
             </Typography>
 
             <Typography paragraph>
-              It can help for me to see your space, either through photos or in person (if local),
-              to get a feel for the surrounding atmosphere (wall color, fabric swatches, light,
-              overall mood, etc.)
+              Once you have communicated your interest, we can discuss sizing, pricing, and
+              composition. I will create some quick thumbnail sketches so you can decide on
+              composition and orientation.
             </Typography>
             <Typography paragraph>
-              I appreciate any inspiration you can provide - what particular paintings/style of mine
-              you favor, any photographs/landscapes/locations you would like me to work from,
-              Pinterest boards, color palettes, etc. The more insight, the better!
+              As soon as we have settled on a composition/color scheme and the deposit has been
+              paid, I start with a small color study, usually around 5” x 7”, to get approval on the
+              composition and color scheme before starting the final piece (this color study becomes
+              a bonus for you and will be shipped with the completed painting!)
             </Typography>
-          </Grid>
-
-          <Grid item xs={12} className={classes.section}>
-            <Typography variant="h5" className={classes.title}>
-              Sketch
-            </Typography>
-
             <Typography paragraph>
-              I start with a few watercolor sketch options for your piece, to give you an idea of
-              what I had in mind and make sure we are on the same page. Once I have your approval,
-              the oil painting begins. At this point, I typically allow for 10-12 week for
-              completion of each piece (and slightly longer during the holiday season.)
+              At this point, I typically allow for 10-12 weeks for completion of each piece,
+              depending on complexity and other projects at the time.
             </Typography>
           </Grid>
 
@@ -167,15 +159,13 @@ const Commissions = () => {
             <Typography variant="h5" className={classes.title}>
               Pricing
             </Typography>
-
             <Typography paragraph>
-              My prices for commissioned pieces start at about $1200, and run about 15% more than
-              ready-to-ship paintings. This is to account for the time spent putting together a
-              cohesive piece that meets all of your wishes. I ask for a 50% deposit to begin, with
-              the remaining balance, plus shipping, due once your painting is complete.
+              At this time, my prices for commissioned pieces start at around $500 for a 16” x 20”
+              painting. This is to account for the time spent putting together a cohesive piece that
+              meets all of your wishes. I ask for a 50% deposit to begin, with the remaining
+              balance, plus shipping, due once your painting is complete.
             </Typography>
           </Grid>
-
           <Grid item xs={12} className={classes.section}>
             <Typography variant="h4" className={classes.getStarted}>
               To get started on your custom piece, complete the form below.
