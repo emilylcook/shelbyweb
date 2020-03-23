@@ -2,9 +2,16 @@ import { useScrollRestoration } from './scrollRestoration'
 import navItems from './navItems'
 
 const isFormSubmitDisabled = (inputs, formState) => {
-  const requiredFields = Object.entries(inputs).flatMap(([name, args]) =>
-    args.validator.required ? [name] : []
-  )
+  const requiredFields = Object.entries(inputs).reduce((acc, val) => {
+    if (val[1].validator.required) {
+      const name = val[1].name
+      acc.push(name)
+    }
+
+    return acc
+  }, [])
+
+  console.log(requiredFields)
 
   const touchedRequiredFields = requiredFields.every(item => {
     return formState.touched[item] && formState.values[item]

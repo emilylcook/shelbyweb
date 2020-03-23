@@ -98,7 +98,8 @@ const earlierWorks = {
         type: 'Acrylic on Panel',
         size: '5x7”',
         status: 'Available'
-      }
+      },
+      tags: ['available']
     },
     {
       path: '/artwork/earlier_works/Apples.jpg',
