@@ -10,7 +10,7 @@ app.use(bodyParser.json());
 
 var corsOptions = {
   origin: function(origin, callback) {
-    if ("https://https://shelbykcook.com" === origin || !origin) {
+    if ("https://shelbykcook.com" === origin || !origin) {
       // if ("http://localhost:3000" === origin || !origin) {
       callback(null, true);
     } else {

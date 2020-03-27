@@ -200,8 +200,26 @@ const treelines = {
   ]
 }
 
+const c2020 = {
+  filters: ['Available'], //, 'Nocturnes'],
+  art: [
+    {
+      path: '/artwork/nocturnes/JamesStreet.jpg',
+      name: 'James Street',
+      info: { type: 'Acrylic on Panel', size: '18x24”', status: 'Available' },
+      tags: ['available', 'nocturnes']
+    }
+  ]
+}
+
 export default function getCollection(name) {
   switch (name) {
+    case 'nocturnes':
+      return {
+        title: 'Nocturnes',
+        collection: c2020
+      }
+
     case '2019':
       return {
         title: '2019',

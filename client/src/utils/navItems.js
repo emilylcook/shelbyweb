@@ -16,6 +16,10 @@ const navItems = {
     label: 'Artwork',
     subItems: [
       {
+        to: '/artwork/nocturnes',
+        label: 'Nocturnes'
+      },
+      {
         to: '/artwork/2019',
         label: '2019'
       },
