@@ -6,7 +6,8 @@ import { useTheme } from '@material-ui/core/styles'
 
 import clsx from 'clsx'
 
-import { HorizontalTitle } from '../common/'
+import { HorizontalTitle, Progress } from '../common/'
+
 import WidthContainer from '../WidthContainer'
 import ImageModal from './ImageModal'
 
@@ -22,16 +23,21 @@ const Artwork = ({ match }) => {
   const [selectedFilters, setSelectedFilters] = useState(new Set())
   const [hideArtwork, setHideArtwork] = useState(true)
   const { collection, title } = getCollection(match.params.collection)
+  const [loading, setLoading] = useState(true)
+  const [collectionsLoaded, setCollectionsLoaded] = useState([])
 
   const hideModal = useMediaQuery(theme.breakpoints.down('xs'))
 
   useEffect(() => {
     setHideArtwork(true)
+    if (!collectionsLoaded.includes(match.params.collection)) {
+      setLoading(true)
+    }
     setTimeout(function() {
       setHideArtwork(false)
       setSelectedFilters(new Set())
     }, 100)
-  }, [match])
+  }, [match, collectionsLoaded])
 
   function handleFilter(filter) {
     const selected = selectedFilters.has(filter)
@@ -62,6 +68,14 @@ const Artwork = ({ match }) => {
   }
 
   art = selectedFilters.size > 0 ? filteredArt(art) : art
+
+  // todo need to keep track of each location?
+  if (loading) {
+    setTimeout(function() {
+      setLoading(false)
+      setCollectionsLoaded([...collectionsLoaded, match.params.collection])
+    }, 1000)
+  }
 
   return (
     <>
@@ -95,7 +109,16 @@ const Artwork = ({ match }) => {
               })}
             </div>
           )}
-          <div className={clsx(classes.masonaryContainer, { [classes.hidden]: hideArtwork })}>
+          {loading && (
+            <div className={classes.progress}>
+              <Progress size={40} delay={false}></Progress>
+            </div>
+          )}
+          <div
+            className={clsx(classes.masonaryContainer, {
+              [classes.hidden]: hideArtwork || loading
+            })}
+          >
             {Object.entries(art).map(([key, { path, name, info }]) => {
               const isHovered = hoverOn === key
               return (
@@ -158,6 +181,11 @@ const useStyles = makeStyles(theme => ({
   root: {
     display: 'flex' /* or inline-flex */,
     minHeight: '100%'
+  },
+  progress: {
+    marginTop: 50,
+    display: 'flex',
+    justifyContent: 'center'
   },
   filterSection: {
     display: 'flex',
