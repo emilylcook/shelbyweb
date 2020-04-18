@@ -122,37 +122,48 @@ const Artwork = ({ match }) => {
             {Object.entries(art).map(([key, { path, name, info }]) => {
               const isHovered = hoverOn === key
               return (
-                <div
-                  key={key}
-                  className={clsx(classes.tile, { [classes.tileHover]: isHovered })}
-                  onMouseEnter={() => setHoverOn(key)}
-                  onClick={() => {
-                    if (hideModal) {
-                      setHoverOn(key)
-                    } else {
-                      setImageModalDetails({ path, key, name, info })
-                      setImageModalOpen(true)
-                    }
-                  }}
-                  onMouseLeave={() => setHoverOn(null)}
-                >
-                  <img className={classes.masonaryItem} alt={name} src={path} />
-                  <div className={classes.details}>
-                    <Typography
-                      className={clsx(classes.paragraph, classes.title, {
-                        [classes.paragraphHover]: isHovered
-                      })}
-                    >
-                      {name}
-                    </Typography>
+                <div>
+                  <div>
                     <div
-                      className={clsx(classes.paragraph, classes.info, {
-                        [classes.paragraphHover]: isHovered
-                      })}
+                      key={key}
+                      className={clsx(classes.tile, { [classes.tileHover]: isHovered })}
+                      onMouseEnter={() => setHoverOn(key)}
+                      onClick={() => {
+                        if (hideModal) {
+                          setHoverOn(key)
+                        } else {
+                          setImageModalDetails({ path, key, name, info })
+                          setImageModalOpen(true)
+                        }
+                      }}
+                      onMouseLeave={() => setHoverOn(null)}
                     >
-                      {info.type && <Typography>{info.type}</Typography>}
-                      {info.size && <Typography>{info.size}</Typography>}
-                      {info.status && <Typography>{info.status}</Typography>}
+                      <img className={classes.masonaryItem} alt={name} src={path} />
+
+                      {info.status === 'Sold' && (
+                        <div className={classes.sold}>
+                          <Typography>Sold</Typography>
+                        </div>
+                      )}
+
+                      <div className={classes.details}>
+                        <Typography
+                          className={clsx(classes.paragraph, classes.title, {
+                            [classes.paragraphHover]: isHovered
+                          })}
+                        >
+                          {name}
+                        </Typography>
+                        <div
+                          className={clsx(classes.paragraph, classes.info, {
+                            [classes.paragraphHover]: isHovered
+                          })}
+                        >
+                          {info.type && <Typography>{info.type}</Typography>}
+                          {info.size && <Typography>{info.size}</Typography>}
+                          {info.status && <Typography>{info.status}</Typography>}
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -178,6 +189,25 @@ const Artwork = ({ match }) => {
 export default Artwork
 
 const useStyles = makeStyles(theme => ({
+  imageContainer: {
+    position: 'relative'
+  },
+  sold: {
+    height: 40,
+    width: 40,
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    textAlign: 'center',
+    position: 'absolute',
+    zIndex: 50,
+    top: 0,
+    right: 0,
+    color: 'white',
+    background: 'rgba(53, 53, 53, 0.82)',
+    border: 20,
+    borderRadius: 35
+  },
   root: {
     display: 'flex' /* or inline-flex */,
     minHeight: '100%'
@@ -211,6 +241,9 @@ const useStyles = makeStyles(theme => ({
     }
   },
   masonaryItem: {
+    paddingTop: 15,
+    paddingBottom: 15,
+    paddingRight: 15,
     color: 'white',
     display: 'block',
     width: '100%'
@@ -219,18 +252,20 @@ const useStyles = makeStyles(theme => ({
     cursor: 'pointer',
     position: 'relative',
     overflow: 'hidden',
-    margin: '0 1rem 1rem 0',
+    margin: '0 0rem 0rem 0',
     textAlign: 'left',
     opacity: 0.99,
     borderRadius: 3,
     // boxShadow: '0 0 20px 0 rgba(0, 0, 0, 0.2)',
     [theme.breakpoints.down('xs')]: {
-      margin: 10
+      margin: 10,
+      marginRight: 0,
+      marginTop: 0
     },
     '&:before': {
       content: "''",
       background: 'linear-gradient(to bottom,rgba(0,0,0,0) 0%, rgba(0,0,0,1) 100%)',
-      width: '100%',
+      width: 'calc(100% - 15px)',
       height: '60%',
       opacity: 0,
       position: 'absolute',

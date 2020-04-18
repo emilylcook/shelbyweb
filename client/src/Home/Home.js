@@ -3,7 +3,8 @@ import { makeStyles } from '@material-ui/core/styles'
 
 import Hero from '../Hero'
 import heroImg from '../assets/hero/hero_02.jpg'
-import nameImg from '../assets/name.png'
+// import nameImg from '../assets/name.png'
+import { Typography } from '@material-ui/core'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -13,17 +14,28 @@ const useStyles = makeStyles(theme => ({
   subTitle: {
     marginBottom: '15px'
   },
-  image: {
-    height: 'auto',
-    width: '250px',
-    [theme.breakpoints.down('xs')]: {
-      // marginBottom: 100
-    }
-  },
+  // image: {
+  //   height: 'auto',
+  //   width: '250px',
+  //   [theme.breakpoints.down('xs')]: {
+  //     // marginBottom: 100
+  //   }
+  // },
   content: {
     [theme.breakpoints.down('xs')]: {
       // marginBottom: 100
     }
+  },
+  titleSection: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'flex-end',
+    fontVariant: 'small-caps',
+    height: 130
+  },
+  title: {
+    fontSize: '2rem',
+    letterSpacing: 3
   }
 }))
 
@@ -34,7 +46,12 @@ const Home = () => {
     <div className={classes.content}>
       <Hero
         heroImg={heroImg}
-        title={<img alt="shelby cook" src={nameImg} className={classes.image} />}
+        title={
+          <div className={classes.titleSection}>
+            <Typography className={classes.title}>SHELBY K COOK</Typography>
+          </div>
+        }
+        // title={<img alt="shelby cook" src={nameImg} className={classes.image} />}
       />
     </div>
   )
