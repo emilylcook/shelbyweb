@@ -10,6 +10,9 @@ export default function ButtonAppBar() {
     <div className={classes.footer}>
       <Grid container>
         <Grid item xs={12} className={classes.contactMeSection}>
+          <div className={classes.emailList}>
+            <Typography className={classes.emailText}>Join my email list</Typography>
+          </div>
           <Typography>
             <a
               href="https://www.instagram.com/shelbykcook/"
@@ -58,7 +61,19 @@ const useStyles = makeStyles(theme => ({
     }
   },
   contactMeSection: {
-    textAlign: 'right',
+    display: 'flex',
+    // textAlign: 'right',
     backgroundColor: '#e8e8e8'
+  },
+  emailList: {
+    flex: 1,
+    alignItems: 'center',
+    alignContent: 'center',
+    display: 'flex',
+    marginLeft: 15,
+    cursor: 'pointer'
+  },
+  emailText: {
+    fontSize: 15
   }
 }))

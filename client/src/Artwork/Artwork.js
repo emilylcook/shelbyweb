@@ -123,14 +123,18 @@ const Artwork = ({ match }) => {
               const isHovered = hoverOn === key
               return (
                 <div>
-                  <div>
+                  <div className={classes.marginBottom}>
                     <div
                       key={key}
                       className={clsx(classes.tile, { [classes.tileHover]: isHovered })}
-                      onMouseEnter={() => setHoverOn(key)}
+                      onMouseEnter={() => {
+                        if (!hideModal) {
+                          setHoverOn(key)
+                        }
+                      }}
                       onClick={() => {
                         if (hideModal) {
-                          setHoverOn(key)
+                          setHoverOn(!isHovered ? key : null)
                         } else {
                           setImageModalDetails({ path, key, name, info })
                           setImageModalOpen(true)
@@ -242,17 +246,21 @@ const useStyles = makeStyles(theme => ({
   },
   masonaryItem: {
     paddingTop: 15,
-    paddingBottom: 15,
+    // paddingBottom: 15,
     paddingRight: 15,
     color: 'white',
     display: 'block',
     width: '100%'
+  },
+  marginBottom: {
+    marginBottom: 15
   },
   tile: {
     cursor: 'pointer',
     position: 'relative',
     overflow: 'hidden',
     margin: '0 0rem 0rem 0',
+
     textAlign: 'left',
     opacity: 0.99,
     borderRadius: 3,
@@ -274,7 +282,8 @@ const useStyles = makeStyles(theme => ({
       zIndex: 2,
       transitionProperty: 'top, opacity',
       transitionDuration: '.4s'
-    }
+    },
+    '-webkit-tap-highlight-color': 'transparent'
   },
   tileHover: {
     '&:before': {
