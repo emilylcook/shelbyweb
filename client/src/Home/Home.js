@@ -3,6 +3,7 @@ import { makeStyles } from '@material-ui/core/styles'
 import { Typography } from '@material-ui/core'
 
 import Hero from '../Hero'
+import treelineImage from '../assets/treeline.png'
 import heroImg from '../assets/hero/Scotland1.jpg'
 
 import Newsletter from '../Newsletter'
@@ -25,13 +26,23 @@ const useStyles = makeStyles(theme => ({
   titleSection: {
     display: 'flex',
     justifyContent: 'center',
-    alignItems: 'flex-end',
+    flexDirection: 'column',
+    alignItems: 'center',
     fontVariant: 'small-caps',
     height: 130
   },
   title: {
     fontSize: '2rem',
     letterSpacing: 3
+  },
+  image: {
+    width: 200,
+    height: 'auto',
+    opacity: 0.8,
+
+    [theme.breakpoints.down('xs')]: {
+      width: 175
+    }
   }
 }))
 
@@ -44,6 +55,7 @@ const Home = () => {
           heroImg={heroImg}
           title={
             <div className={classes.titleSection}>
+              <img alt="treelines" src={treelineImage} className={classes.image} />
               <Typography className={classes.title}>SHELBY K COOK</Typography>
             </div>
           }

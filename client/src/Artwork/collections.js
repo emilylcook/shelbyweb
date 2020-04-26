@@ -176,8 +176,8 @@ const treelines = {
     {
       path: '/artwork/treelines/Merge.jpg',
       name: 'Merge',
-      info: { type: 'Acrylic on Canvas', size: '30x48”', status: 'Available' },
-      tags: ['available']
+      info: { type: 'Acrylic on Canvas', size: '30x48”', status: 'Sold' },
+      tags: ['sold']
     },
     {
       path: '/artwork/treelines/Autumn.jpg',
