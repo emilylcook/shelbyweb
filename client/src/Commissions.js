@@ -234,6 +234,10 @@ const useStyles = makeStyles(theme => ({
     display: 'flex' /* or inline-flex */,
     minHeight: '100%'
   },
+  button: {
+    fontWeight: 600,
+    letterSpacing: 2
+  },
   submitButton: {
     marginBottom: 50
   },
