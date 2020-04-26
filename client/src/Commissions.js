@@ -19,6 +19,7 @@ const Commissions = () => {
 
   const [formState, { text, email }] = useFormState({})
   const [emailSent, setEmailSent] = useState(false)
+  const [loading, setLoading] = useState(false)
   const { enqueueSnackbar } = useSnackbar()
 
   const inputs = {
@@ -101,6 +102,7 @@ const Commissions = () => {
 
   function sendEmail() {
     const { name, email, paintingSize, inspiration, questions } = formState.values
+    setLoading(true)
     axios
       .post(`${config.API}/sendEmail`, {
         name,
@@ -111,9 +113,11 @@ const Commissions = () => {
       })
       .then(function(response) {
         setEmailSent(true)
+        setLoading(false)
       })
       .catch(function(error) {
         setEmailSent(false)
+        setLoading(false)
       })
   }
 
@@ -206,7 +210,7 @@ const Commissions = () => {
               </Grid>
               <Grid item xs={12} className={classes.submitButton}>
                 <Button
-                  disabled={disableSubmit}
+                  disabled={disableSubmit || loading}
                   variant="contained"
                   color="primary"
                   className={classes.button}

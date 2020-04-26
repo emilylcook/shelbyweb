@@ -9,11 +9,13 @@ import config from './config'
 const Newsletter = () => {
   const classes = useStyles()
   const [email, setEmail] = useState(null)
+  const [loading, setLoading] = useState(false)
   const [subscribed, setSubscribed] = useState(false)
   const [message, setMessage] = useState(false)
   const { enqueueSnackbar } = useSnackbar()
 
   function subscribe() {
+    setLoading(true)
     axios
       .post(`${config.API}/signup`, {
         email
@@ -21,9 +23,11 @@ const Newsletter = () => {
       .then(function(response) {
         setMessage(response.data.message)
         setSubscribed(true)
+        setLoading(false)
       })
       .catch(function(error) {
         setSubscribed('error')
+        setLoading(false)
       })
   }
 
@@ -71,7 +75,7 @@ const Newsletter = () => {
           ></TextField>
 
           <Button
-            disabled={!emailRegex.test(email)}
+            disabled={!emailRegex.test(email) || loading}
             variant="contained"
             color="primary"
             className={classes.button}
