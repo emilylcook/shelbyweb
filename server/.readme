@@ -1,0 +1,6 @@
+
+setting firebase envs
+ firebase functions:config:set blah.label 
+
+ run locally
+ firebase emulators:start

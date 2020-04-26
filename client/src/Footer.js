@@ -11,7 +11,7 @@ export default function ButtonAppBar() {
       <Grid container>
         <Grid item xs={12} className={classes.contactMeSection}>
           <div className={classes.emailList}>
-            <Typography className={classes.emailText}>Join my email list</Typography>
+            {/* <Typography className={classes.emailText}>Join my email list</Typography> */}
           </div>
           <Typography>
             <a

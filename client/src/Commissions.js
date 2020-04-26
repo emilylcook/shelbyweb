@@ -11,6 +11,9 @@ import { HorizontalTitle } from './common/'
 import { isFormSubmitDisabled } from './utils'
 import config from './config'
 
+import Hero from './Hero'
+import heroImg from './assets/hero/Tofino3.jpg'
+
 const Commissions = () => {
   const classes = useStyles()
 
@@ -116,6 +119,7 @@ const Commissions = () => {
 
   return (
     <div className={classes.content}>
+      <Hero heroImg={heroImg} />
       <WidthContainer className={classes.columnWrapper}>
         <Grid container>
           <Grid item xs={12} className={clsx(classes.header)}>

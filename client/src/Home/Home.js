@@ -1,10 +1,11 @@
 import React from 'react'
 import { makeStyles } from '@material-ui/core/styles'
+import { Typography } from '@material-ui/core'
 
 import Hero from '../Hero'
-import heroImg from '../assets/hero/hero_02.jpg'
-// import nameImg from '../assets/name.png'
-import { Typography } from '@material-ui/core'
+import heroImg from '../assets/hero/Scotland1.jpg'
+
+import Newsletter from '../Newsletter'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -14,14 +15,9 @@ const useStyles = makeStyles(theme => ({
   subTitle: {
     marginBottom: '15px'
   },
-  // image: {
-  //   height: 'auto',
-  //   width: '250px',
-  //   [theme.breakpoints.down('xs')]: {
-  //     // marginBottom: 100
-  //   }
-  // },
+
   content: {
+    minHeight: '100vh',
     [theme.breakpoints.down('xs')]: {
       // marginBottom: 100
     }
@@ -41,19 +37,20 @@ const useStyles = makeStyles(theme => ({
 
 const Home = () => {
   const classes = useStyles()
-
   return (
-    <div className={classes.content}>
-      <Hero
-        heroImg={heroImg}
-        title={
-          <div className={classes.titleSection}>
-            <Typography className={classes.title}>SHELBY K COOK</Typography>
-          </div>
-        }
-        // title={<img alt="shelby cook" src={nameImg} className={classes.image} />}
-      />
-    </div>
+    <>
+      <div className={classes.content}>
+        <Hero
+          heroImg={heroImg}
+          title={
+            <div className={classes.titleSection}>
+              <Typography className={classes.title}>SHELBY K COOK</Typography>
+            </div>
+          }
+        />
+      </div>
+      <Newsletter />
+    </>
   )
 }
 

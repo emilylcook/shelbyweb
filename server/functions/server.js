@@ -4,6 +4,7 @@ const smtpTransport = require("nodemailer-smtp-transport");
 const express = require("express");
 const cors = require("cors");
 const bodyParser = require("body-parser");
+const request = require("request-promise-native");
 
 const app = express();
 app.use(bodyParser.json());
@@ -21,6 +22,52 @@ var corsOptions = {
 };
 
 app.use(cors(corsOptions));
+
+app.post("/signup/", async function(req, res, next) {
+  const { email } = req.body;
+  const LIST_ID = functions.config().mailchimp.listid;
+  const ACCESS_TOKEN = functions.config().mailchimp.access_token;
+  const BASE_URL = functions.config().mailchimp.base_url;
+
+  const authRequest = request.defaults({
+    headers: {
+      "User-Agent": "workplace_app",
+      Authorization: `Basic ${ACCESS_TOKEN}`
+    },
+    json: true
+  });
+
+  const body = {
+    email_address: email,
+    status: "subscribed"
+  };
+
+  const options = {
+    method: "POST",
+    uri: `${BASE_URL}/lists/${LIST_ID}/members`,
+    body
+  };
+
+  try {
+    await authRequest(options);
+    return res.status(200).send({
+      message: "Subscribed to newsletter!"
+    });
+  } catch (e) {
+    console.error("Error from mailchimp API:");
+    console.error(e.error);
+
+    if (e.error.title === "Member Exists") {
+      return res.status(200).send({
+        message: "Email is already subscribed."
+      });
+    }
+
+    return res.status(500).send({
+      message: e.message
+    });
+  }
+});
 
 app.post("/sendEmail/", function(req, res, next) {
   const { name, email, paintingSize, inspiration, questions } = req.body;

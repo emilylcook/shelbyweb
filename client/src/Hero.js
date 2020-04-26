@@ -53,7 +53,7 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-function Hero({ heroImg, grayscale = '74%', subText, title }) {
+function Hero({ heroImg, grayscale = '34%', subText, title }) {
   const useHeroStyles = makeStyles(theme => ({
     heroImageStyle: {
       height: 700,
