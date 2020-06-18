@@ -1,0 +1,96 @@
+BEFORE YOU MAKE ANY CHANGES always run
+
+`git pull` to get my changes if I have made any!
+
+to run locally
+
+`npm run start`
+
+
+and a window will open at localhost:3000 for the site to run!
+
+------
+
+to add new art
+
+1) upload to the artwork folder (wherever but keep organizaed)
+2) in the "collections.js" add the folder path and any name/tags/ wala! will render
+
+    {
+      path: '/artwork/2019/Cattle Point.jpg',
+      name: 'Cattle Point',
+      info: { type: 'Acrylic on Panel', size: '6x6”', status: 'Available' },
+      tags: ['available']
+    },
+
+
+Adding new "filters"
+1) at the top of the collection in "collections.js" add a second filter
+  filters: ['Available', 'NEWFILTERHERE'],
+
+2) add the filter as a "tag" to any artwork in the collection that it is applicable 
+
+    {
+      path: '/artwork/2019/Cattle Point.jpg',
+      name: 'Cattle Point',
+      info: { type: 'Acrylic on Panel', size: '6x6”', status: 'Available' },
+      tags: ['available', 'NEWFILTERHERE]
+    },
+
+
+Adding new "catagory" 
+
+1) in 'navitems.js' add or replace a sectino
+  {
+    to: '/artwork/new-label-here',
+    label: 'New Label Here'
+  }
+
+  (they appear in the order listed here)
+
+2) in collections.js 
+    a) add a new collection 
+        const newCollectionHere = {
+            filters: ['Available'],
+            art: [
+                {
+                path: '/artwork/2019/Cat Nap.png',
+                name: 'Cat Nap',
+                info: { type: 'Acrylic on Panel', size: null, status: 'Sold' },
+                tags: ['sold']
+                },
+                ....
+        } 
+    b) at bottom of collections add the collection to 'getCollection' where the /end-of-url (new-label-here) matches the switch case. and the collection is whatever you named it above.
+        case 'new-label-fish':
+            return {
+                title: 'New Label Here',
+                collection: newCollectionHere
+            }
+
+
+
+------
+
+OKAY SO I MADE CHANGES, NOW WHAT??
+
+
+to DEPLOY 
+
+`npm run deploy`
+all changes will deploy
+
+
+wait thats scarry!
+
+do:
+
+1. `git add .` (this adds all your files to the commit)
+2. `git commit -m "i did some things! yay" (commits your changes)
+3. `git push` (pushes your changes up)
+
+then tell me and i can pull down and look :D
+
+
+
+-- good enough for now, we will both be working off master once you have the hang of this we can get into branches on git if necessary --

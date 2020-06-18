@@ -219,7 +219,7 @@ export default function getCollection(name) {
         title: 'Nocturnes',
         collection: c2020
       }
-
+ 
     case '2019':
       return {
         title: '2019',
