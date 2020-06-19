@@ -38,6 +38,24 @@ const StudioWork = {
       tags: ['available', 'Landscapes']
     },
     {
+      path: '/artwork/StudioWork/Aerial Silks.jpg',
+      name: 'Aerial Silks',
+      info: { type: 'Acrylic on Panel', size: '12x6”', status: 'Sold' },
+      tags: ['sold', 'Portraits']
+    },
+    {
+      path: '/artwork/StudioWork/Lyra.jpg',
+      name: 'Lyra',
+      info: { type: 'Acrylic on Panel', size: '12x6”', status: 'Sold' },
+      tags: ['sold', 'Portraits']
+    },
+    {
+      path: '/artwork/StudioWork/Barbara.jpg',
+      name: 'Barbara',
+      info: { type: 'Acrylic on Panel', size: '14x11”', status: 'Sold' },
+      tags: ['sold', 'Portraits']
+    },
+    {
       path: '/artwork/StudioWork/Self-Portrait.png',
       name: 'Self Portrait',
       info: { type: 'Acrylic on Canvas', size: '12” Round', status: 'Available' },
@@ -54,6 +72,24 @@ const StudioWork = {
       name: 'Pacific Crest Trail',
       info: { type: 'Acrylic on Canvas', size: '36x24”', status: 'Sold' },
       tags: ['sold', 'Landscapes', 'Commissions']
+    },
+    {
+      path: '/artwork/StudioWork/Milo.jpg',
+      name: 'Milo',
+      info: { type: 'Acrylic on Panel', size: '8x10”', status: 'Sold' },
+      tags: ['sold', 'Pet Portraits', 'Commissions']
+    },
+    {
+      path: '/artwork/StudioWork/Nalya.jpg',
+      name: 'Nalya',
+      info: { type: 'Acrylic on Canvas', size: '16x20”', status: 'Sold' },
+      tags: ['sold', 'Pet Portraits', 'Commissions']
+    },
+    {
+      path: '/artwork/StudioWork/Self-Portrait in the Passenger Seat.jpg',
+      name: 'Self-Portrait in the Passenger Seat',
+      info: { type: 'Oil on Canvas', size: '10” Round', status: 'Available' },
+      tags: ['available', 'Portraits', ]
     },
     {
       path: '/artwork/StudioWork/Bear.jpg',
@@ -95,6 +131,12 @@ const enPleinAir = {
       path: '/artwork/EnPleinAir/cutts_island.jpg',
       name: 'Cutts Island',
       info: { type: 'Oil on Canvas Board', size: '9x12”', status: 'Available' },
+      tags: ['available']
+    },
+    {
+      path: '/artwork/EnPleinAir/isle of Lewis.jpg',
+      name: 'Isle of Lewis',
+      info: { type: 'Acrylic on Panel', size: '4x12”', status: 'Available' },
       tags: ['available']
     },
     {
@@ -204,16 +246,16 @@ export default function getCollection(name) {
         collection: c2020
       }
  
-    case 'Studio-Work':
+    case 'StudioWork':
       return {
         title: 'Studio Work',
         collection: StudioWork
       }
 
-    case 'En-Plein-Air':
+    case 'EnPleinAir':
       return {
         title: 'En Plein Air',
-        collection: enPleinAir
+        collection: EnPleinAir
       }
     case 'treelines':
       return {
@@ -224,7 +266,7 @@ export default function getCollection(name) {
       return {
         title: 'all',
         collection: {
-          art: enPleinAir.art
+          art: EnPleinAir.art
             .concat(StudioWork.art)
             .concat(treelines.art)
         }
