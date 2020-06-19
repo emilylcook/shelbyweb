@@ -5,7 +5,7 @@ const StudioWork = {
       path: '/artwork/StudioWork/Cat Nap.png',
       name: 'Cat Nap',
       info: { type: 'Acrylic on Panel', size: null, status: 'Sold' },
-      tags: ['sold', 'Pet Portraits']
+      tags: ['sold', 'pet portraits']
     },
     {
       path: '/artwork/StudioWork/Lopez.jpg',
