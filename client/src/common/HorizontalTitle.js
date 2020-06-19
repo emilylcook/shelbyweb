@@ -19,7 +19,7 @@ const useStyles = makeStyles(theme => ({
       left: '10%',
       width: '80%',
       height: 1,
-      backgroundColor: '#272B2F',
+      backgroundColor: '#272f28',
       content: "''"
     }
   },

@@ -14,7 +14,7 @@ const theme = {
       main: '#414141'
     },
     primary: {
-      main: '#43657E'
+      main: '#4f5a4d'
     },
     secondary: {
       main: '#9E9E9E' // intentionally the same as primary
