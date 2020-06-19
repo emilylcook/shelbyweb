@@ -215,11 +215,6 @@ export default function getCollection(name) {
         title: 'En Plein Air',
         collection: enPleinAir
       }
-    case 'earlier-works':
-      return {
-        title: 'Earlier Works',
-        collection: earlierWorks
-      }
     case 'treelines':
       return {
         title: 'Treelines',
@@ -229,9 +224,8 @@ export default function getCollection(name) {
       return {
         title: 'all',
         collection: {
-          art: c2019.art
-            .concat(c2018.art)
-            .concat(earlierWorks.art)
+          art: enPleinAir.art
+            .concat(cStudioWorks.art)
             .concat(treelines.art)
         }
       }
