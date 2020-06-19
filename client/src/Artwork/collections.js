@@ -124,7 +124,7 @@ const StudioWork = {
   ]
 }
 
-const enPleinAir = {
+const EnPleinAir = {
   filters: ['Available'],
   art: [
     {
