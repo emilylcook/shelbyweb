@@ -68,16 +68,16 @@ const StudioWork = {
       tags: ['sold', 'landscapes', 'commissions']
     },
     {
-      path: '/artwork/StudioWork/Lyra.jpg',
-      name: 'Lyra',
-      info: { type: 'Acrylic on Panel', size: '12x6”', status: 'Sold' },
-      tags: ['sold', 'portraits']
-    },
-    {
       path: '/artwork/StudioWork/Milo.jpg',
       name: 'Milo',
       info: { type: 'Acrylic on Panel', size: '8x10”', status: 'Sold' },
       tags: ['sold', 'pet portraits', 'commissions']
+    },
+    {
+      path: '/artwork/StudioWork/Lyra.jpg',
+      name: 'Lyra',
+      info: { type: 'Acrylic on Panel', size: '12x6”', status: 'Sold' },
+      tags: ['sold', 'portraits']
     },
     {
       path: '/artwork/StudioWork/Nalya.jpg',
@@ -86,7 +86,7 @@ const StudioWork = {
       tags: ['sold', 'pet portraits', 'commissions']
     },
     {
-      path: '/artwork/StudioWork/Self-Portrait in the Passenger Seat.jpg',
+      path: '/artwork/StudioWork/Self-Portrait in the Passenger Seat.png',
       name: 'Self-Portrait in the Passenger Seat',
       info: { type: 'Oil on Canvas', size: '10” Round', status: 'Available' },
       tags: ['available', 'portraits', ]
