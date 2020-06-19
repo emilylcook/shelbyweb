@@ -10,14 +10,14 @@ to run locally
 and a window will open at localhost:3000 for the site to run!
 
 ------
-
+ 
 to add new art
 
 1) upload to the artwork folder (wherever but keep organizaed)
 2) in the "collections.js" add the folder path and any name/tags/ wala! will render
 
     {
-      path: '/artwork/2019/Cattle Point.jpg',
+      path: '/artwork/En Plein Air/Cattle Point.jpg',
       name: 'Cattle Point',
       info: { type: 'Acrylic on Panel', size: '6x6”', status: 'Available' },
       tags: ['available']
@@ -34,7 +34,7 @@ Adding new "filters"
       path: '/artwork/2019/Cattle Point.jpg',
       name: 'Cattle Point',
       info: { type: 'Acrylic on Panel', size: '6x6”', status: 'Available' },
-      tags: ['available', 'NEWFILTERHERE]
+      tags: ['available', 'NEWFILTERHERE']
     },
 
 

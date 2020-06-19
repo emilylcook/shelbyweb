@@ -153,7 +153,7 @@ const Commissions = () => {
             </Typography>
             <Typography paragraph>
               As soon as we have settled on a composition/color scheme and the deposit has been
-              paid, I start with a small color study, usually around 5” x 7”, to get approval on the
+              paid, I start with a small color study to get approval on the
               composition and color scheme before starting the final piece (this color study becomes
               a bonus for you and will be shipped with the completed painting!)
             </Typography>
@@ -168,8 +168,8 @@ const Commissions = () => {
               Pricing
             </Typography>
             <Typography paragraph>
-              At this time, my prices for commissioned pieces start at around $500 for a 16” x 20”
-              painting. This is to account for the time spent putting together a cohesive piece that
+              The price of a commission will depend on the size and complexity of the painting, and will
+              account for the time spent putting together a cohesive piece that
               meets all of your wishes. I ask for a 50% deposit to begin, with the remaining
               balance, plus shipping, due once your painting is complete.
             </Typography>

@@ -1,159 +1,143 @@
-const c2019 = {
-  filters: ['Available'],
+const StudioWork = {
+  filters: ['Available', 'Landscapes', 'Portraits', 'Pet Portraits', 'Still Life', 'Commissions'] ,
   art: [
     {
-      path: '/artwork/2019/Cat Nap.png',
+      path: '/artwork/StudioWork/Cat Nap.png',
       name: 'Cat Nap',
       info: { type: 'Acrylic on Panel', size: null, status: 'Sold' },
-      tags: ['sold']
+      tags: ['sold', 'Pet Portraits']
     },
     {
-      path: '/artwork/2019/Cattle Point.jpg',
-      name: 'Cattle Point',
-      info: { type: 'Acrylic on Panel', size: '6x6”', status: 'Available' },
-      tags: ['available']
-    },
-    {
-      path: '/artwork/2019/Lopez.jpg',
+      path: '/artwork/StudioWork/Lopez.jpg',
       name: 'Lopez',
       info: { type: 'Acrylic on Panel', size: '10x10”', status: 'Available' },
-      tags: ['available']
+      tags: ['available', 'Landscapes']
     },
     {
-      path: '/artwork/2019/Stalker.jpg',
+      path: '/artwork/StudioWork/Stalker.jpg',
       name: 'Stalker',
       info: { type: 'Acrylic on Panel', size: '10x10”', status: 'Available' },
-      tags: ['available']
+      tags: ['available', 'Still Life']
     },
     {
-      path: '/artwork/2019/The Crow.jpg',
+      path: '/artwork/StudioWork/The Crow.jpg',
       name: 'The Crow',
       info: { type: 'Acrylic on Panel', size: '5x7”', status: 'Available' },
-      tags: ['available']
+      tags: ['available', 'Still Life']
     },
     {
-      path: '/artwork/2019/The Secret.jpg',
+      path: '/artwork/StudioWork/The Secret.jpg',
       name: 'The Secret',
       info: { type: 'Acrylic on Canvas', size: '8x8”', status: 'Available' },
-      tags: ['available']
+      tags: ['available', 'Landscapes']
     },
     {
-      path: '/artwork/2019/Tofino.jpg',
+      path: '/artwork/StudioWork/Tofino.jpg',
       name: 'Tofino',
       info: { type: 'Acrylic on Canvas Board', size: '6x8”', status: 'Available' },
-      tags: ['available']
+      tags: ['available', 'Landscapes']
     },
     {
-      path: '/artwork/2019/Self-Portrait.png',
+      path: '/artwork/StudioWork/Self-Portrait.png',
       name: 'Self Portrait',
       info: { type: 'Acrylic on Canvas', size: '12” Round', status: 'Available' },
-      tags: ['available']
+      tags: ['available', 'Portraits']
     },
     {
-      path: '/artwork/2019/Botanical Bench.jpg',
+      path: '/artwork/StudioWork/Botanical Bench.jpg',
       name: 'Botanical Bench',
       info: { type: 'Acrylic on Canvas Board', size: '6x8”', status: 'Available' },
-      tags: ['available']
+      tags: ['available', 'Landscapes']
+    },
+    {
+      path: '/artwork/StudioWork/Pacific Crest Trail.jpg',
+      name: 'Pacific Crest Trail',
+      info: { type: 'Acrylic on Canvas', size: '36x24”', status: 'Sold' },
+      tags: ['sold', 'Landscapes', 'Commissions']
+    },
+    {
+      path: '/artwork/StudioWork/Bear.jpg',
+      name: 'Bear',
+      info: { type: 'Acrylic on Panel', size: '6x8”', status: 'Available' },
+      tags: ['available', 'Landscapes']
+    },
+    {
+      path: '/artwork/StudioWork/Fenced In.jpg',
+      name: 'Fenced In',
+      info: { type: 'Acrylic on Panel', size: '8x10”', status: 'Sold' },
+      tags: ['sold', 'Landscapes']
+    },
+    {
+      path: '/artwork/StudioWork/December.jpg',
+      name: 'December',
+      info: { type: 'Acrylic on Panel', size: '12x6”', status: 'Sold' },
+      tags: ['sold', 'Landscapes']
+    },
+    {
+      path: '/artwork/StudioWork/Forest with Dogwoods.jpg',
+      name: 'Forest with Dogwoods',
+      info: { type: 'Acrylic on Canvas', size: '36x48”', status: 'Sold' },
+      tags: ['sold', 'Landscapes', 'Commissions']
+    },
+    {
+      path: '/artwork/StudioWork/Forest.jpg',
+      name: 'Forest',
+      info: { type: 'Acrylic on Panel', size: '12x24”', status: 'Sold' },
+      tags: ['sold', 'Landscapes']
     }
   ]
 }
 
-const c2018 = {
+const enPleinAir = {
   filters: ['Available'],
   art: [
     {
-      path: '/artwork/2018/cutts_island.jpg',
+      path: '/artwork/EnPleinAir/cutts_island.jpg',
       name: 'Cutts Island',
       info: { type: 'Oil on Canvas Board', size: '9x12”', status: 'Available' },
       tags: ['available']
     },
     {
-      path: '/artwork/2018/Pacific Crest Trail.jpg',
-      name: 'Pacific Crest Trail',
-      info: { type: 'Acrylic on Canvas', size: '36x24”', status: 'Sold' },
-      tags: ['sold']
-    },
-    {
-      path: '/artwork/2018/deception_pass.jpg',
+      path: '/artwork/EnPleinAir/deception_pass.jpg',
       name: 'Deception Pass',
       info: { type: 'Acrylic on Panel', size: '6x12”', status: 'Sold' },
       tags: ['sold']
     },
     {
-      path: '/artwork/2018/lopez_island.jpg',
+      path: '/artwork/EnPleinAir/lopez_island.jpg',
       name: 'Lopez Island',
       info: { type: 'Acrylic on Panel', size: '11x14”', status: 'Available' },
       tags: ['available']
-    }
-  ]
-}
-
-const earlierWorks = {
-  filters: ['Available'],
-  art: [
+    },
     {
-      path: '/artwork/earlier_works/Gardenias.jpg',
+      path: '/artwork/EnPleinAir/Cattle Point.jpg',
+      name: 'Cattle Point',
+      info: { type: 'Acrylic on Panel', size: '6x6”', status: 'Available' },
+      tags: ['available']
+    },
+    {
+      path: '/artwork/EnPleinAir/Gardenias.jpg',
       name: 'Gardenias',
-      info: {
-        type: 'Acrylic on Panel',
-        size: '5x7”',
-        status: 'Available'
-      },
+      info: { type: 'Acrylic on Panel', size: '7x5”', status: 'Available' },
       tags: ['available']
     },
     {
-      path: '/artwork/earlier_works/Apples.jpg',
+      path: '/artwork/EnPleinAir/Apples.jpg',
       name: 'Apples',
-      info: { type: 'Acrylic on Panel', size: '5x7”', status: 'Available' },
+      info: { type: 'Acrylic on Panel', size: '7x5”', status: 'Available' },
       tags: ['available']
     },
     {
-      path: '/artwork/earlier_works/Bear.jpg',
-      name: 'Bear',
-      info: { type: 'Acrylic on Panel', size: '6x8”', status: 'Available' },
-      tags: ['available']
-    },
-    {
-      path: '/artwork/earlier_works/Fenced In.jpg',
-      name: 'Fenced In',
-      info: { type: 'Acrylic on Panel', size: '8x10”', status: 'Sold' },
-      tags: ['sold']
-    },
-    {
-      path: '/artwork/earlier_works/December.jpg',
-      name: 'December',
-      info: { type: 'Acrylic on Panel', size: '12x6”', status: 'Sold' },
-      tags: ['sold']
-    },
-    {
-      path: '/artwork/earlier_works/Forest with Dogwoods.jpg',
-      name: 'Forest with Dogwoods',
-      info: { type: 'Acrylic on Canvas', size: '36x48”', status: 'Sold' },
-      tags: ['sold']
-    },
-    {
-      path: '/artwork/earlier_works/Forest.jpg',
-      name: 'Forest',
-      info: { type: 'Acrylic on Panel', size: '12x24”', status: 'Sold' },
-      tags: ['sold']
-    },
-    {
-      path: '/artwork/earlier_works/Mt.Erie.jpg',
+      path: '/artwork/EnPleinAir/Mt.Erie.jpg',
       name: 'Mt. Erie',
       info: { type: 'Acrylic on Panel', size: '6x12”', status: 'Sold' },
       tags: ['sold']
     },
     {
-      path: '/artwork/earlier_works/Twin Trees.jpg',
+      path: '/artwork/EnPleinAir/Twin Trees.jpg',
       name: 'Twin Trees',
-      info: { type: 'Acrylic on Panel', size: '5x7”', status: 'Available' },
+      info: { type: 'Acrylic on Panel', size: '7x5”', status: 'Available' },
       tags: ['available']
-    },
-    {
-      path: '/artwork/earlier_works/zion.jpg',
-      name: 'Zion',
-      info: { type: 'Acrylic on Canvas', status: 'Sold' },
-      tags: ['sold']
     }
   ]
 }
@@ -220,16 +204,16 @@ export default function getCollection(name) {
         collection: c2020
       }
  
-    case '2019':
+    case 'Studio-Work':
       return {
-        title: '2019',
-        collection: c2019
+        title: 'Studio Work',
+        collection: StudioWork
       }
 
-    case '2018':
+    case 'En-Plein-Air':
       return {
-        title: '2018',
-        collection: c2018
+        title: 'En Plein Air',
+        collection: enPleinAir
       }
     case 'earlier-works':
       return {

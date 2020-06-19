@@ -20,20 +20,16 @@ const navItems = {
         label: 'Nocturnes'
       },
       {
-        to: '/artwork/2019',
-        label: '2019'
-      },
-      {
-        to: '/artwork/2018',
-        label: '2018'
-      },
-      {
         to: '/artwork/treelines',
         label: 'Treelines'
       },
       {
-        to: '/artwork/earlier-works',
-        label: 'Earlier Works'
+        to: '/artwork/StudioWork',
+        label: 'Studio Work'
+      },
+      {
+        to: '/artwork/EnPleinAir',
+        label: 'En Plein Air'
       }
     ]
   }
