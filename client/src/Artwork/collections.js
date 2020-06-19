@@ -225,7 +225,7 @@ export default function getCollection(name) {
         title: 'all',
         collection: {
           art: enPleinAir.art
-            .concat(StudioWorks.art)
+            .concat(StudioWork.art)
             .concat(treelines.art)
         }
       }
