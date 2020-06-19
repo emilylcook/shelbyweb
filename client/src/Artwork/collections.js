@@ -11,115 +11,115 @@ const StudioWork = {
       path: '/artwork/StudioWork/Lopez.jpg',
       name: 'Lopez',
       info: { type: 'Acrylic on Panel', size: '10x10”', status: 'Available' },
-      tags: ['available', 'Landscapes']
+      tags: ['available', 'landscapes']
     },
     {
       path: '/artwork/StudioWork/Stalker.jpg',
       name: 'Stalker',
       info: { type: 'Acrylic on Panel', size: '10x10”', status: 'Available' },
-      tags: ['available', 'Still Life']
+      tags: ['available', 'still life']
     },
     {
       path: '/artwork/StudioWork/The Crow.jpg',
       name: 'The Crow',
       info: { type: 'Acrylic on Panel', size: '5x7”', status: 'Available' },
-      tags: ['available', 'Still Life']
+      tags: ['available', 'still life']
     },
     {
       path: '/artwork/StudioWork/The Secret.jpg',
       name: 'The Secret',
       info: { type: 'Acrylic on Canvas', size: '8x8”', status: 'Available' },
-      tags: ['available', 'Landscapes']
+      tags: ['available', 'landscapes']
     },
     {
       path: '/artwork/StudioWork/Tofino.jpg',
       name: 'Tofino',
       info: { type: 'Acrylic on Canvas Board', size: '6x8”', status: 'Available' },
-      tags: ['available', 'Landscapes']
-    },
-    {
-      path: '/artwork/StudioWork/Aerial Silks.jpg',
-      name: 'Aerial Silks',
-      info: { type: 'Acrylic on Panel', size: '12x6”', status: 'Sold' },
-      tags: ['sold', 'Portraits']
-    },
-    {
-      path: '/artwork/StudioWork/Lyra.jpg',
-      name: 'Lyra',
-      info: { type: 'Acrylic on Panel', size: '12x6”', status: 'Sold' },
-      tags: ['sold', 'Portraits']
+      tags: ['available', 'landscapes']
     },
     {
       path: '/artwork/StudioWork/Barbara.jpg',
       name: 'Barbara',
       info: { type: 'Acrylic on Panel', size: '14x11”', status: 'Sold' },
-      tags: ['sold', 'Portraits']
+      tags: ['sold', 'portraits']
+    },
+    {
+      path: '/artwork/StudioWork/Aerial Silks.jpg',
+      name: 'Aerial Silks',
+      info: { type: 'Acrylic on Panel', size: '12x6”', status: 'Sold' },
+      tags: ['sold', 'portraits']
     },
     {
       path: '/artwork/StudioWork/Self-Portrait.png',
       name: 'Self Portrait',
       info: { type: 'Acrylic on Canvas', size: '12” Round', status: 'Available' },
-      tags: ['available', 'Portraits']
+      tags: ['available', 'portraits']
     },
     {
       path: '/artwork/StudioWork/Botanical Bench.jpg',
       name: 'Botanical Bench',
       info: { type: 'Acrylic on Canvas Board', size: '6x8”', status: 'Available' },
-      tags: ['available', 'Landscapes']
+      tags: ['available', 'landscapes']
     },
     {
       path: '/artwork/StudioWork/Pacific Crest Trail.jpg',
       name: 'Pacific Crest Trail',
       info: { type: 'Acrylic on Canvas', size: '36x24”', status: 'Sold' },
-      tags: ['sold', 'Landscapes', 'Commissions']
+      tags: ['sold', 'landscapes', 'commissions']
+    },
+    {
+      path: '/artwork/StudioWork/Lyra.jpg',
+      name: 'Lyra',
+      info: { type: 'Acrylic on Panel', size: '12x6”', status: 'Sold' },
+      tags: ['sold', 'portraits']
     },
     {
       path: '/artwork/StudioWork/Milo.jpg',
       name: 'Milo',
       info: { type: 'Acrylic on Panel', size: '8x10”', status: 'Sold' },
-      tags: ['sold', 'Pet Portraits', 'Commissions']
+      tags: ['sold', 'pet portraits', 'commissions']
     },
     {
       path: '/artwork/StudioWork/Nalya.jpg',
       name: 'Nalya',
       info: { type: 'Acrylic on Canvas', size: '16x20”', status: 'Sold' },
-      tags: ['sold', 'Pet Portraits', 'Commissions']
+      tags: ['sold', 'pet portraits', 'commissions']
     },
     {
       path: '/artwork/StudioWork/Self-Portrait in the Passenger Seat.jpg',
       name: 'Self-Portrait in the Passenger Seat',
       info: { type: 'Oil on Canvas', size: '10” Round', status: 'Available' },
-      tags: ['available', 'Portraits', ]
+      tags: ['available', 'portraits', ]
     },
     {
       path: '/artwork/StudioWork/Bear.jpg',
       name: 'Bear',
       info: { type: 'Acrylic on Panel', size: '6x8”', status: 'Available' },
-      tags: ['available', 'Landscapes']
+      tags: ['available', 'landscapes']
     },
     {
       path: '/artwork/StudioWork/Fenced In.jpg',
       name: 'Fenced In',
       info: { type: 'Acrylic on Panel', size: '8x10”', status: 'Sold' },
-      tags: ['sold', 'Landscapes']
+      tags: ['sold', 'landscapes']
     },
     {
       path: '/artwork/StudioWork/December.jpg',
       name: 'December',
       info: { type: 'Acrylic on Panel', size: '12x6”', status: 'Sold' },
-      tags: ['sold', 'Landscapes']
+      tags: ['sold', 'landscapes']
     },
     {
       path: '/artwork/StudioWork/Forest with Dogwoods.jpg',
       name: 'Forest with Dogwoods',
       info: { type: 'Acrylic on Canvas', size: '36x48”', status: 'Sold' },
-      tags: ['sold', 'Landscapes', 'Commissions']
+      tags: ['sold', 'landscapes', 'commissions']
     },
     {
       path: '/artwork/StudioWork/Forest.jpg',
       name: 'Forest',
       info: { type: 'Acrylic on Panel', size: '12x24”', status: 'Sold' },
-      tags: ['sold', 'Landscapes']
+      tags: ['sold', 'landscapes']
     }
   ]
 }
