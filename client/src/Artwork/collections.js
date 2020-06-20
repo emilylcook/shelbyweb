@@ -134,12 +134,6 @@ const EnPleinAir = {
       tags: ['available']
     },
     {
-      path: '/artwork/EnPleinAir/isle of Lewis.jpg',
-      name: 'Isle of Lewis',
-      info: { type: 'Acrylic on Panel', size: '4x12”', status: 'Available' },
-      tags: ['available']
-    },
-    {
       path: '/artwork/EnPleinAir/deception_pass.jpg',
       name: 'Deception Pass',
       info: { type: 'Acrylic on Panel', size: '6x12”', status: 'Sold' },
@@ -179,6 +173,12 @@ const EnPleinAir = {
       path: '/artwork/EnPleinAir/Twin Trees.jpg',
       name: 'Twin Trees',
       info: { type: 'Acrylic on Panel', size: '7x5”', status: 'Available' },
+      tags: ['available']
+    },
+    {
+      path: '/artwork/EnPleinAir/Isle of Lewis.jpg',
+      name: 'Isle of Lewis',
+      info: { type: 'Acrylic on Panel', size: '4x12”', status: 'Available' },
       tags: ['available']
     }
   ]
