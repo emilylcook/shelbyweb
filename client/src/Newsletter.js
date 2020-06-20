@@ -54,9 +54,10 @@ const Newsletter = () => {
     <div className={classes.newsLetterContainer}>
       <Grid container className={classes.newsletter}>
         <Grid item xs={12} className={classes.newsletterHeader}>
-          <Typography variant="h5">Join the List!</Typography>
+          <Typography variant="h5">Join the Collector's List!</Typography>
           <Typography paragraph>
-            Sign up for my Collector's list to keep up to date on new releases and information:
+            Sign up to receive VIP exclusive discounts and first access to collection releases.
+            We promise to never spam you!
           </Typography>
         </Grid>
         <Grid item xs={12} className={classes.form}>

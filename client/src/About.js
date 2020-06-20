@@ -98,21 +98,26 @@ const About = () => {
           <Grid item xs={12} sm={12} md={7} className={clsx(classes.section)}>
             <HorizontalTitle title="About" includeSpacer />
             <Typography paragraph>
-              Shelby Cook was born and raised in the Pacific Northwest. She has enjoyed drawing and
-              painting since she was young, inspired by the landscape she grew up in. She studied
+              Shelby K Cook was born and raised in the Pacific Northwest of the USA. She has enjoyed drawing and
+              painting since she was young, inspired by the natural landscape she grew up in. She studied
               fine art in college, earning her BFA from Western Washington University along with a
               BA in Art History. Specializing in painting, Cook uses contemporary realism to capture
               moments and tell stories about the landscapes and cities she visits.
             </Typography>
             <Typography paragraph>
               Cook frequently paints en plein air, relying on the changes of light and temperature
-              of the landscape around her to help her capture the feeling of being in the
-              environment. Her studio work focuses more on exploring the visual representation of
-              insomnia. She uses nocturnes to capture the isolation associated, as well as bars and
-              streets as subject matter to showcase the variety of human interactions that take
-              place when people are either choosing not to sleep or are physically unable to.
+              around her to help her capture the feeling of being in the environment. She travels with 
+              her portable easel and aims to paint in as many countries as possible. In her studio work, 
+              she focuses on works based on her travels and memories, combining nostalgia with scenery as 
+              a way to remember and capture experiences. Alongside these, she uses nocturnes to explore 
+              the visual representation of insomnia. Darkness captures the isolation associated, while the 
+              subject matter of bars and nighttime streets showcase the variety of human interactions that 
+              take place when people are either choosing not to sleep or are physically unable to.
             </Typography>
-            <Typography paragraph>Cook currently works and resides in Seattle, WA.</Typography>
+            <Typography paragraph>
+              Cook currently works and resides in Seattle, WA and spends her time travelling across the 
+              world whenever she is able.
+            </Typography>
           </Grid>
           <Grid item xs={12} sm={12} md={5} className={clsx(classes.section)}>
             <Grid container className={classes.rightContainer}>
@@ -142,8 +147,7 @@ const About = () => {
               </Grid>
               <Grid item xs={12} md={10}>
                 <Typography paragraph>
-                  If you are interested in available pieces, please reach out via email or
-                  Instagram.
+                  If you are interested in available pieces or collaborations, please reach out via email.
                 </Typography>
               </Grid>
             </Grid>
