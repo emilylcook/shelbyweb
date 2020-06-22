@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 
 import { makeStyles } from '@material-ui/core/styles'
-import { Typography, useMediaQuery } from '@material-ui/core'
+import { Typography, Grid, useMediaQuery } from '@material-ui/core'
 import { useTheme } from '@material-ui/core/styles'
 
 import clsx from 'clsx'
@@ -41,15 +41,14 @@ const Artwork = ({ match }) => {
 
   function handleFilter(filter) {
     const selected = selectedFilters.has(filter)
-    let newSet = selectedFilters
+    // let newSet = selectedFilters
 
-    if (selected) {
-      newSet.delete(filter)
-    } else {
-      newSet.add(filter)
+    let singleFilterSet = new Set()
+    if (!selected) {
+      singleFilterSet.add(filter)
     }
 
-    setSelectedFilters(new Set(newSet))
+    setSelectedFilters(new Set(singleFilterSet))
   }
 
   function clearFilters() {
@@ -85,29 +84,32 @@ const Artwork = ({ match }) => {
             <HorizontalTitle title={title} includeSpacer titleClass={classes.pageTitle} />
           </div>
           {filters && (
-            <div className={classes.filterSection}>
-              <div
+            <Grid container className={classes.filterSection}>
+              <Grid
+                item
                 className={clsx(classes.filter, {
                   [classes.activeFilter]: selectedFilters.size === 0
                 })}
                 onClick={() => clearFilters()}
               >
                 All
-              </div>
+              </Grid>
+
               {filters.map(filter => {
                 const isActive = selectedFilters.has(filter.toLowerCase())
 
                 return (
-                  <div
+                  <Grid
+                    item
                     key={filter}
                     className={clsx(classes.filter, { [classes.activeFilter]: isActive })}
                     onClick={() => handleFilter(filter.toLowerCase())}
                   >
                     {filter}
-                  </div>
+                  </Grid>
                 )
               })}
-            </div>
+            </Grid>
           )}
           {loading && (
             <div className={classes.progress}>
@@ -122,10 +124,9 @@ const Artwork = ({ match }) => {
             {Object.entries(art).map(([key, { path, name, info }]) => {
               const isHovered = hoverOn === key
               return (
-                <div>
+                <div key={key}>
                   <div className={classes.marginBottom}>
                     <div
-                      key={key}
                       className={clsx(classes.tile, { [classes.tileHover]: isHovered })}
                       onMouseEnter={() => {
                         if (!hideModal) {
