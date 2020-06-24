@@ -57,7 +57,6 @@ const Newsletter = () => {
           <Typography variant="h5">Join the Collector's List!</Typography>
           <Typography paragraph>
             Sign up to receive VIP exclusive discounts and first access to collection releases.
-            We promise to never spam you!
           </Typography>
         </Grid>
         <Grid item xs={12} className={classes.form}>
@@ -84,6 +83,11 @@ const Newsletter = () => {
           >
             Subscribe
           </Button>
+        </Grid>
+        <Grid item xs={12}>
+          <Typography paragraph className={classes.footer}>
+            We promise to never spam you!
+          </Typography>
         </Grid>
       </Grid>
     </div>
@@ -135,5 +139,12 @@ const useStyles = makeStyles(theme => ({
     [theme.breakpoints.down('xs')]: {
       width: '100%'
     }
+  },
+  footer: {
+    fontStyle: 'italic',
+    fontSize: '.8rem',
+    letterSpacing: 1,
+    opacity: 0.8,
+    marginTop: 10
   }
 }))

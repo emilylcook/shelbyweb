@@ -106,7 +106,7 @@ function Hero({ heroImg, grayscale = '34%', subText, title }) {
       <Typography className={classes.photoCredit}>
         <Link
           className={classes.link}
-          href="https://www.instagram.com/erik.aleksandrovich/?hl=en"
+          href="https://erikaleksandrovich.com"
           rel="noopener noreferrer"
           target="_blank"
         >
