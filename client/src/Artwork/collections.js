@@ -8,6 +8,12 @@ const StudioWork = {
       tags: ['sold', 'pet portraits']
     },
     {
+      path: '/artwork/StudioWork/Self-Portrait in the Passenger Seat.png',
+      name: 'Self-Portrait in the Passenger Seat',
+      info: { type: 'Oil on Canvas', size: '10” Round', status: 'Available' },
+      tags: ['available', 'portraits', ]
+    },
+    {
       path: '/artwork/StudioWork/Lopez.jpg',
       name: 'Lopez',
       info: { type: 'Acrylic on Panel', size: '10x10”', status: 'Available' },
@@ -44,12 +50,6 @@ const StudioWork = {
       tags: ['sold', 'portraits']
     },
     {
-      path: '/artwork/StudioWork/Aerial Silks.jpg',
-      name: 'Aerial Silks',
-      info: { type: 'Acrylic on Panel', size: '12x6”', status: 'Sold' },
-      tags: ['sold', 'portraits']
-    },
-    {
       path: '/artwork/StudioWork/Self-Portrait.png',
       name: 'Self Portrait',
       info: { type: 'Acrylic on Canvas', size: '12” Round', status: 'Available' },
@@ -74,9 +74,9 @@ const StudioWork = {
       tags: ['sold', 'pet portraits', 'commissions']
     },
     {
-      path: '/artwork/StudioWork/Lyra.jpg',
-      name: 'Lyra',
-      info: { type: 'Acrylic on Panel', size: '12x6”', status: 'Sold' },
+      path: '/artwork/StudioWork/Lyra and Silks.jpg',
+      name: 'Lyra and Silks (diptych)',
+      info: { type: 'Acrylic on Panel', size: '12x12”', status: 'Sold' },
       tags: ['sold', 'portraits']
     },
     {
@@ -84,12 +84,6 @@ const StudioWork = {
       name: 'Nalya',
       info: { type: 'Acrylic on Canvas', size: '16x20”', status: 'Sold' },
       tags: ['sold', 'pet portraits', 'commissions']
-    },
-    {
-      path: '/artwork/StudioWork/Self-Portrait in the Passenger Seat.png',
-      name: 'Self-Portrait in the Passenger Seat',
-      info: { type: 'Oil on Canvas', size: '10” Round', status: 'Available' },
-      tags: ['available', 'portraits', ]
     },
     {
       path: '/artwork/StudioWork/Bear.jpg',
