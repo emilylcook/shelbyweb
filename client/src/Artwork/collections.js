@@ -122,6 +122,12 @@ const EnPleinAir = {
   filters: ['Available'],
   art: [
     {
+      path: '/artwork/EnPleinAir/Isle of Lewis.jpg',
+      name: 'Isle of Lewis',
+      info: { type: 'Acrylic on Panel', size: '4x12”', status: 'Available' },
+      tags: ['available']
+    },
+    {
       path: '/artwork/EnPleinAir/cutts_island.jpg',
       name: 'Cutts Island',
       info: { type: 'Oil on Canvas Board', size: '9x12”', status: 'Available' },
@@ -167,12 +173,6 @@ const EnPleinAir = {
       path: '/artwork/EnPleinAir/Twin Trees.jpg',
       name: 'Twin Trees',
       info: { type: 'Acrylic on Panel', size: '7x5”', status: 'Available' },
-      tags: ['available']
-    },
-    {
-      path: '/artwork/EnPleinAir/Isle of Lewis.jpg',
-      name: 'Isle of Lewis',
-      info: { type: 'Acrylic on Panel', size: '4x12”', status: 'Available' },
       tags: ['available']
     }
   ]
