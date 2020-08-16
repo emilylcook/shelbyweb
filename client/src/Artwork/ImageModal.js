@@ -3,11 +3,24 @@ import { makeStyles } from '@material-ui/styles'
 import MuiDialogTitle from '@material-ui/core/DialogTitle'
 import { IconButton, Typography, Dialog, DialogContent, useMediaQuery } from '@material-ui/core'
 import CloseIcon from '@material-ui/icons/Close'
+import KeyboardArrowRightIcon from '@material-ui/icons/KeyboardArrowRight'
+import KeyboardArrowLeftIcon from '@material-ui/icons/KeyboardArrowLeft'
 import { useTheme } from '@material-ui/core/styles'
 
 const useStyles = makeStyles(theme => ({
   root: {
     maxWidth: 'none'
+  },
+  elevation: {
+    background: 'none',
+    boxShadow: 'none',
+    height: '100vh',
+    width: '100vw',
+    maxHeight: '100vh',
+    maxWidth: '100vw'
+  },
+  backdrop: {
+    backgroundColor: 'rgba(0, 0, 0, 0.9)'
   },
   image: {
     maxWidth: '80vw',
@@ -25,13 +38,18 @@ const useStyles = makeStyles(theme => ({
   button: {
     marginBottom: 30
   },
+  icon: { fontSize: 80 },
+  closeIcon: { fontSize: 40 },
   closeButton: {
-    position: 'absolute',
-    right: 0,
-    top: 0,
-    color: theme.palette.grey[500]
+    position: 'fixed',
+    right: 10,
+    top: 10,
+    color: 'white'
   },
   details: {
+    marginTop: 10,
+    textAlign: 'center',
+    color: 'white',
     [theme.breakpoints.down('sm')]: {
       fontSize: 14
     }
@@ -40,11 +58,34 @@ const useStyles = makeStyles(theme => ({
     display: 'flex',
     justifyContent: 'space-between',
     padding: '0px 10px',
-    borderTop: 'thin solid #d5d5d5'
+    borderTop: 'thin solid #d5d5d5',
+    height: '99vh'
   },
-  slideControl: {
-    fontSize: 10,
-    cursor: 'pointer'
+
+  backControl: {
+    position: 'absolute',
+    top: '50%',
+    left: 0,
+    color: 'white',
+    [theme.breakpoints.down('xs')]: {
+      top: '65%'
+    }
+  },
+
+  nextControl: {
+    position: 'absolute',
+    top: '50%',
+    right: 0,
+    color: 'white',
+    [theme.breakpoints.down('xs')]: {
+      top: '65%'
+    }
+  },
+  contentRoot: {
+    textAlign: 'center',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center'
   }
 }))
 
@@ -54,7 +95,7 @@ function DialogTitle({ children, onClose }) {
     <MuiDialogTitle disableTypography className={classes.titleRoot}>
       <Typography variant="h6">{children}</Typography>
       <IconButton aria-label="close" className={classes.closeButton} onClick={onClose}>
-        <CloseIcon />
+        <CloseIcon className={classes.closeIcon} />
       </IconButton>
     </MuiDialogTitle>
   )
@@ -118,34 +159,48 @@ function ImageModal({ open, handleClose, collection, details = {} }) {
   return (
     <Dialog
       fullScreen={fullScreen}
-      classes={{ root: classes.root }}
+      classes={{ root: classes.root, elevation: classes.elevation }}
       open={open}
       onClose={handleClose}
       maxWidth="xl"
       onKeyDown={onKeyPress}
+      BackdropProps={{
+        classes: {
+          root: classes.backdrop
+        }
+      }}
+      PaperProps={{
+        classes: {
+          root: classes.elevation
+        }
+      }}
     >
-      <DialogTitle className={classes.title} onClose={handleClose}>
-        {/* Request Info */}
-      </DialogTitle>
-      <DialogContent className={classes.content}>
-        <img className={classes.image} alt={name} src={path} />
-        <div className={classes.details}>
-          <Typography className={classes.title}>{name}</Typography>
+      <IconButton
+        aria-label="previous"
+        className={classes.backControl}
+        onClick={() => setPrevious()}
+      >
+        <KeyboardArrowLeftIcon className={classes.icon} />
+      </IconButton>
+      <IconButton aria-label="mext" className={classes.nextControl} onClick={() => setNext()}>
+        <KeyboardArrowRightIcon className={classes.icon} />
+      </IconButton>
+      <DialogTitle className={classes.title} onClose={handleClose}></DialogTitle>
+      <DialogContent className={classes.content} classes={{ root: classes.contentRoot }}>
+        <div>
+          <img className={classes.image} alt={name} src={path} />
           <div className={classes.details}>
-            {info.type && <Typography>{info.type}</Typography>}
-            {info.size && <Typography>{info.size}</Typography>}
-            {info.status && <Typography>{info.status}</Typography>}
+            <Typography className={classes.title}>
+              <b>{name}</b>
+            </Typography>
+            <div className={classes.details}>
+              {info.type && <Typography>{info.type}</Typography>}
+              {info.size && <Typography>{info.size}</Typography>}
+              {info.status && <Typography>{info.status}</Typography>}
+            </div>
           </div>
         </div>
       </DialogContent>
-      <div className={classes.changeSlide}>
-        <Typography className={classes.slideControl} onClick={() => setPrevious()}>
-          {'<'} previous
-        </Typography>
-        <Typography className={classes.slideControl} onClick={() => setNext()}>
-          next {'>'}
-        </Typography>
-      </div>
     </Dialog>
   )
 }

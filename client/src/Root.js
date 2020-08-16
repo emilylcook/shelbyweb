@@ -12,7 +12,7 @@ import App from './App'
 const theme = createMuiTheme(themeConfig)
 
 const useStyles = makeStyles(() => ({
-  success: { backgroundColor: '#407982' },
+  success: { backgroundColor: '#4f5a4d' },
   error: { backgroundColor: 'blue' },
   warning: { backgroundColor: 'green' },
   info: { backgroundColor: 'yellow' }
