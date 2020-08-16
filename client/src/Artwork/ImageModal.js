@@ -7,88 +7,6 @@ import KeyboardArrowRightIcon from '@material-ui/icons/KeyboardArrowRight'
 import KeyboardArrowLeftIcon from '@material-ui/icons/KeyboardArrowLeft'
 import { useTheme } from '@material-ui/core/styles'
 
-const useStyles = makeStyles(theme => ({
-  root: {
-    maxWidth: 'none'
-  },
-  elevation: {
-    background: 'none',
-    boxShadow: 'none',
-    height: '100vh',
-    width: '100vw',
-    maxHeight: '100vh',
-    maxWidth: '100vw'
-  },
-  backdrop: {
-    backgroundColor: 'rgba(0, 0, 0, 0.9)'
-  },
-  image: {
-    maxWidth: '80vw',
-    maxHeight: '70vh',
-    width: 'auto',
-    margin: 'auto',
-    height: 'auto',
-    [theme.breakpoints.down('md')]: {
-      maxHeight: '60vh'
-    },
-    [theme.breakpoints.down('sm')]: {
-      maxHeight: '50vh'
-    }
-  },
-  button: {
-    marginBottom: 30
-  },
-  icon: { fontSize: 80 },
-  closeIcon: { fontSize: 40 },
-  closeButton: {
-    position: 'fixed',
-    right: 10,
-    top: 10,
-    color: 'white'
-  },
-  details: {
-    marginTop: 10,
-    textAlign: 'center',
-    color: 'white',
-    [theme.breakpoints.down('sm')]: {
-      fontSize: 14
-    }
-  },
-  changeSlide: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    padding: '0px 10px',
-    borderTop: 'thin solid #d5d5d5',
-    height: '99vh'
-  },
-
-  backControl: {
-    position: 'absolute',
-    top: '50%',
-    left: 0,
-    color: 'white',
-    [theme.breakpoints.down('xs')]: {
-      top: '65%'
-    }
-  },
-
-  nextControl: {
-    position: 'absolute',
-    top: '50%',
-    right: 0,
-    color: 'white',
-    [theme.breakpoints.down('xs')]: {
-      top: '65%'
-    }
-  },
-  contentRoot: {
-    textAlign: 'center',
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center'
-  }
-}))
-
 function DialogTitle({ children, onClose }) {
   const classes = useStyles()
   return (
@@ -206,3 +124,85 @@ function ImageModal({ open, handleClose, collection, details = {} }) {
 }
 
 export default ImageModal
+
+const useStyles = makeStyles(theme => ({
+  root: {
+    maxWidth: 'none'
+  },
+  elevation: {
+    background: 'none',
+    boxShadow: 'none',
+    height: '100vh',
+    width: '100vw',
+    maxHeight: '100vh',
+    maxWidth: '100vw'
+  },
+  backdrop: {
+    backgroundColor: 'rgba(0, 0, 0, 0.9)'
+  },
+  image: {
+    maxWidth: '80vw',
+    maxHeight: '70vh',
+    width: 'auto',
+    margin: 'auto',
+    height: 'auto',
+    [theme.breakpoints.down('md')]: {
+      maxHeight: '60vh'
+    },
+    [theme.breakpoints.down('sm')]: {
+      maxHeight: '50vh'
+    }
+  },
+  button: {
+    marginBottom: 30
+  },
+  icon: { fontSize: 80 },
+  closeIcon: { fontSize: 40 },
+  closeButton: {
+    position: 'fixed',
+    right: 10,
+    top: 10,
+    color: 'white'
+  },
+  details: {
+    marginTop: 10,
+    textAlign: 'center',
+    color: 'white',
+    [theme.breakpoints.down('sm')]: {
+      fontSize: 14
+    }
+  },
+  changeSlide: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    padding: '0px 10px',
+    borderTop: 'thin solid #d5d5d5',
+    height: '99vh'
+  },
+
+  backControl: {
+    position: 'absolute',
+    top: '50%',
+    left: 0,
+    color: 'white',
+    [theme.breakpoints.down('xs')]: {
+      top: '65%'
+    }
+  },
+
+  nextControl: {
+    position: 'absolute',
+    top: '50%',
+    right: 0,
+    color: 'white',
+    [theme.breakpoints.down('xs')]: {
+      top: '65%'
+    }
+  },
+  contentRoot: {
+    textAlign: 'center',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center'
+  }
+}))

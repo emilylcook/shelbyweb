@@ -1,6 +1,6 @@
 {
   "name": "shelbyweb",
-  "version": "0.5.42",
+  "version": "0.5.45",
   "private": true,
   "dependencies": {
     "@fortawesome/fontawesome-free": "^5.11.2",
@@ -20,7 +20,8 @@
     "react-use-form-state": "^0.11.0",
     "redux": "^4.0.4",
     "redux-persist": "^6.0.0",
-    "redux-starter-kit": "^0.8.0"
+    "redux-starter-kit": "^0.8.0",
+    "typescript": "^3.9.7"
   },
   "devDependencies": {
     "prettier": "^1.18.2",
@@ -40,7 +41,7 @@
   "prettier": {
     "singleQuote": true,
     "printWidth": 100,
-    "semi": false
+    "semi": true
   },
   "lint-staged": {
     "src/**/*.{js,jsx,json,css}": [

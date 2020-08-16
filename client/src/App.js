@@ -1,19 +1,20 @@
-import React from 'react'
-import { Route, Switch, Redirect } from 'react-router-dom'
-import CssBaseline from '@material-ui/core/CssBaseline'
-import { makeStyles } from '@material-ui/core/styles'
-import '@fortawesome/fontawesome-free/css/all.css'
+import React from 'react';
+import { Route, Switch, Redirect } from 'react-router-dom';
+import CssBaseline from '@material-ui/core/CssBaseline';
+import { makeStyles } from '@material-ui/core/styles';
+import '@fortawesome/fontawesome-free/css/all.css';
 
-import Home from './Home/'
+import Home from './Home/';
 // import Connect from './Connect'
-import About from './About'
-import Footer from './Footer'
-import Artwork from './Artwork/'
-import Header from './Header'
-import Commissions from './Commissions'
-import { useScrollRestoration } from './utils'
+import About from './About';
+import Footer from './Footer';
+import Artwork from './Artwork/';
+import Header from './Header';
+import ShoppingCart from './Cart/ShoppingCart';
+import Commissions from './Commissions';
+import { useScrollRestoration } from './utils';
 
-import getAllImages from './Artwork/imagesForPreload'
+import getAllImages from './Artwork/imagesForPreload';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -45,10 +46,10 @@ const useStyles = makeStyles(theme => ({
   hidden: {
     display: 'none'
   }
-}))
+}));
 
 const PreloadImages = classes => {
-  let allImages = getAllImages()
+  let allImages = getAllImages();
   return (
     <div id="preload" className={classes.hidden} style={{ display: 'none' }}>
       {allImages.map(item => (
@@ -61,12 +62,12 @@ const PreloadImages = classes => {
         />
       ))}
     </div>
-  )
-}
+  );
+};
 
 const App = () => {
-  useScrollRestoration()
-  const classes = useStyles()
+  useScrollRestoration();
+  const classes = useStyles();
 
   return (
     <div>
@@ -85,6 +86,7 @@ const App = () => {
               {/* <Route path="/connect" exact component={Connect} /> */}
               <Route path="/commissions" exact component={Commissions} />
               <Route path="/artwork/:collection" component={Artwork} />
+              <Route path="/cart" component={ShoppingCart} />
               <Redirect to="/" />
             </Switch>
           </div>
@@ -93,7 +95,7 @@ const App = () => {
         </main>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default App
+export default App;
