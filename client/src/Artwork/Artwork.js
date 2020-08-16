@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react'
 
 import { makeStyles } from '@material-ui/core/styles'
-import { Typography, Grid, useMediaQuery } from '@material-ui/core'
-import { useTheme } from '@material-ui/core/styles'
+import { Typography, Grid } from '@material-ui/core'
 
 import clsx from 'clsx'
 
@@ -14,7 +13,6 @@ import useCollectionData from '../utils/useCollectionData'
 const Artwork = ({ match }) => {
   const classes = useStyles()
   const [hoverOn, setHoverOn] = useState(null)
-  const theme = useTheme()
 
   const [imageModalOpen, setImageModalOpen] = useState(false)
   const [imageModalDetails, setImageModalDetails] = useState({})
@@ -25,7 +23,7 @@ const Artwork = ({ match }) => {
   const [loading, setLoading] = useState(true)
   const [collectionsLoaded, setCollectionsLoaded] = useState([])
 
-  const hideModal = useMediaQuery(theme.breakpoints.down('xs'))
+  const hideModal = false // useMediaQuery(theme.breakpoints.down('xs'))
 
   const { loading: loadingCollections, collections } = useCollectionData()
 
