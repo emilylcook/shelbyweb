@@ -1,0 +1,41 @@
+const allImages = [
+  '/artwork/StudioWork/Cat Nap.png',
+  '/artwork/StudioWork/Self-Portrait in the Passenger Seat.png',
+  '/artwork/StudioWork/Lopez.jpg',
+  '/artwork/StudioWork/Stalker.jpg',
+  '/artwork/StudioWork/The Crow.jpg',
+  '/artwork/StudioWork/The Secret.jpg',
+  '/artwork/StudioWork/Tofino.jpg',
+  '/artwork/StudioWork/Barbara.jpg',
+  '/artwork/StudioWork/Self-Portrait.png',
+  '/artwork/StudioWork/Botanical Bench.jpg',
+  '/artwork/StudioWork/Pacific Crest Trail.jpg',
+  '/artwork/StudioWork/Milo.jpg',
+  '/artwork/StudioWork/Lyra and Silks.jpg',
+  '/artwork/StudioWork/Nalya.jpg',
+  '/artwork/StudioWork/Bear.jpg',
+  '/artwork/StudioWork/Fenced In.jpg',
+  '/artwork/StudioWork/December.jpg',
+  '/artwork/StudioWork/Forest with Dogwoods.jpg',
+  '/artwork/StudioWork/Forest.jpg',
+  '/artwork/EnPleinAir/Isle of Lewis.jpg',
+  '/artwork/EnPleinAir/cutts_island.jpg',
+  '/artwork/EnPleinAir/deception_pass.jpg',
+  '/artwork/EnPleinAir/lopez_island.jpg',
+  '/artwork/EnPleinAir/Cattle Point.jpg',
+  '/artwork/EnPleinAir/Gardenias.jpg',
+  '/artwork/EnPleinAir/Apples.jpg',
+  '/artwork/EnPleinAir/Mt.Erie.jpg',
+  '/artwork/EnPleinAir/Twin Trees.jpg',
+  '/artwork/treelines/Ascent.jpg',
+  '/artwork/treelines/Portal.jpg',
+  '/artwork/treelines/Merge.jpg',
+  '/artwork/treelines/Autumn.jpg',
+  '/artwork/treelines/Mist.jpg',
+  '/artwork/treelines/Filter.jpg',
+  '/artwork/nocturnes/JamesStreet.jpg'
+]
+
+export default function getAllImages() {
+  return allImages
+}

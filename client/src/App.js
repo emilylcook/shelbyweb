@@ -13,7 +13,7 @@ import Header from './Header'
 import Commissions from './Commissions'
 import { useScrollRestoration } from './utils'
 
-import getCollection from './Artwork/collections'
+import getAllImages from './Artwork/imagesForPreload'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -48,16 +48,16 @@ const useStyles = makeStyles(theme => ({
 }))
 
 const PreloadImages = classes => {
-  let allArt = getCollection('all').collection
+  let allImages = getAllImages()
   return (
     <div id="preload" className={classes.hidden} style={{ display: 'none' }}>
-      {Object.entries(allArt).map(([key, { path, name, info }]) => (
+      {allImages.map(item => (
         <img
-          key={key}
+          key={item}
           className={classes.hidden}
           style={{ display: 'none' }}
-          alt={name}
-          src={path}
+          alt={item}
+          src={item}
         />
       ))}
     </div>

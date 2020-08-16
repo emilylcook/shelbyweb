@@ -5,8 +5,10 @@ import { ConnectedRouter } from 'connected-react-router'
 import { MuiThemeProvider, createMuiTheme, makeStyles } from '@material-ui/core/styles'
 import { SnackbarProvider } from 'notistack'
 
+import useCollectionData from './utils/useCollectionData'
 import themeConfig from './theme'
 import App from './App'
+
 const theme = createMuiTheme(themeConfig)
 
 const useStyles = makeStyles(() => ({
@@ -18,6 +20,9 @@ const useStyles = makeStyles(() => ({
 
 export default function Root({ store, history, persistor }) {
   const classes = useStyles()
+
+  // Initialize Collections
+  useCollectionData()
 
   return (
     <Provider store={store}>

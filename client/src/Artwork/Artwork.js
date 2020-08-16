@@ -7,11 +7,9 @@ import { useTheme } from '@material-ui/core/styles'
 import clsx from 'clsx'
 
 import { HorizontalTitle, Progress } from '../common/'
-
 import WidthContainer from '../WidthContainer'
 import ImageModal from './ImageModal'
-
-import getCollection from './collections'
+import useCollectionData from '../utils/useCollectionData'
 
 const Artwork = ({ match }) => {
   const classes = useStyles()
@@ -22,11 +20,21 @@ const Artwork = ({ match }) => {
   const [imageModalDetails, setImageModalDetails] = useState({})
   const [selectedFilters, setSelectedFilters] = useState(new Set())
   const [hideArtwork, setHideArtwork] = useState(true)
-  const { collection, title } = getCollection(match.params.collection)
+
+  const [collection, setCollection] = useState(null)
   const [loading, setLoading] = useState(true)
   const [collectionsLoaded, setCollectionsLoaded] = useState([])
 
   const hideModal = useMediaQuery(theme.breakpoints.down('xs'))
+
+  const { loading: loadingCollections, collections } = useCollectionData()
+
+  useEffect(() => {
+    if (!loadingCollections) {
+      const selectedCollection = collections.find(x => x.id === match.params.collection)
+      setCollection(selectedCollection)
+    }
+  }, [match, loadingCollections, collections])
 
   useEffect(() => {
     setHideArtwork(true)
@@ -41,7 +49,6 @@ const Artwork = ({ match }) => {
 
   function handleFilter(filter) {
     const selected = selectedFilters.has(filter)
-    // let newSet = selectedFilters
 
     let singleFilterSet = new Set()
     if (!selected) {
@@ -55,7 +62,12 @@ const Artwork = ({ match }) => {
     setSelectedFilters(new Set())
   }
 
+  if (!collection) {
+    return null
+  }
+
   const { filters } = collection
+
   let art = collection.art
 
   function filteredArt(art) {
@@ -81,7 +93,11 @@ const Artwork = ({ match }) => {
       <div className={classes.content}>
         <WidthContainer className={classes.mainContent}>
           <div className={classes.titleSection}>
-            <HorizontalTitle title={title} includeSpacer titleClass={classes.pageTitle} />
+            <HorizontalTitle
+              title={collection?.title}
+              includeSpacer
+              titleClass={classes.pageTitle}
+            />
           </div>
           {filters && (
             <Grid container className={classes.filterSection}>
