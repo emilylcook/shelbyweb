@@ -14,7 +14,7 @@ import { getNumberOfItemsInCart } from '../utils/useCartData';
 export default function ButtonAppBar() {
   const classes = useStyles();
   const [hoverOn, setHoverOn] = useState(null);
-  const [itemsInCart, setItemsInCart] = useState(); // ??
+  const [itemsInCart, setItemsInCart] = useState();
 
   useEffect(() => {
     const interval = setInterval(() => {
