@@ -13,6 +13,7 @@
       ],
       "art": [
         {
+          "id": "catNap",
           "path": "/artwork/StudioWork/Cat Nap.png",
           "name": "Cat Nap",
           "info": { "type": "Acrylic on Panel", "size": null, "status": "Sold" },
@@ -22,31 +23,46 @@
           "path": "/artwork/StudioWork/Self-Portrait in the Passenger Seat.png",
           "name": "Self-Portrait in the Passenger Seat",
           "info": { "type": "Oil on Canvas", "size": "10” Round", "status": "Available" },
-          "tags": ["available", "portraits"]
+          "tags": ["available", "portraits"],
+          "price": 1200,
+          "quantity": 1,
+          "id": "selfPortraitInPassengerSeat"
         },
         {
           "path": "/artwork/StudioWork/Lopez.jpg",
           "name": "Lopez",
           "info": { "type": "Acrylic on Panel", "size": "10x10”", "status": "Available" },
-          "tags": ["available", "landscapes"]
+          "tags": ["available", "landscapes"],
+          "price": 1100,
+          "quantity": 1,
+          "id": "lopez"
         },
         {
           "path": "/artwork/StudioWork/Stalker.jpg",
           "name": "Stalker",
           "info": { "type": "Acrylic on Panel", "size": "10x10”", "status": "Available" },
-          "tags": ["available", "still life"]
+          "tags": ["available", "still life"],
+          "price": 900,
+          "quantity": 1,
+          "id": "stalker"
         },
         {
           "path": "/artwork/StudioWork/The Crow.jpg",
           "name": "The Crow",
           "info": { "type": "Acrylic on Panel", "size": "5x7”", "status": "Available" },
-          "tags": ["available", "still life"]
+          "tags": ["available", "still life"],
+          "price": 600,
+          "quantity": 1,
+          "id": "theCrow"
         },
         {
           "path": "/artwork/StudioWork/The Secret.jpg",
           "name": "The Secret",
           "info": { "type": "Acrylic on Canvas", "size": "8x8”", "status": "Available" },
-          "tags": ["available", "landscapes"]
+          "tags": ["available", "landscapes"],
+          "price": 500,
+          "quantity": 1,
+          "id": "theSecret"
         },
         {
           "path": "/artwork/StudioWork/Tofino.jpg",

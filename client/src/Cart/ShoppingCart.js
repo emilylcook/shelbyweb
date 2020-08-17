@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Grid, createStyles, makeStyles, CircularProgress, TextField } from '@material-ui/core';
-
+import { Grid, makeStyles, CircularProgress, FormControlLabel, TextField } from '@material-ui/core';
+import Checkbox from '@material-ui/core/Checkbox';
 import Stepper from '@material-ui/core/Stepper';
 import Step from '@material-ui/core/Step';
 import StepLabel from '@material-ui/core/StepLabel';
@@ -8,11 +8,12 @@ import StepContent from '@material-ui/core/StepContent';
 import Button from '@material-ui/core/Button';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
+import { useSnackbar } from 'notistack';
 import clsx from 'clsx';
 
+import { clearCart, getItemsInCart, removeItemFromCart } from '../utils/useCartData';
 import Square from './Square';
-
-const emailRegex = /[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,3}/;
+import { billingAddressFields, emailRegex, shippingAddressFields } from './helpers';
 
 export default function ShoppingCart() {
   const classes = useStyles({});
@@ -20,42 +21,95 @@ export default function ShoppingCart() {
   const [completed, setCompleted] = useState(false);
   const [isLoad, setLoad] = useState(false);
   const [activeStep, setActiveStep] = React.useState(0);
+  const { enqueueSnackbar } = useSnackbar();
+
+  const [itemsInCart, setItemsInCart] = useState(getItemsInCart() || []);
   const steps = getSteps();
 
-  const [formFields, setFormFields] = React.useState({});
+  const [formFields, setFormFields] = React.useState({ billingSameAsShipping: true });
   const setFormField = (name, val) => {
     setFormFields({ ...formFields, [name]: val });
   };
 
-  console.log('formFields', formFields);
   const handleNext = () => {
     setActiveStep(prevActiveStep => prevActiveStep + 1);
   };
 
+  const handleCompletePayment = () => {
+    // TODO api call to actually do this
+
+    // on success:
+    setActiveStep(prevActiveStep => prevActiveStep + 1);
+    clearCart();
+    setCompleted(true);
+  };
+
+  const pricesInCart = itemsInCart.flatMap(x => x.price);
+  let subTotal = pricesInCart
+    .reduce(function(a, b) {
+      return a + b;
+    }, 0)
+    .toFixed(2);
+
+  let taxes = null;
+  let shipping = null;
+  let totalAmount = parseFloat(subTotal);
+  if (shipping) {
+    totalAmount += shipping;
+  }
+  if (taxes) {
+    totalAmount += taxes;
+  }
+
   const checkIfValid = () => {
     let valid = false;
-    if (activeStep === 0) {
-      if (formFields.email && emailRegex.test(formFields.email)) {
-        valid = true;
-      }
-    } else {
-      // todo shipping/billing validation
+    switch (activeStep) {
+      case 0:
+        // validate email
+        if (formFields.email && emailRegex.test(formFields.email)) {
+          valid = true;
+        }
+        break;
+      case 1:
+        // validate shipping & billing
+        const shippingAddressRequired = shippingAddressFields
+          .filter(x => x.required)
+          .map(f => f.key);
 
-      valid = true;
+        const shippingValid = shippingAddressRequired.every(x => formFields[x]);
+
+        if (shippingValid && formFields.billingSameAsShipping) {
+          valid = true;
+        } else if (shippingValid) {
+          const billingAddressRequired = billingAddressFields
+            .filter(x => x.required)
+            .map(f => f.key);
+          const billingValid = billingAddressRequired.every(x => formFields[x]);
+
+          if (billingValid) {
+            valid = true;
+          }
+        }
+
+        break;
+      case 2:
+        // validate payment info collected
+        if (formFields.nonce) {
+          valid = true;
+        }
+        break;
+      case 3:
+        valid = true;
+        break;
+      default:
+        valid = true;
+        break;
     }
 
     return valid;
   };
 
   const canGoToNextStep = checkIfValid();
-
-  const handleBack = () => {
-    setActiveStep(prevActiveStep => prevActiveStep - 1);
-  };
-
-  const handleReset = () => {
-    setActiveStep(0);
-  };
 
   useEffect(() => {
     let sqPaymentScript = document.createElement('script');
@@ -72,7 +126,7 @@ export default function ShoppingCart() {
   });
 
   function getSteps() {
-    return ['Email', 'Shipping & Billing address', 'Payment'];
+    return ['Email', 'Shipping & Billing', 'Payment', 'Review & Purchase'];
   }
 
   function getStepContent(step) {
@@ -88,7 +142,7 @@ export default function ShoppingCart() {
               onChange={event => {
                 setFormField('email', event.target.value);
               }}
-              defaultValue={formFields?.email}
+              defaultValue={formFields?.email || ''}
               fullWidth
             ></TextField>
             <Typography paragraph>
@@ -97,16 +151,78 @@ export default function ShoppingCart() {
           </div>
         );
       case 1:
-        return <div>'Shipping'</div>;
-      case 2:
         return (
-          <Square
-            handleCompletePayment={handleCompletePayment}
-            paymentForm={window.SqPaymentForm}
-          />
+          <Grid container>
+            <Grid item xs={12}>
+              <Typography>Shipping Address</Typography>
+            </Grid>
+            {shippingAddressFields.map(x => {
+              return (
+                <Grid item key={x.key} xs={x.xs} sm={x.sm} className={classes.formItem}>
+                  <TextField
+                    className={classes.textfield}
+                    variant="outlined"
+                    label={x.label}
+                    onChange={event => {
+                      setFormField(x.key, event.target.value);
+                    }}
+                    defaultValue={formFields[x.key] || ''}
+                    fullWidth
+                    name={x.name}
+                  ></TextField>
+                </Grid>
+              );
+            })}
+            <Grid item xs={12}>
+              <Typography>Billing Address</Typography>
+            </Grid>
+            <Grid item xs={12}>
+              <FormControlLabel
+                label={'Billing same as shipping?'}
+                control={
+                  <Checkbox
+                    defaultChecked={formFields.billingSameAsShipping}
+                    name={'billingSameAsShipping'}
+                    color="primary"
+                    onClick={event => {
+                      setFormField('billingSameAsShipping', !formFields.billingSameAsShipping);
+                    }}
+                  />
+                }
+              />
+            </Grid>
+
+            {!formFields.billingSameAsShipping &&
+              billingAddressFields.map(x => {
+                return (
+                  <Grid item key={x.key} xs={x.xs} sm={x.sm} className={classes.formItem}>
+                    <TextField
+                      className={classes.textfield}
+                      variant="outlined"
+                      label={x.label}
+                      onChange={event => {
+                        setFormField(x.key, event.target.value);
+                      }}
+                      defaultValue={formFields[x.key] || ''}
+                      fullWidth
+                    ></TextField>
+                  </Grid>
+                );
+              })}
+          </Grid>
         );
-      // case 4:
-      //   return <div>Review &amp; Purchase</div>;
+      case 2:
+        return <Square handleSquare={handleSquare} paymentForm={window.SqPaymentForm} />;
+      case 3:
+        return (
+          <Grid container>
+            <Grid item xs={12}>
+              <Typography variant="h5" paragraph>
+                AHH FINALIZE!
+              </Typography>
+            </Grid>
+          </Grid>
+        );
       default:
         return 'Unknown step';
     }
@@ -116,11 +232,35 @@ export default function ShoppingCart() {
     return <CircularProgress />;
   }
 
-  const handleCompletePayment = () => {
+  const handleSquare = nonce => {
+    setFormField('nonce', nonce);
     handleNext();
-    setCompleted(true);
+    // setCompleted(true);
 
     // TODO: clear out cart and such too
+  };
+
+  const removeItem = async id => {
+    const result = await removeItemFromCart(id);
+
+    if (result) {
+      const modifiedItems = [...itemsInCart];
+      const itemToRemove = modifiedItems.findIndex(x => x.id === id);
+      modifiedItems.splice(itemToRemove, 1);
+
+      setItemsInCart(modifiedItems);
+
+      console.log(modifiedItems);
+      enqueueSnackbar('Removed item from cart!', {
+        variant: 'success',
+        autoHideDuration: 4500
+      });
+    } else {
+      enqueueSnackbar('Unable to remove item', {
+        variant: 'error',
+        autoHideDuration: 4500
+      });
+    }
   };
 
   return (
@@ -149,13 +289,15 @@ export default function ShoppingCart() {
               > */}
               <StepContent>
                 {getStepContent(index)}
-                {activeStep !== steps.length - 1 && (
+                {activeStep !== 2 && (
                   <div className={classes.actionsContainer}>
                     <Button
                       disabled={!canGoToNextStep}
                       variant="contained"
                       color="primary"
-                      onClick={handleNext}
+                      onClick={() =>
+                        activeStep === steps.length - 1 ? handleCompletePayment() : handleNext()
+                      }
                       className={classes.button}
                       fullWidth
                     >
@@ -200,16 +342,157 @@ export default function ShoppingCart() {
       </Grid>
 
       <Grid item xs={12} sm={6} className={classes.container}>
-        <Typography variant="h3" paragraph>
-          Order Summary
-        </Typography>
-        TODO: list the items in the cart! and shipping once we know it and such
+        <Grid container>
+          <Grid item xs={12}>
+            <Typography variant="h3" paragraph className={classes.h3}>
+              Order Summary
+            </Typography>
+          </Grid>
+
+          {itemsInCart.map(item => {
+            const { id, name, path, info, price, quantity } = item;
+
+            const details = `${info.size} - ${info.type}`;
+            return (
+              <Grid item xs={12} className={classes.lineContainer}>
+                <Grid container className={classes.lineItem}>
+                  <Grid item>
+                    <img className={classes.image} alt={name} src={path} />
+                  </Grid>
+                  <Grid item className={classes.imageDetails}>
+                    <Typography className={classes.info}>{name}</Typography>
+                    <Typography className={classes.details}>{details}</Typography>
+                  </Grid>
+                  <Grid item className={classes.priceContainer}>
+                    <Typography className={classes.price}>${price} USD</Typography>
+                    <Typography className={classes.quantity}>Quantity {quantity}</Typography>
+                  </Grid>
+                </Grid>
+                <Button
+                  className={classes.removeButton}
+                  variant="outlined"
+                  color="default"
+                  onClick={() => removeItem(id)}
+                >
+                  Remove
+                </Button>
+              </Grid>
+            );
+          })}
+
+          <Grid item xs={12} className={classes.costInfoContainer}>
+            <div className={classes.row}>
+              <Typography className={classes.costLabel}>SubTotal</Typography>
+              <Typography className={classes.dollarAmount}>${subTotal} USD</Typography>
+            </div>
+            <div className={classes.row}>
+              <Typography className={classes.costLabel}>Tax</Typography>
+              <Typography className={classes.dollarAmount}>
+                {taxes ? `$${taxes} USD` : '-'}
+              </Typography>
+            </div>
+            <div className={classes.row}>
+              <Typography className={classes.costLabel}>Shipping</Typography>
+              <Typography className={classes.dollarAmount}>
+                {shipping ? `$${shipping} USD` : '-'}
+              </Typography>
+            </div>
+            <div className={classes.totalRow}>
+              <Typography className={classes.totalLabel}>Total</Typography>
+              <Typography className={classes.totalPrice}>${totalAmount} USD</Typography>
+            </div>
+          </Grid>
+        </Grid>
       </Grid>
     </Grid>
   );
 }
 
 const useStyles = makeStyles(theme => ({
+  costInfoContainer: { marginTop: 20 },
+  totalRow: { display: 'flex', marginTop: 10 },
+  row: { display: 'flex' },
+  totalPrice: {
+    fontWeight: 600
+  },
+  totalLabel: {
+    fontWeight: 600,
+    flex: 1
+  },
+  costLabel: {
+    color: 'gray',
+    flex: 1
+  },
+  dollarAmount: {
+    color: 'gray'
+  },
+  removeButton: {
+    position: 'absolute',
+    bottom: 6,
+    right: 0,
+    color: 'gray',
+    height: 20,
+    textTransform: 'capitalize',
+    fontSize: 12,
+    [theme.breakpoints.down('xs')]: {
+      bottom: 10
+    }
+  },
+  h3: {
+    marginBottom: 30,
+    fontSize: 40,
+    [theme.breakpoints.down('sm')]: {
+      fontSize: 30
+    }
+  },
+  price: { fontWeight: 600 },
+  priceContainer: {
+    width: 100,
+    textAlign: 'right',
+
+    [theme.breakpoints.down('xs')]: {
+      width: '100%',
+      height: 70
+    }
+  },
+  quantity: { fontColor: 'gray', fontSize: 12 },
+  imageDetails: {
+    flex: 1,
+    [theme.breakpoints.down('xs')]: {
+      width: '100%'
+    }
+  },
+  info: { fontWeight: 600 },
+  details: { fontColor: 'gray' },
+  lineContainer: {
+    marginBottom: 20,
+    position: 'relative'
+  },
+  lineItem: {
+    display: 'flex',
+    alignItems: 'end',
+    paddingBottom: 10,
+    borderBottom: `thin solid #ededed`
+  },
+
+  image: {
+    marginRight: 40,
+    maxWidth: '100px',
+    maxHeight: '100px',
+    width: 'auto',
+    // margin: 'auto',
+    height: 'auto',
+    [theme.breakpoints.down('sm')]: {
+      marginRight: 20
+    },
+    [theme.breakpoints.down('xs')]: {
+      marginRight: 15
+    }
+  },
+  formItem: {
+    paddingLeft: 10,
+    paddingRight: 10
+  },
   textfield: { marginTop: 10, marginBottom: 20 },
   hidden: {
     visibility: 'hidden',
@@ -230,7 +513,8 @@ const useStyles = makeStyles(theme => ({
     padding: 30,
     [theme.breakpoints.down('xs')]: {
       paddingTop: 10,
-      padding: 5
+      padding: 5,
+      flexDirection: `column-reverse`
     }
   },
   button: {
@@ -249,7 +533,8 @@ const useStyles = makeStyles(theme => ({
     padding: 0,
     paddingRight: 20,
     [theme.breakpoints.down('xs')]: {
-      paddingRight: 0
+      paddingRight: 0,
+      marginTop: 20
     }
   },
   container: {

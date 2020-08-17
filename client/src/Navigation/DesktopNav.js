@@ -1,20 +1,36 @@
-import React, { useState } from 'react'
-import { makeStyles } from '@material-ui/core/styles'
-import { HashLink as Link } from 'react-router-hash-link'
-import { Grid, Typography } from '@material-ui/core'
+import React, { useState, useEffect } from 'react';
+import { makeStyles } from '@material-ui/core/styles';
+import { HashLink as Link } from 'react-router-hash-link';
+import { Grid, Typography } from '@material-ui/core';
 
-import clsx from 'clsx'
+import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
+import Badge from '@material-ui/core/Badge';
+import clsx from 'clsx';
 
-import { navItems } from '../utils'
-import Logo from './Logo'
+import { navItems } from '../utils';
+import Logo from './Logo';
+import { getNumberOfItemsInCart } from '../utils/useCartData';
 
 export default function ButtonAppBar() {
-  const classes = useStyles()
-  const [hoverOn, setHoverOn] = useState(null)
+  const classes = useStyles();
+  const [hoverOn, setHoverOn] = useState(null);
+  const [itemsInCart, setItemsInCart] = useState(); // ??
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const cartCheck = getNumberOfItemsInCart();
+
+      if (itemsInCart !== cartCheck) {
+        setItemsInCart(cartCheck);
+      }
+    }, 1000);
+    return () => clearInterval(interval);
+    // eslint-disable-next-line
+  }, []);
 
   return (
     <>
-      <Logo/>
+      <Logo />
       <Grid justify="flex-end" container spacing={2}>
         {Object.entries(navItems).map(([key, { to, label, subItems }]) => (
           <Grid key={key} item className={classes.navItem}>
@@ -56,13 +72,24 @@ export default function ButtonAppBar() {
             </div>
           </Grid>
         ))}
+        <Grid item>
+          <Link to={itemsInCart && '/cart'} onMouseEnter={() => setHoverOn(null)}>
+            <Badge badgeContent={itemsInCart} color="primary">
+              <ShoppingCartIcon className={classes.shoppingCartIcon} />
+            </Badge>
+          </Link>
+        </Grid>
       </Grid>
     </>
-  )
+  );
 }
 
 const useStyles = makeStyles(theme => ({
-  logo:{
+  shoppingCartIcon: {
+    color: theme.palette.text.primary,
+    cursor: 'pointer'
+  },
+  logo: {
     height: 50
   },
   navButton: {
@@ -156,4 +183,4 @@ const useStyles = makeStyles(theme => ({
     textDecoration: 'none',
     color: 'inherit'
   }
-}))
+}));

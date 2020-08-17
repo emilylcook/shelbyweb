@@ -1,36 +1,24 @@
-import React, { useEffect, useState } from 'react';
-import { Grid, makeStyles, Theme, CircularProgress } from '@material-ui/core';
+import React from 'react';
+import { makeStyles } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import clsx from 'clsx';
 
-// import config from './config';
 import getConfig from './config';
 import squareLogo from '../assets/squareLogo.jpg';
 
-const Square = ({ paymentForm, handleCompletePayment }) => {
+const Square = ({ paymentForm, handleSquare }) => {
   const classes = useStyles({});
 
-  // useEffect(() => {
-  //   paymentForm = new paymentForm(config);
-  //   paymentForm.build();
-  // }, []);
-  const paymentSubmitCallback = success => {
-    if (success) {
-      handleCompletePayment();
-    } else {
-      console.log('AN ERROR?!?!?');
-      // do something
-    }
+  const handleReturnNonce = nonce => {
+    console.log('nonce', nonce);
+    handleSquare(nonce);
   };
 
-  const config = getConfig(paymentSubmitCallback);
+  const config = getConfig(handleReturnNonce);
   paymentForm = new paymentForm(config);
   paymentForm.build();
   const requestCardNonce = () => {
     paymentForm.requestCardNonce();
-
-    //TODO: if successs
-    // handleCompletePayment();
   };
 
   return (
@@ -47,7 +35,8 @@ const Square = ({ paymentForm, handleCompletePayment }) => {
         <img alt="Square Logo" src={squareLogo} className={classes.squareLogo} />
       </div>
 
-      {/* <button onClick={requestCardNonce}>Pay Now</button> */}
+      <ul id="errors" className={classes.error} style={{ display: 'none' }}></ul>
+
       <Button
         variant="contained"
         color="primary"
@@ -55,13 +44,23 @@ const Square = ({ paymentForm, handleCompletePayment }) => {
         className={classes.button}
         fullWidth
       >
-        Confirm and Pay Now
+        Continue
       </Button>
     </div>
   );
 };
 
 const useStyles = makeStyles({
+  error: {
+    float: `left`,
+    width: `calc((100% - 56px))`,
+    margin: `16px 16px 16px 0`,
+    border: `1px solid #E02F2F`,
+    borderRadius: 6,
+    backgroundColor: `white`,
+    fontSize: 16,
+    padding: 24
+  },
   flex: {},
   button: {
     marginTop: 20,

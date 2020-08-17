@@ -1,14 +1,24 @@
-import React, { useState, useEffect } from 'react'
-import { makeStyles } from '@material-ui/styles'
-import MuiDialogTitle from '@material-ui/core/DialogTitle'
-import { IconButton, Typography, Dialog, DialogContent, useMediaQuery } from '@material-ui/core'
-import CloseIcon from '@material-ui/icons/Close'
-import KeyboardArrowRightIcon from '@material-ui/icons/KeyboardArrowRight'
-import KeyboardArrowLeftIcon from '@material-ui/icons/KeyboardArrowLeft'
-import { useTheme } from '@material-ui/core/styles'
+import React, { useState, useEffect } from 'react';
+import { makeStyles } from '@material-ui/styles';
+import MuiDialogTitle from '@material-ui/core/DialogTitle';
+import {
+  IconButton,
+  Typography,
+  Button,
+  Dialog,
+  DialogContent,
+  useMediaQuery
+} from '@material-ui/core';
+import { useSnackbar } from 'notistack';
+import CloseIcon from '@material-ui/icons/Close';
+import KeyboardArrowRightIcon from '@material-ui/icons/KeyboardArrowRight';
+import KeyboardArrowLeftIcon from '@material-ui/icons/KeyboardArrowLeft';
+import { useTheme } from '@material-ui/core/styles';
+
+import { addProductToCart } from '../utils/useCartData';
 
 function DialogTitle({ children, onClose }) {
-  const classes = useStyles()
+  const classes = useStyles();
   return (
     <MuiDialogTitle disableTypography className={classes.titleRoot}>
       <Typography variant="h6">{children}</Typography>
@@ -16,68 +26,101 @@ function DialogTitle({ children, onClose }) {
         <CloseIcon className={classes.closeIcon} />
       </IconButton>
     </MuiDialogTitle>
-  )
+  );
 }
 
 function ImageModal({ open, handleClose, collection, details = {} }) {
-  const classes = useStyles()
-  const theme = useTheme()
-  const fullScreen = useMediaQuery(theme.breakpoints.down('xs'))
-  const [modalDetais, setDetails] = useState(details)
+  const classes = useStyles();
+  const theme = useTheme();
+  const fullScreen = useMediaQuery(theme.breakpoints.down('xs'));
+  const [modalDetails, setDetails] = useState(details);
+  const { enqueueSnackbar } = useSnackbar();
 
-  const { path, key, name, info = {} } = modalDetais
+  const { path, key, name, info = {}, price, quantity = 0 } = modalDetails;
 
   useEffect(() => {
-    setDetails(details)
-  }, [details])
+    setDetails(details);
+  }, [details]);
 
   function setNext() {
-    let nextKey = parseInt(key) + 1
+    let nextKey = parseInt(key) + 1;
 
     if (collection.length <= nextKey) {
-      nextKey = 0
+      nextKey = 0;
     }
 
-    const nextImage = collection[nextKey]
+    const nextImage = collection[nextKey];
 
     setDetails({
       path: nextImage.path,
       key: nextKey,
       name: nextImage.name,
-      info: nextImage.info || {}
-    })
+      info: nextImage.info || {},
+      quantity: nextImage.quantity || 0,
+      price: nextImage?.price,
+      id: nextImage.id
+    });
   }
 
   function setPrevious() {
-    let prevKey = parseInt(key) - 1
+    let prevKey = parseInt(key) - 1;
 
     if (prevKey < 0) {
-      prevKey = collection.length - 1
+      prevKey = collection.length - 1;
     }
 
-    const nextImage = collection[prevKey]
+    const nextImage = collection[prevKey];
 
     setDetails({
       path: nextImage.path,
       key: prevKey,
       name: nextImage.name,
-      info: nextImage.info || {}
-    })
+      info: nextImage.info || {},
+      quantity: nextImage.quantity || 0,
+      price: nextImage?.price,
+      id: nextImage.id
+    });
   }
 
   function onKeyPress(event) {
     if (event.keyCode === 37) {
       // left arrow
-      setPrevious()
+      setPrevious();
     } else if (event.keyCode === 39) {
       // right arrow
-      setNext()
+      setNext();
     }
   }
+
+  const addToCart = () => {
+    const item = {
+      id: modalDetails.id,
+      quantity: 1,
+      price: modalDetails.price,
+      name: modalDetails.name,
+      path: modalDetails.path,
+      info: modalDetails.info
+    };
+
+    const result = addProductToCart(item);
+
+    if (result.success) {
+      enqueueSnackbar('Added to cart!', {
+        variant: 'success',
+        autoHideDuration: 4500
+      });
+    } else {
+      enqueueSnackbar('Item already in your cart', {
+        variant: 'error',
+        autoHideDuration: 4500
+      });
+    }
+  };
+
   return (
     <Dialog
       fullScreen={fullScreen}
-      classes={{ root: classes.root, elevation: classes.elevation }}
+      classes={{ root: classes.root }}
       open={open}
       onClose={handleClose}
       maxWidth="xl"
@@ -115,15 +158,21 @@ function ImageModal({ open, handleClose, collection, details = {} }) {
               {info.type && <Typography>{info.type}</Typography>}
               {info.size && <Typography>{info.size}</Typography>}
               {info.status && <Typography>{info.status}</Typography>}
+              {quantity > 0 && price && (
+                <>
+                  <Typography>${price}</Typography>
+                  <Button onClick={addToCart}>Add To Cart</Button>
+                </>
+              )}
             </div>
           </div>
         </div>
       </DialogContent>
     </Dialog>
-  )
+  );
 }
 
-export default ImageModal
+export default ImageModal;
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -205,4 +254,4 @@ const useStyles = makeStyles(theme => ({
     justifyContent: 'center',
     alignItems: 'center'
   }
-}))
+}));
