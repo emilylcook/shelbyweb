@@ -10,7 +10,6 @@ const Square = ({ paymentForm, handleSquare }) => {
   const classes = useStyles({});
 
   const handleReturnNonce = nonce => {
-    console.log('nonce', nonce);
     handleSquare(nonce);
   };
 

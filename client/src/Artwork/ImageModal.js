@@ -157,11 +157,13 @@ function ImageModal({ open, handleClose, collection, details = {} }) {
             <div className={classes.details}>
               {info.type && <Typography>{info.type}</Typography>}
               {info.size && <Typography>{info.size}</Typography>}
-              {info.status && <Typography>{info.status}</Typography>}
+              {info.status && info.status !== 'Available' && <Typography>{info.status}</Typography>}
               {quantity > 0 && price && (
                 <>
-                  <Typography>${price}</Typography>
-                  <Button onClick={addToCart}>Add To Cart</Button>
+                  <Typography paragraph>${price}</Typography>
+                  <Button color="primary" variant="contained" onClick={addToCart}>
+                    Add To Cart
+                  </Button>
                 </>
               )}
             </div>

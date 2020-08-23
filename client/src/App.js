@@ -10,11 +10,12 @@ import About from './About';
 import Footer from './Footer';
 import Artwork from './Artwork/';
 import Header from './Header';
-import ShoppingCart from './Cart/ShoppingCart';
 import Commissions from './Commissions';
 import { useScrollRestoration } from './utils';
 
 import getAllImages from './Artwork/imagesForPreload';
+import CheckoutScreen from './Cart/CheckoutScreen';
+import ShoppingCartScreen from './Cart/ShoppingCartScreen';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -86,7 +87,8 @@ const App = () => {
               {/* <Route path="/connect" exact component={Connect} /> */}
               <Route path="/commissions" exact component={Commissions} />
               <Route path="/artwork/:collection" component={Artwork} />
-              <Route path="/cart" component={ShoppingCart} />
+              <Route path="/cart" component={ShoppingCartScreen} />
+              <Route path="/checkout" component={CheckoutScreen} />
               <Redirect to="/" />
             </Switch>
           </div>

@@ -8,22 +8,23 @@ import StepContent from '@material-ui/core/StepContent';
 import Button from '@material-ui/core/Button';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
-import { useSnackbar } from 'notistack';
+
 import clsx from 'clsx';
 
-import { clearCart, getItemsInCart, removeItemFromCart } from '../utils/useCartData';
+import { clearCart } from '../utils/useCartData';
 import Square from './Square';
+import OrderSummary from './OrderSummary';
 import { billingAddressFields, emailRegex, shippingAddressFields } from './helpers';
 
-export default function ShoppingCart() {
+// TODO verify items are in cart are still available at some point
+
+export default function CheckoutScreen() {
   const classes = useStyles({});
 
   const [completed, setCompleted] = useState(false);
   const [isLoad, setLoad] = useState(false);
   const [activeStep, setActiveStep] = React.useState(0);
-  const { enqueueSnackbar } = useSnackbar();
 
-  const [itemsInCart, setItemsInCart] = useState(getItemsInCart() || []);
   const steps = getSteps();
 
   const [formFields, setFormFields] = React.useState({ billingSameAsShipping: true });
@@ -37,29 +38,14 @@ export default function ShoppingCart() {
 
   const handleCompletePayment = () => {
     // TODO api call to actually do this
+    console.log('formFields', formFields);
+    // build api call to make
 
     // on success:
-    setActiveStep(prevActiveStep => prevActiveStep + 1);
-    clearCart();
-    setCompleted(true);
+    // setActiveStep(prevActiveStep => prevActiveStep + 1);
+    // clearCart();
+    // setCompleted(true);
   };
-
-  const pricesInCart = itemsInCart.flatMap(x => x.price);
-  let subTotal = pricesInCart
-    .reduce(function(a, b) {
-      return a + b;
-    }, 0)
-    .toFixed(2);
-
-  let taxes = null;
-  let shipping = null;
-  let totalAmount = parseFloat(subTotal);
-  if (shipping) {
-    totalAmount += shipping;
-  }
-  if (taxes) {
-    totalAmount += taxes;
-  }
 
   const checkIfValid = () => {
     let valid = false;
@@ -214,12 +200,40 @@ export default function ShoppingCart() {
       case 2:
         return <Square handleSquare={handleSquare} paymentForm={window.SqPaymentForm} />;
       case 3:
+        const shippingStreetAddress = formFields?.shippingStreetAddress2
+          ? `${formFields?.shippingStreetAddress} ${formFields?.shippingStreetAddress2}`
+          : formFields?.shippingStreetAddress;
+
         return (
           <Grid container>
             <Grid item xs={12}>
               <Typography variant="h5" paragraph>
-                AHH FINALIZE!
+                Review ?
               </Typography>
+            </Grid>
+
+            <Grid item xs={12} className={classes.reviewRow}>
+              <Typography className={classes.label}>Email</Typography>
+              <Typography className={classes.value}>{formFields.email}</Typography>
+            </Grid>
+
+            <Grid item xs={12} className={classes.reviewRow}>
+              <Typography className={classes.label}>Shipping Address</Typography>
+              <Typography className={classes.value}>
+                {formFields?.shippingFirstName} {formFields?.shippingLastName}
+                <br />
+                {shippingStreetAddress},<br />
+                {formFields?.shippingCity}, {formFields?.shippingState} {formFields?.shippingPostal}
+              </Typography>
+            </Grid>
+
+            <Grid item xs={12} className={classes.reviewRow}>
+              <Typography className={classes.label}>Billing</Typography>
+              {formFields?.billingSameAsShipping ? (
+                <Typography className={classes.value}>Same as shipping</Typography>
+              ) : (
+                'address'
+              )}
             </Grid>
           </Grid>
         );
@@ -238,29 +252,6 @@ export default function ShoppingCart() {
     // setCompleted(true);
 
     // TODO: clear out cart and such too
-  };
-
-  const removeItem = async id => {
-    const result = await removeItemFromCart(id);
-
-    if (result) {
-      const modifiedItems = [...itemsInCart];
-      const itemToRemove = modifiedItems.findIndex(x => x.id === id);
-      modifiedItems.splice(itemToRemove, 1);
-
-      setItemsInCart(modifiedItems);
-
-      console.log(modifiedItems);
-      enqueueSnackbar('Removed item from cart!', {
-        variant: 'success',
-        autoHideDuration: 4500
-      });
-    } else {
-      enqueueSnackbar('Unable to remove item', {
-        variant: 'error',
-        autoHideDuration: 4500
-      });
-    }
   };
 
   return (
@@ -342,90 +333,18 @@ export default function ShoppingCart() {
       </Grid>
 
       <Grid item xs={12} sm={6} className={classes.container}>
-        <Grid container>
-          <Grid item xs={12}>
-            <Typography variant="h3" paragraph className={classes.h3}>
-              Order Summary
-            </Typography>
-          </Grid>
-
-          {itemsInCart.map(item => {
-            const { id, name, path, info, price, quantity } = item;
-
-            const details = `${info.size} - ${info.type}`;
-            return (
-              <Grid item xs={12} className={classes.lineContainer}>
-                <Grid container className={classes.lineItem}>
-                  <Grid item>
-                    <img className={classes.image} alt={name} src={path} />
-                  </Grid>
-                  <Grid item className={classes.imageDetails}>
-                    <Typography className={classes.info}>{name}</Typography>
-                    <Typography className={classes.details}>{details}</Typography>
-                  </Grid>
-                  <Grid item className={classes.priceContainer}>
-                    <Typography className={classes.price}>${price} USD</Typography>
-                    <Typography className={classes.quantity}>Quantity {quantity}</Typography>
-                  </Grid>
-                </Grid>
-                <Button
-                  className={classes.removeButton}
-                  variant="outlined"
-                  color="default"
-                  onClick={() => removeItem(id)}
-                >
-                  Remove
-                </Button>
-              </Grid>
-            );
-          })}
-
-          <Grid item xs={12} className={classes.costInfoContainer}>
-            <div className={classes.row}>
-              <Typography className={classes.costLabel}>SubTotal</Typography>
-              <Typography className={classes.dollarAmount}>${subTotal} USD</Typography>
-            </div>
-            <div className={classes.row}>
-              <Typography className={classes.costLabel}>Tax</Typography>
-              <Typography className={classes.dollarAmount}>
-                {taxes ? `$${taxes} USD` : '-'}
-              </Typography>
-            </div>
-            <div className={classes.row}>
-              <Typography className={classes.costLabel}>Shipping</Typography>
-              <Typography className={classes.dollarAmount}>
-                {shipping ? `$${shipping} USD` : '-'}
-              </Typography>
-            </div>
-            <div className={classes.totalRow}>
-              <Typography className={classes.totalLabel}>Total</Typography>
-              <Typography className={classes.totalPrice}>${totalAmount} USD</Typography>
-            </div>
-          </Grid>
-        </Grid>
+        <OrderSummary completed={completed} />
       </Grid>
     </Grid>
   );
 }
 
 const useStyles = makeStyles(theme => ({
-  costInfoContainer: { marginTop: 20 },
-  totalRow: { display: 'flex', marginTop: 10 },
-  row: { display: 'flex' },
-  totalPrice: {
+  label: {
     fontWeight: 600
   },
-  totalLabel: {
-    fontWeight: 600,
-    flex: 1
-  },
-  costLabel: {
-    color: 'gray',
-    flex: 1
-  },
-  dollarAmount: {
-    color: 'gray'
-  },
+  reviewRow: { marginBottom: 10 },
+  row: { display: 'flex' },
   removeButton: {
     position: 'absolute',
     bottom: 6,
@@ -436,57 +355,6 @@ const useStyles = makeStyles(theme => ({
     fontSize: 12,
     [theme.breakpoints.down('xs')]: {
       bottom: 10
-    }
-  },
-  h3: {
-    marginBottom: 30,
-    fontSize: 40,
-    [theme.breakpoints.down('sm')]: {
-      fontSize: 30
-    }
-  },
-  price: { fontWeight: 600 },
-  priceContainer: {
-    width: 100,
-    textAlign: 'right',
-
-    [theme.breakpoints.down('xs')]: {
-      width: '100%',
-      height: 70
-    }
-  },
-  quantity: { fontColor: 'gray', fontSize: 12 },
-  imageDetails: {
-    flex: 1,
-    [theme.breakpoints.down('xs')]: {
-      width: '100%'
-    }
-  },
-  info: { fontWeight: 600 },
-  details: { fontColor: 'gray' },
-  lineContainer: {
-    marginBottom: 20,
-    position: 'relative'
-  },
-  lineItem: {
-    display: 'flex',
-    alignItems: 'end',
-    paddingBottom: 10,
-    borderBottom: `thin solid #ededed`
-  },
-
-  image: {
-    marginRight: 40,
-    maxWidth: '100px',
-    maxHeight: '100px',
-    width: 'auto',
-    // margin: 'auto',
-    height: 'auto',
-    [theme.breakpoints.down('sm')]: {
-      marginRight: 20
-    },
-    [theme.breakpoints.down('xs')]: {
-      marginRight: 15
     }
   },
   formItem: {
@@ -538,6 +406,7 @@ const useStyles = makeStyles(theme => ({
     }
   },
   container: {
+    height: 'fit-content',
     background: 'white',
     padding: 20,
     border: `thin solid #F2F3F2`
