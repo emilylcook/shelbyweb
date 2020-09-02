@@ -20,17 +20,23 @@ const Artwork = ({ match }) => {
   const [hideArtwork, setHideArtwork] = useState(true);
 
   const [collection, setCollection] = useState(null);
+  const [artToShow, setArtToShow] = useState(null);
   const [loading, setLoading] = useState(true);
   const [collectionsLoaded, setCollectionsLoaded] = useState([]);
 
   const hideModal = false; // useMediaQuery(theme.breakpoints.down('xs'))
 
-  const { loading: loadingCollections, collections } = useCollectionData();
+  const { loading: loadingCollections, art, collections } = useCollectionData();
 
   useEffect(() => {
     if (!loadingCollections) {
-      const selectedCollection = collections.find(x => x.id === match.params.collection);
+      const selectedCollection = collections.find(
+        x => x.id.toLowerCase() === match.params.collection.toLowerCase()
+      );
       setCollection(selectedCollection);
+
+      const artInCollection = art.filter(x => x && x.collections.includes(selectedCollection.id));
+      setArtToShow(artInCollection);
     }
   }, [match, loadingCollections, collections]);
 
@@ -66,7 +72,7 @@ const Artwork = ({ match }) => {
 
   const { filters } = collection;
 
-  let art = collection.art;
+  let _art = artToShow;
 
   function filteredArt(art) {
     return art.filter(a => {
@@ -76,7 +82,7 @@ const Artwork = ({ match }) => {
     });
   }
 
-  art = selectedFilters.size > 0 ? filteredArt(art) : art;
+  _art = selectedFilters.size > 0 ? filteredArt(_art) : _art;
 
   // todo need to keep track of each location?
   if (loading) {
@@ -135,7 +141,7 @@ const Artwork = ({ match }) => {
               [classes.hidden]: hideArtwork || loading
             })}
           >
-            {Object.entries(art).map(([key, { path, name, info, ...rest }]) => {
+            {Object.entries(_art).map(([key, { path, name, info, ...rest }]) => {
               const isHovered = hoverOn === key;
               return (
                 <div key={key}>

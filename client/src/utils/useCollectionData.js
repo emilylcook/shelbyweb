@@ -1,20 +1,23 @@
 import React, { useState } from 'react';
 import firebase from '../firebase';
 
-export default function useCollectionData() {
-  const [loading, setLoading] = useState(true);
+export default function useArtData() {
+  const [loadingArt, setLoadingArt] = useState(true);
+  const [loadingCollections, setLoadingCollections] = useState(true);
   const [collections, setCollections] = useState([]);
+  const [art, setArt] = useState([]);
 
-  // initial  load
+  // initial load
   React.useEffect(() => {
     loadCollections();
+    loadArt();
   }, []);
 
   const loadCollections = () => {
     let collections = [];
     firebase
       .database()
-      .ref('collections')
+      .ref('newCollection')
       .on('value', snapshot => {
         snapshot.forEach(collectionValues => {
           var collection = collectionValues.val();
@@ -22,14 +25,36 @@ export default function useCollectionData() {
         });
 
         setCollections(collections);
-        setLoading(false);
+        setLoadingCollections(false);
       });
   };
 
-  return { loading, collections };
+  const loadArt = () => {
+    let collections = [];
+    firebase
+      .database()
+      .ref('arts')
+      .on('value', snapshot => {
+        snapshot.forEach(collectionValues => {
+          var collection = collectionValues.val();
+          collections.push(collection);
+        });
+
+        setArt(collections);
+        setLoadingArt(false);
+      });
+  };
+
+  return { loading: loadingArt || loadingCollections, art, collections };
 }
 
-export function removeItemFromCollection(id) {}
+export function removeItemFromCollection(id) {
+  // remove 1 frmo quanity
+  // if 0
+  // remove available tag
+  // add sold tag
+  // set status to sold
+}
 
 export async function confirmItemIsAvailable(collectionId, artId) {
   let item = {};
@@ -37,16 +62,15 @@ export async function confirmItemIsAvailable(collectionId, artId) {
   try {
     const snapshot = firebase
       .database()
-      .ref('collections')
+      .ref('arts')
       .orderByChild('id')
-      .equalTo(collectionId)
-
+      .equalTo(artId)
       .once('value');
 
     const value = await snapshot;
-    const collection = value.val();
+    const art = value.val();
 
-    item = Object.values(collection)[0].art?.find(x => x.id === artId);
+    item = art[1];
 
     return !!item && item.quantity > 0;
   } catch (e) {
