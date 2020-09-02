@@ -8,20 +8,23 @@ import StepContent from '@material-ui/core/StepContent';
 import Button from '@material-ui/core/Button';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
-
+import { useHistory } from 'react-router';
+import axios from 'axios';
 import clsx from 'clsx';
 
-import { clearCart } from '../utils/useCartData';
+import { clearCart, getItemsInCart } from '../utils/useCartData';
 import Square from './Square';
 import OrderSummary from './OrderSummary';
 import { billingAddressFields, emailRegex, shippingAddressFields } from './helpers';
+
+import config from '../config';
 
 // TODO verify items are in cart are still available at some point
 
 export default function CheckoutScreen() {
   const classes = useStyles({});
+  const history = useHistory();
 
-  const [completed, setCompleted] = useState(false);
   const [isLoad, setLoad] = useState(false);
   const [activeStep, setActiveStep] = React.useState(0);
 
@@ -36,15 +39,145 @@ export default function CheckoutScreen() {
     setActiveStep(prevActiveStep => prevActiveStep + 1);
   };
 
+  console.log('config---', config);
   const handleCompletePayment = () => {
     // TODO api call to actually do this
     console.log('formFields', formFields);
     // build api call to make
 
+    const finalItems = getItemsInCart();
+
+    const pricesInCart = finalItems?.flatMap(x => x.price);
+    let subTotal = pricesInCart
+      .reduce(function(a, b) {
+        return a + b;
+      }, 0)
+      .toFixed(2);
+
+    const shipping = 0; // TODO
+    const taxes = 0; //TODO
+
+    let totalAmount = parseFloat(subTotal);
+    if (shipping) {
+      totalAmount += shipping;
+    }
+    if (taxes) {
+      totalAmount += taxes;
+    }
+
+    let lineItems = finalItems.map(art => {
+      return {
+        label: art.name,
+        amount: art.price,
+        pending: false
+      };
+    });
+
+    lineItems.push({
+      label: 'Subtotal',
+      amount: pricesInCart,
+      pending: false
+    });
+    lineItems.push({
+      label: 'Shipping',
+      amount: shipping,
+      pending: false
+    });
+    lineItems.push({
+      label: 'Taxes',
+      amount: taxes,
+      pending: false
+    });
+
+    const shippingContact = {
+      // familyName: formFields?.shippingFirstName,
+      // givenName: formFields?.shippingLastName,
+      // email: formFields?.email,
+      // country: 'USA',
+      // region: formFields?.shippingState,
+      // city: formFields?.shippingCity,
+      // addressLines: formFields?.shippingStreetAddress2
+      //   ? [formFields?.shippingStreetAddress, formFields?.shippingStreetAddress2]
+      //   : [formFields?.shippingStreetAddress],
+      // postalCode: formFields?.shippingPostal
+      first_name: formFields?.shippingFirstName,
+      last_name: formFields?.shippingLastName,
+      locality: formFields?.shippingCity,
+      administrative_district_level_1: formFields?.shippingState,
+      postal_code: formFields?.shippingPostal,
+      address_line_1: formFields?.shippingStreetAddress,
+      address_line_2: formFields?.shippingStreetAddress2
+    };
+
+    const billingContact = formFields?.billingSameAsShipping
+      ? shippingContact
+      : {
+          // familyName: formFields?.billingFirstName,
+          // givenName: formFields?.billingLastName,
+          // email: formFields?.email,
+          // country: 'USA',
+          // region: formFields?.billingState,
+          // city: formFields?.billingCity,
+          // addressLines: formFields?.billingStreetAddress2
+          //   ? [formFields?.billingStreetAddress, formFields?.billingStreetAddress2]
+          //   : [formFields?.billingStreetAddress],
+          // postalCode: formFields?.billingPostal
+          first_name: formFields?.billingFirstName,
+          last_name: formFields?.billingLastName,
+          locality: formFields?.billingCity,
+          administrative_district_level_1: formFields?.billingState,
+          postal_code: formFields?.billingPostal,
+          address_line_1: formFields?.billingStreetAddress,
+          address_line_2: formFields?.billingStreetAddress2
+        };
+
+    const paymentRequestJson = {
+      nonce: formFields?.nonce,
+      // requestShippingAddress: false,
+      // requestBillingInfo: false,
+      email: formFields?.email,
+      shippingContact,
+      billingContact,
+      currencyCode: 'USD',
+      countryCode: 'US',
+      total: totalAmount,
+      // total: {
+      //   label: 'SHELBYFINEART',
+      // amount: totalAmount,
+      // pending: false
+      // },
+      lineItems
+    };
+
+    console.log('PAYMENT REQUEST JSON');
+    console.log(paymentRequestJson);
+
+    axios
+      .post(`${config.API}/checkout`, paymentRequestJson)
+      .then(function(response) {
+        console.log('RESPONSE', response);
+
+        if (response.status === 200) {
+          // clear out
+          clearCart();
+          setActiveStep(0);
+          setFormFields({});
+          setLoad(false);
+
+          const orderNumber = response.data.orderNumber;
+
+          history.push(`/checkout/success?orderNumber=${orderNumber}`);
+        }
+      })
+      .catch(function(error) {
+        console.log('ERROR', error);
+        // setSubscribed('error');
+        // setLoading(false);
+      });
+
     // on success:
     // setActiveStep(prevActiveStep => prevActiveStep + 1);
     // clearCart();
-    // setCompleted(true);
   };
 
   const checkIfValid = () => {
@@ -206,12 +339,6 @@ export default function CheckoutScreen() {
 
         return (
           <Grid container>
-            <Grid item xs={12}>
-              <Typography variant="h5" paragraph>
-                Review ?
-              </Typography>
-            </Grid>
-
             <Grid item xs={12} className={classes.reviewRow}>
               <Typography className={classes.label}>Email</Typography>
               <Typography className={classes.value}>{formFields.email}</Typography>
@@ -249,9 +376,6 @@ export default function CheckoutScreen() {
   const handleSquare = nonce => {
     setFormField('nonce', nonce);
     handleNext();
-    // setCompleted(true);
-
-    // TODO: clear out cart and such too
   };
 
   return (
@@ -266,18 +390,10 @@ export default function CheckoutScreen() {
         >
           {steps.map((label, index) => (
             <Step key={label} className={clsx(classes.step, classes.container)}>
-              <StepLabel
-                onClick={() => (!completed && activeStep > index ? setActiveStep(index) : null)}
-              >
+              <StepLabel onClick={() => (activeStep > index ? setActiveStep(index) : null)}>
                 {label}
               </StepLabel>
 
-              {/* <div
-                className={clsx({
-                  [classes.visible]: index === activeStep,
-                  [classes.hidden]: index !== activeStep
-                })}
-              > */}
               <StepContent>
                 {getStepContent(index)}
                 {activeStep !== 2 && (
@@ -296,25 +412,6 @@ export default function CheckoutScreen() {
                     </Button>
                   </div>
                 )}
-                {/* <div className={classes.actionsContainer}>
-                  <div>
-                    <Button
-                      disabled={activeStep === 0}
-                      onClick={handleBack}
-                      className={classes.button}
-                    >
-                      Back
-                    </Button>
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      onClick={handleNext}
-                      className={classes.button}
-                    >
-                      {activeStep === steps.length - 1 ? 'Confirm and Pay' : 'Next'}
-                    </Button>
-                  </div> */}
-                {/* </div> */}
               </StepContent>
             </Step>
           ))}
@@ -325,15 +422,12 @@ export default function CheckoutScreen() {
               Checkout completed
             </Typography>
             <Typography>A receipt will be sent to your email.</Typography>
-            {/* <Button onClick={handleReset} className={classes.button}>
-              Reset
-            </Button> */}
           </Paper>
         )}
       </Grid>
 
       <Grid item xs={12} sm={6} className={classes.container}>
-        <OrderSummary completed={completed} />
+        <OrderSummary completed={false} />
       </Grid>
     </Grid>
   );

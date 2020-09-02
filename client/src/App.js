@@ -15,6 +15,7 @@ import { useScrollRestoration } from './utils';
 
 import getAllImages from './Artwork/imagesForPreload';
 import CheckoutScreen from './Cart/CheckoutScreen';
+import CheckoutSuccessScreen from './Cart/CheckoutSuccessScreen';
 import ShoppingCartScreen from './Cart/ShoppingCartScreen';
 
 const useStyles = makeStyles(theme => ({
@@ -88,7 +89,8 @@ const App = () => {
               <Route path="/commissions" exact component={Commissions} />
               <Route path="/artwork/:collection" component={Artwork} />
               <Route path="/cart" component={ShoppingCartScreen} />
-              <Route path="/checkout" component={CheckoutScreen} />
+              <Route exact={true} path="/checkout" component={CheckoutScreen} />
+              <Route exact={true} path="/checkout/success" component={CheckoutSuccessScreen} />
               <Redirect to="/" />
             </Switch>
           </div>

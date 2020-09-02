@@ -70,7 +70,7 @@ export default function OrderSummary({ completed = false, cartView = false }) {
 
             const details = `${info.size} - ${info.type}`;
             return (
-              <Grid item xs={12} className={classes.lineContainer}>
+              <Grid key={id} item xs={12} className={classes.lineContainer}>
                 <Grid container className={classes.lineItem}>
                   <Grid item>
                     <img className={classes.image} alt={name} src={path} />

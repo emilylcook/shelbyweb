@@ -73,7 +73,7 @@ export default function ButtonAppBar() {
           </Grid>
         ))}
         <Grid item>
-          <Link to={itemsInCart && '/cart'} onMouseEnter={() => setHoverOn(null)}>
+          <Link to={itemsInCart ? '/cart' : '/'} onMouseEnter={() => setHoverOn(null)}>
             <Badge badgeContent={itemsInCart} color="primary">
               <ShoppingCartIcon className={classes.shoppingCartIcon} />
             </Badge>

@@ -59,44 +59,8 @@ export function getConfig(handleReturnNonce) {
         errorList.style.display = 'none';
         errorList.innerHTML = '';
 
-        alert(`The generated nonce is:\n${nonce}`);
-
         handleReturnNonce(nonce);
         return;
-        // TODO this needs to be a server call.
-        // fetch('http://localhost:4000/process-payment', {
-        //   method: 'POST',
-        //   headers: {
-        //     Accept: 'application/json',
-        //     'Content-Type': 'application/json'
-        //   },
-        //   body: JSON.stringify({
-        //     nonce: nonce
-        //   })
-        // })
-        //   .catch(err => {
-        //     alert('Network error: ' + err);
-        //   })
-        //   .then(response => {
-        //     if (!response.ok) {
-        //       return response.text().then(errorInfo => Promise.reject(errorInfo));
-        //     }
-        //     return response.text();
-        //   })
-        //   .then(data => {
-        //     console.log(JSON.stringify(data));
-        //     alert(
-        //       'Payment complete successfully!\nCheck browser developer console form more details'
-        //     );
-
-        //     handleCompletePayment(true);
-        //   })
-        //   .catch(err => {
-        //     console.error(err);
-        //     alert('Payment failed to complete!\nCheck browser developer console form more details');
-
-        //     handleCompletePayment(false);
-        //   });
       }
     }
   };
