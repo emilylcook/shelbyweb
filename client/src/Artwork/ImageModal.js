@@ -29,7 +29,7 @@ function DialogTitle({ children, onClose }) {
   );
 }
 
-function ImageModal({ open, handleClose, collection, details = {} }) {
+function ImageModal({ open, collectionId, handleClose, collection, details = {} }) {
   const classes = useStyles();
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('xs'));
@@ -95,6 +95,7 @@ function ImageModal({ open, handleClose, collection, details = {} }) {
   const addToCart = () => {
     const item = {
       id: modalDetails.id,
+      collectionId: collectionId,
       quantity: 1,
       price: modalDetails.price,
       name: modalDetails.name,

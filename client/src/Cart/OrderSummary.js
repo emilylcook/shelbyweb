@@ -6,6 +6,7 @@ import { useSnackbar } from 'notistack';
 import { HashLink as Link } from 'react-router-hash-link';
 
 import { getItemsInCart, removeItemFromCart } from '../utils/useCartData';
+import { confirmItemIsAvailable } from '../utils/useCollectionData';
 
 export default function OrderSummary({ completed = false, cartView = false }) {
   const classes = useStyles({});
@@ -13,7 +14,27 @@ export default function OrderSummary({ completed = false, cartView = false }) {
   const [itemsInCart, setItemsInCart] = useState(getItemsInCart() || []);
   const { enqueueSnackbar } = useSnackbar();
 
-  const removeItem = async id => {
+  const verifyItemsInCart = async () => {
+    if (itemsInCart && itemsInCart.length > 0) {
+      itemsInCart.forEach(async x => {
+        const availableInDatabase = await confirmItemIsAvailable(x.collectionId, x.id);
+
+        if (!availableInDatabase) {
+          // if item is not available, remove it
+
+          removeItem(x.id, false);
+          enqueueSnackbar(`${x.name} is no longer available`, {
+            variant: 'warning',
+            autoHideDuration: 4500
+          });
+        }
+      });
+    }
+  };
+
+  verifyItemsInCart();
+
+  const removeItem = async (id, showMessage = true) => {
     const result = await removeItemFromCart(id);
 
     if (result) {
@@ -23,15 +44,19 @@ export default function OrderSummary({ completed = false, cartView = false }) {
 
       setItemsInCart(modifiedItems);
 
-      enqueueSnackbar('Removed item from cart!', {
-        variant: 'success',
-        autoHideDuration: 4500
-      });
+      if (showMessage) {
+        enqueueSnackbar('Removed item from cart!', {
+          variant: 'success',
+          autoHideDuration: 4500
+        });
+      }
     } else {
-      enqueueSnackbar('Unable to remove item', {
-        variant: 'error',
-        autoHideDuration: 4500
-      });
+      if (showMessage) {
+        enqueueSnackbar('Unable to remove item', {
+          variant: 'error',
+          autoHideDuration: 4500
+        });
+      }
     }
   };
 

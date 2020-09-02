@@ -15,7 +15,7 @@ export default function CheckoutSuccessScreen() {
       <Grid item xs={12} className={classes.header}>
         <img alt="treelines" src={treelineImage} className={classes.image} />
         <Typography variant="h2" className={classes.title} color="primary" paragraph>
-          Order completed!
+          Order Completed!
         </Typography>
       </Grid>
       <Grid item xs={12} sm={8} md={6} className={classes.body}>

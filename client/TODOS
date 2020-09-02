@@ -6,4 +6,3 @@ CART
 
 -) handle bad payment (failed /message)
 -) update quantity in database on complete 
--) before checkout ensure item is still available (or during)

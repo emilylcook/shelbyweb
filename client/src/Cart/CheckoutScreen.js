@@ -164,6 +164,8 @@ export default function CheckoutScreen() {
           setFormFields({});
           setLoad(false);
 
+          // removeItemFromDatabase();
+
           const orderNumber = response.data.orderNumber;
 
           history.push(`/checkout/success?orderNumber=${orderNumber}`);

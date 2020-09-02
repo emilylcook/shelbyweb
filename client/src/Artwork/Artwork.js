@@ -193,6 +193,7 @@ const Artwork = ({ match }) => {
         </WidthContainer>
       </div>
       <ImageModal
+        collectionId={match.params.collection}
         handleClose={() => {
           setImageModalOpen(false);
           setImageModalDetails({});
