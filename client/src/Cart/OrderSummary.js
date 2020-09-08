@@ -8,7 +8,7 @@ import { HashLink as Link } from 'react-router-hash-link';
 import { getItemsInCart, removeItemFromCart } from '../utils/useCartData';
 import { confirmItemIsAvailable } from '../utils/useCollectionData';
 
-export default function OrderSummary({ completed = false, cartView = false }) {
+export default function OrderSummary({ completed = false, cartView = false, shipping = null }) {
   const classes = useStyles({});
 
   const [itemsInCart, setItemsInCart] = useState(getItemsInCart() || []);
@@ -68,7 +68,7 @@ export default function OrderSummary({ completed = false, cartView = false }) {
     .toFixed(2);
 
   let taxes = null;
-  let shipping = null;
+  // let shipping = null;
   let totalAmount = parseFloat(subTotal);
   if (shipping) {
     totalAmount += shipping;

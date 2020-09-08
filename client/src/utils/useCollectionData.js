@@ -48,12 +48,49 @@ export default function useArtData() {
   return { loading: loadingArt || loadingCollections, art, collections };
 }
 
-export function removeItemFromCollection(id) {
-  // remove 1 frmo quanity
-  // if 0
-  // remove available tag
-  // add sold tag
-  // set status to sold
+export async function removeItemFromCollection(artId, quantity = 1) {
+  try {
+    console.log('remove!!', artId);
+    const snapshot = firebase
+      .database()
+      .ref('/arts/' + artId)
+      .once('value');
+
+    const value = await snapshot;
+    const art = value.val();
+
+    let item = art;
+
+    item.quantity = item.quantity - quantity;
+
+    if (item.quantity === 0) {
+      item.status = 'Sold';
+      const index = item.tags.indexOf('available');
+
+      if (index !== -1) {
+        item.tags[index] = 'sold';
+      }
+    }
+
+    // Write the new post's data simultaneously in the posts list and the user's post list.
+    var updates = {};
+    updates['/arts/' + artId] = item;
+
+    console.log(updates);
+
+    await firebase
+      .database()
+      .ref()
+      .update(updates);
+
+    return true;
+  } catch (e) {
+    console.log(e);
+    return false;
+  }
+
+  // MAYBE:
+  // (trigger set art reload?)
 }
 
 export async function confirmItemIsAvailable(collectionId, artId) {
@@ -62,19 +99,17 @@ export async function confirmItemIsAvailable(collectionId, artId) {
   try {
     const snapshot = firebase
       .database()
-      .ref('arts')
-      .orderByChild('id')
-      .equalTo(artId)
+      .ref('/arts/' + artId)
       .once('value');
 
     const value = await snapshot;
     const art = value.val();
 
-    item = art[1];
+    item = art;
 
     return !!item && item.quantity > 0;
   } catch (e) {
     console.log(e);
-    return false;
+    return true;
   }
 }

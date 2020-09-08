@@ -58,7 +58,8 @@ function ImageModal({ open, collectionId, handleClose, collection, details = {} 
       info: nextImage.info || {},
       quantity: nextImage.quantity || 0,
       price: nextImage?.price,
-      id: nextImage.id
+      id: nextImage.id,
+      shippingDetails: nextImage.shippingDetails
     });
   }
 
@@ -72,6 +73,7 @@ function ImageModal({ open, collectionId, handleClose, collection, details = {} 
     const nextImage = collection[prevKey];
 
     setDetails({
+      shippingDetails: nextImage.shippingDetails,
       path: nextImage.path,
       key: prevKey,
       name: nextImage.name,
@@ -94,6 +96,7 @@ function ImageModal({ open, collectionId, handleClose, collection, details = {} 
 
   const addToCart = () => {
     const item = {
+      shippingDetails: modalDetails.shippingDetails,
       id: modalDetails.id,
       collectionId: collectionId,
       quantity: 1,
@@ -102,6 +105,7 @@ function ImageModal({ open, collectionId, handleClose, collection, details = {} 
       path: modalDetails.path,
       info: modalDetails.info
     };
+    console.log(item);
 
     const result = addProductToCart(item);
 

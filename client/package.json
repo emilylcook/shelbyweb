@@ -21,7 +21,8 @@
     "redux": "^4.0.4",
     "redux-persist": "^6.0.0",
     "redux-starter-kit": "^0.8.0",
-    "typescript": "^3.9.7"
+    "typescript": "^3.9.7",
+    "xml2js": "^0.4.23"
   },
   "devDependencies": {
     "prettier": "^1.18.2",

@@ -11,12 +11,18 @@ import Typography from '@material-ui/core/Typography';
 import { useHistory } from 'react-router';
 import axios from 'axios';
 import clsx from 'clsx';
+import { useSnackbar } from 'notistack';
 
 import { clearCart, getItemsInCart } from '../utils/useCartData';
 import Square from './Square';
 import OrderSummary from './OrderSummary';
-import { billingAddressFields, emailRegex, shippingAddressFields } from './helpers';
-
+import {
+  billingAddressFields,
+  emailRegex,
+  calculateShippingCosts,
+  shippingAddressFields
+} from './helpers';
+import { removeItemFromCollection } from '../utils/useCollectionData';
 import config from '../config';
 
 // TODO verify items are in cart are still available at some point
@@ -24,6 +30,7 @@ import config from '../config';
 export default function CheckoutScreen() {
   const classes = useStyles({});
   const history = useHistory();
+  const { enqueueSnackbar } = useSnackbar();
 
   const [isLoad, setLoad] = useState(false);
   const [activeStep, setActiveStep] = React.useState(0);
@@ -31,20 +38,24 @@ export default function CheckoutScreen() {
   const steps = getSteps();
 
   const [formFields, setFormFields] = React.useState({ billingSameAsShipping: true });
+
   const setFormField = (name, val) => {
     setFormFields({ ...formFields, [name]: val });
   };
 
-  const handleNext = () => {
+  const handleNext = async () => {
+    if (activeStep === 1) {
+      console.log('calculate shipping');
+      // TODO: calculate shipping
+      const itemsInCart = getItemsInCart();
+      const shippingCost = await calculateShippingCosts(formFields, itemsInCart);
+      console.log('got shipping', shippingCost);
+      setFormField('shippingCost', shippingCost);
+    }
     setActiveStep(prevActiveStep => prevActiveStep + 1);
   };
 
-  console.log('config---', config);
   const handleCompletePayment = () => {
-    // TODO api call to actually do this
-    console.log('formFields', formFields);
-    // build api call to make
-
     const finalItems = getItemsInCart();
 
     const pricesInCart = finalItems?.flatMap(x => x.price);
@@ -54,9 +65,10 @@ export default function CheckoutScreen() {
       }, 0)
       .toFixed(2);
 
-    const shipping = 0; // TODO
+    const shipping = formFields?.shippingCost || 0;
     const taxes = 0; //TODO
 
+    console.log('SHIPPING,', shipping);
     let totalAmount = parseFloat(subTotal);
     if (shipping) {
       totalAmount += shipping;
@@ -67,6 +79,8 @@ export default function CheckoutScreen() {
 
     let lineItems = finalItems.map(art => {
       return {
+        id: art.id,
+        type: 'art',
         label: art.name,
         amount: art.price,
         pending: false
@@ -90,16 +104,6 @@ export default function CheckoutScreen() {
     });
 
     const shippingContact = {
-      // familyName: formFields?.shippingFirstName,
-      // givenName: formFields?.shippingLastName,
-      // email: formFields?.email,
-      // country: 'USA',
-      // region: formFields?.shippingState,
-      // city: formFields?.shippingCity,
-      // addressLines: formFields?.shippingStreetAddress2
-      //   ? [formFields?.shippingStreetAddress, formFields?.shippingStreetAddress2]
-      //   : [formFields?.shippingStreetAddress],
-      // postalCode: formFields?.shippingPostal
       first_name: formFields?.shippingFirstName,
       last_name: formFields?.shippingLastName,
       locality: formFields?.shippingCity,
@@ -112,16 +116,6 @@ export default function CheckoutScreen() {
     const billingContact = formFields?.billingSameAsShipping
       ? shippingContact
       : {
-          // familyName: formFields?.billingFirstName,
-          // givenName: formFields?.billingLastName,
-          // email: formFields?.email,
-          // country: 'USA',
-          // region: formFields?.billingState,
-          // city: formFields?.billingCity,
-          // addressLines: formFields?.billingStreetAddress2
-          //   ? [formFields?.billingStreetAddress, formFields?.billingStreetAddress2]
-          //   : [formFields?.billingStreetAddress],
-          // postalCode: formFields?.billingPostal
           first_name: formFields?.billingFirstName,
           last_name: formFields?.billingLastName,
           locality: formFields?.billingCity,
@@ -133,24 +127,14 @@ export default function CheckoutScreen() {
 
     const paymentRequestJson = {
       nonce: formFields?.nonce,
-      // requestShippingAddress: false,
-      // requestBillingInfo: false,
       email: formFields?.email,
       shippingContact,
       billingContact,
       currencyCode: 'USD',
       countryCode: 'US',
       total: totalAmount,
-      // total: {
-      //   label: 'SHELBYFINEART',
-      // amount: totalAmount,
-      // pending: false
-      // },
       lineItems
     };
-
-    console.log('PAYMENT REQUEST JSON');
-    console.log(paymentRequestJson);
 
     axios
       .post(`${config.API}/checkout`, paymentRequestJson)
@@ -158,6 +142,12 @@ export default function CheckoutScreen() {
         console.log('RESPONSE', response);
 
         if (response.status === 200) {
+          console.log('SUCCESS', lineItems);
+          lineItems
+            .filter(x => x && x?.type === 'art')
+            .forEach(item => {
+              removeItemFromCollection(item.id, 1);
+            });
           // clear out
           clearCart();
           setActiveStep(0);
@@ -165,7 +155,6 @@ export default function CheckoutScreen() {
           setLoad(false);
 
           // removeItemFromDatabase();
-
           const orderNumber = response.data.orderNumber;
 
           history.push(`/checkout/success?orderNumber=${orderNumber}`);
@@ -173,6 +162,10 @@ export default function CheckoutScreen() {
       })
       .catch(function(error) {
         console.log('ERROR', error);
+        enqueueSnackbar('Unable to complete order', {
+          variant: 'error',
+          autoHideDuration: 4500
+        });
         // setSubscribed('error');
         // setLoading(false);
       });
@@ -182,7 +175,7 @@ export default function CheckoutScreen() {
     // clearCart();
   };
 
-  const checkIfValid = () => {
+  const checkIfValid = async () => {
     let valid = false;
     switch (activeStep) {
       case 0:
@@ -212,6 +205,14 @@ export default function CheckoutScreen() {
           }
         }
 
+        // if (valid) {
+        //   // TODO: calculate shipping
+        //   const itemsInCart = getItemsInCart();
+        //   const shippingCost = await calculateShippingCosts(formFields, itemsInCart);
+        //   console.log('got shipping', shippingCost);
+        //   setFormField('shippingCost', shippingCost);
+        // }
+
         break;
       case 2:
         // validate payment info collected
@@ -221,6 +222,7 @@ export default function CheckoutScreen() {
         break;
       case 3:
         valid = true;
+
         break;
       default:
         valid = true;
@@ -276,6 +278,10 @@ export default function CheckoutScreen() {
           <Grid container>
             <Grid item xs={12}>
               <Typography>Shipping Address</Typography>
+              <Typography className={classes.helper}>
+                *Shipping will be calculated after this step. Shipping is done via USPS priority
+                mail with insurance and signature confirmation required.
+              </Typography>
             </Grid>
             {shippingAddressFields.map(x => {
               return (
@@ -429,7 +435,7 @@ export default function CheckoutScreen() {
       </Grid>
 
       <Grid item xs={12} sm={6} className={classes.container}>
-        <OrderSummary completed={false} />
+        <OrderSummary completed={false} shipping={formFields?.shippingCost} />
       </Grid>
     </Grid>
   );
@@ -456,6 +462,10 @@ const useStyles = makeStyles(theme => ({
   formItem: {
     paddingLeft: 10,
     paddingRight: 10
+  },
+  helper: {
+    color: theme.palette.text.primary,
+    fontSize: 12
   },
   textfield: { marginTop: 10, marginBottom: 20 },
   hidden: {
