@@ -22,6 +22,7 @@ function buildReceipt({
   .helper{
     color: #8c8c8c;
     font-size: 12px;
+    font-style: italic;
   }
 
   .invoice-box {
@@ -150,7 +151,7 @@ function buildReceipt({
     shipping_address.last_name
   }, Thank you for your purchase from <a href="https://shelbykcook.com/">shelbykcook.com</a>! Here
                   is a summary of your order: <br/>
-                  <span class="helper">*please allow 1-2 weeks for packing and shipping</span>
+                  <span class="helper">please allow 1-2 weeks for packing and shipping</span>
                 </td>
               </tr><tr>
               
