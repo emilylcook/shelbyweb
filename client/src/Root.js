@@ -5,9 +5,12 @@ import { ConnectedRouter } from 'connected-react-router';
 import { MuiThemeProvider, createMuiTheme, makeStyles } from '@material-ui/core/styles';
 import { SnackbarProvider } from 'notistack';
 
+import { CookiesProvider } from 'react-cookie';
+
 import useCollectionData from './utils/useCollectionData';
 import themeConfig from './theme';
 import App from './App';
+import { AuthProvider } from './utils/useAuth';
 
 const theme = createMuiTheme(themeConfig);
 
@@ -38,7 +41,11 @@ export default function Root({ store, history, persistor }) {
               }}
               maxSnack={1}
             >
-              <App />
+              <CookiesProvider>
+                <AuthProvider>
+                  <App />
+                </AuthProvider>
+              </CookiesProvider>
             </SnackbarProvider>
           </ConnectedRouter>
         </PersistGate>

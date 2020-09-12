@@ -17,6 +17,8 @@ import getAllImages from './Artwork/imagesForPreload';
 import CheckoutScreen from './Cart/CheckoutScreen';
 import CheckoutSuccessScreen from './Cart/CheckoutSuccessScreen';
 import ShoppingCartScreen from './Cart/ShoppingCartScreen';
+import LoginForm from './LoginForm';
+import LogOutScreen from './LogoutScreen';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -91,6 +93,8 @@ const App = () => {
               <Route path="/cart" component={ShoppingCartScreen} />
               <Route exact={true} path="/checkout" component={CheckoutScreen} />
               <Route exact={true} path="/checkout/success" component={CheckoutSuccessScreen} />
+              <Route path="/login" component={LoginForm} />
+              <Route path="/logout" component={LogOutScreen} />
               <Redirect to="/" />
             </Switch>
           </div>

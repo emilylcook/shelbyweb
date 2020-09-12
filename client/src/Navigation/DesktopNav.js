@@ -10,11 +10,13 @@ import clsx from 'clsx';
 import { navItems } from '../utils';
 import Logo from './Logo';
 import { getNumberOfItemsInCart } from '../utils/useCartData';
+import useAuth from '../utils/useAuth';
 
 export default function ButtonAppBar() {
   const classes = useStyles();
   const [hoverOn, setHoverOn] = useState(null);
   const [itemsInCart, setItemsInCart] = useState();
+  const { isAuthenticated } = useAuth();
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -79,6 +81,52 @@ export default function ButtonAppBar() {
             </Badge>
           </Link>
         </Grid>
+        {isAuthenticated && (
+          <Grid item className={classes.navItem}>
+            <div className={clsx(classes.listItemContainer)}>
+              <div key="admin">
+                <Typography className={classes.listItem} onMouseEnter={() => setHoverOn('admin')}>
+                  Admin
+                </Typography>
+                <div
+                  onMouseLeave={() => setHoverOn('')}
+                  className={clsx(classes.subMenu, {
+                    [classes.subMenuHidden]: hoverOn !== 'admin'
+                  })}
+                >
+                  <div key="admin/logout" className={classes.subMenuItemContainer}>
+                    <Link to={'/logout'} className={classes.subMenuItem}>
+                      logout
+                    </Link>
+                  </div>
+
+                  <div key="admin/manage-art" className={classes.subMenuItemContainer}>
+                    <Link to={'/admin/manage-art'} className={classes.subMenuItem}>
+                      manage arts
+                    </Link>
+                  </div>
+                  {/* {Object.entries(subItems).map((['key', { to, label }]) => (
+                    <div key={key} className={classes.subMenuItemContainer}>
+                      <Link to={to} className={classes.subMenuItem}>
+                        {label}
+                      </Link>
+                    </div>
+                  ))} */}
+                </div>
+              </div>
+              {/* ) : (
+                <Link
+                  key={key}
+                  to={to}
+                  onMouseEnter={() => setHoverOn(key)}
+                  className={classes.listItem}
+                >
+                  {label}
+                </Link>
+              )} */}
+            </div>
+          </Grid>
+        )}
       </Grid>
     </>
   );
