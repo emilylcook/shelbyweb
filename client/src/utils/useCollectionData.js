@@ -44,6 +44,7 @@ export default function useArtData() {
         setLoadingArt(false);
       });
   };
+  console.log(art);
 
   return { loading: loadingArt || loadingCollections, art, collections };
 }

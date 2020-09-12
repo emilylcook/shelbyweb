@@ -1,4 +1,3 @@
-import config from '../config';
 import axios from 'axios';
 
 const parseString = require('xml2js').parseString;
@@ -120,7 +119,7 @@ const taxCalculation = {
 };
 
 export const calculateShippingCosts = async (formFields, items) => {
-  const { shippingState, shippingCity, shippingPostal } = formFields;
+  const { shippingPostal } = formFields;
 
   let totalShipping = 0;
   const SELLER_ORIGIN = '98122';
@@ -153,7 +152,7 @@ export const calculateShippingCosts = async (formFields, items) => {
   });
 
   const USER_ID = '948EMILY3213';
-  const value = 1524;
+  // const value = 1524;
   const XML = `<RateV4Request USERID="${USER_ID}">
   <Revision>2</Revision>
    ${packagesXml}

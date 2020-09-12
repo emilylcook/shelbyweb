@@ -1,0 +1,210 @@
+import React, { useEffect, useState } from 'react';
+import { makeStyles } from '@material-ui/core/styles';
+import Paper from '@material-ui/core/Paper';
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableContainer from '@material-ui/core/TableContainer';
+import TableHead from '@material-ui/core/TableHead';
+import TablePagination from '@material-ui/core/TablePagination';
+import TableRow from '@material-ui/core/TableRow';
+
+import { useHistory } from 'react-router-dom';
+
+import useAuth from '../utils/useAuth';
+import useArtData from '../utils/useCollectionData';
+import { Art, columns, orderData, OrderType } from './tablehelpers';
+import { Grid, TableSortLabel, Typography } from '@material-ui/core';
+import { HorizontalTitle } from '../common';
+import SearchField from './SearchField';
+
+// TODO
+// filters on columns and such
+
+export default function ManageArt() {
+  const { isAuthenticated } = useAuth();
+  const history = useHistory();
+  const { art, loading } = useArtData();
+
+  const [tableData, setTableData] = useState<Art[]>([]);
+  const [visibleRows, setVisibleRows] = useState<Art[]>([]);
+  const [rowsPerPage, setRowsPerPage] = React.useState(25);
+  const [searchText, setSearchText] = useState<string>('');
+
+  const [order, setOrder] = React.useState<OrderType>('desc');
+  const [orderBy, setOrderBy] = React.useState<string>('name');
+
+  const createSortHandler = (property: string) => (event: React.MouseEvent<unknown>) => {
+    handleRequestSort(event, property);
+  };
+
+  const handleRequestSort = (event: React.MouseEvent<unknown>, property: string) => {
+    const isAsc = orderBy === property && order === 'asc';
+    setOrder(isAsc ? 'desc' : 'asc');
+    setOrderBy(property);
+    let sortedList = visibleRows;
+    sortedList = orderData(tableData, property, isAsc ? 'asc' : 'desc');
+
+    setVisibleRows(sortedList);
+  };
+
+  useEffect(() => {
+    if (art && !loading) {
+      setTableData(art);
+      const sorted = orderData(art, 'name', 'asc');
+      setVisibleRows(sorted);
+    }
+  }, [art, loading]);
+
+  if (!isAuthenticated) {
+    history.push('/');
+  }
+  const classes = useStyles();
+  const [page, setPage] = React.useState(0);
+
+  const handleChangePage = (event: unknown, newPage: number) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setRowsPerPage(+event.target.value);
+    setPage(0);
+  };
+
+  // Handle do search
+  const handleDoSearch = (value: string) => {
+    const toLowerCase = value.toLowerCase();
+    if (toLowerCase !== searchText) {
+      setSearchText(toLowerCase);
+      setPage(0); // on filter change we will go back to page 0
+    }
+  };
+
+  //   search on name
+  const matchedVisibleList = visibleRows.filter(x => x.name.toLowerCase().includes(searchText));
+
+  return (
+    <Grid container>
+      <Grid item xs={12} className={classes.header}>
+        <HorizontalTitle title="Manage Art" includeSpacer />
+
+        <Grid item xs={12} className={classes.search}>
+          <SearchField onChange={(e: string) => handleDoSearch(e)} />
+        </Grid>
+      </Grid>
+      <Grid item xs={12} className={classes.tableContainer}>
+        <Paper className={classes.root}>
+          <TableContainer className={classes.container}>
+            <Table stickyHeader aria-label=" table">
+              <TableHead className={classes.tableHeader}>
+                <TableRow className={classes.tableHeader}>
+                  <TableCell className={classes.headerCell}>
+                    {columns.map(column => (
+                      <TableSortLabel
+                        key={column.id}
+                        active={orderBy === column.id}
+                        direction={orderBy === column.id ? order : 'asc'}
+                        onClick={createSortHandler(column.id)}
+                        style={{ minWidth: column.minWidth }}
+                      >
+                        <Typography className={classes.headerItem}>{column.label}</Typography>
+                      </TableSortLabel>
+                    ))}
+                  </TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {matchedVisibleList
+                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                  .map(row => {
+                    return (
+                      <TableRow
+                        className={classes.row}
+                        hover
+                        role="checkbox"
+                        tabIndex={-1}
+                        key={row.id}
+                      >
+                        <TableCell className={classes.longCell}>{row.name}</TableCell>
+                        <TableCell className={classes.cell}>{row.collections.join(', ')}</TableCell>
+                        <TableCell className={classes.mediumCell}>{row.tags.join(', ')}</TableCell>
+                        <TableCell className={classes.cell}>
+                          {row.price ? `$${row.price}` : ''}
+                        </TableCell>
+                        <TableCell className={classes.cell}>{row.quantity}</TableCell>
+                        <TableCell className={classes.lastCell}>TBD</TableCell>
+                        {/* <TableCell>{row.price}</TableCell> */}
+                        {/* {columns.map(column => {
+
+                    const value = row[column.id];
+                    return (
+                      <TableCell key={column.id} align={column.align}>
+                        {column.format && typeof value === 'number' ? column.format(value) : value}
+                      </TableCell>
+                    );
+                  })} */}
+                      </TableRow>
+                    );
+                  })}
+              </TableBody>
+            </Table>
+          </TableContainer>
+          <TablePagination
+            rowsPerPageOptions={[10, 25, 100]}
+            component="div"
+            count={visibleRows.length}
+            rowsPerPage={rowsPerPage}
+            page={page}
+            onChangePage={handleChangePage}
+            onChangeRowsPerPage={handleChangeRowsPerPage}
+          />
+        </Paper>
+      </Grid>
+    </Grid>
+  );
+}
+
+const useStyles = makeStyles(theme => ({
+  search: { marginLeft: 50 },
+  header: {
+    marginTop: 20,
+    marginBottom: 20
+  },
+  tableContainer: {
+    marginLeft: 50,
+    marginRight: 50,
+    [theme.breakpoints.down('xs')]: {
+      marginBottom: 0
+    }
+  },
+  cell: {
+    width: 170
+  },
+  longCell: {
+    width: 300
+  },
+  mediumCell: {
+    width: 240
+  },
+  lastCell: {
+    width: 170,
+    flex: 1
+  },
+  row: {
+    display: 'flex'
+  },
+  root: {
+    width: '100%'
+  },
+  headerItem: {},
+  container: {
+    maxHeight: 440
+  },
+  headerCell: {
+    display: 'flex',
+    backgroundColor: '#acc1b1'
+  },
+  tableHeader: {
+    backgroundColor: '#acc1b1'
+  }
+}));

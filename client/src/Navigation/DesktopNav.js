@@ -100,30 +100,13 @@ export default function ButtonAppBar() {
                     </Link>
                   </div>
 
-                  <div key="admin/manage-art" className={classes.subMenuItemContainer}>
-                    <Link to={'/admin/manage-art'} className={classes.subMenuItem}>
+                  <div key="admin/manage" className={classes.subMenuItemContainer}>
+                    <Link to={'/admin/manage'} className={classes.subMenuItem}>
                       manage arts
                     </Link>
                   </div>
-                  {/* {Object.entries(subItems).map((['key', { to, label }]) => (
-                    <div key={key} className={classes.subMenuItemContainer}>
-                      <Link to={to} className={classes.subMenuItem}>
-                        {label}
-                      </Link>
-                    </div>
-                  ))} */}
                 </div>
               </div>
-              {/* ) : (
-                <Link
-                  key={key}
-                  to={to}
-                  onMouseEnter={() => setHoverOn(key)}
-                  className={classes.listItem}
-                >
-                  {label}
-                </Link>
-              )} */}
             </div>
           </Grid>
         )}

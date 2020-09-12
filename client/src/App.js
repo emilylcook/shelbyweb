@@ -19,6 +19,7 @@ import CheckoutSuccessScreen from './Cart/CheckoutSuccessScreen';
 import ShoppingCartScreen from './Cart/ShoppingCartScreen';
 import LoginForm from './LoginForm';
 import LogOutScreen from './LogoutScreen';
+import ManageArt from './Admin/ManageArt';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -86,8 +87,11 @@ const App = () => {
           <div className={classes.body}>
             <Switch>
               <Route path="/" exact component={Home} />
+              {/* admin routes */}
+
+              <Route path="/admin/manage" component={ManageArt} />
+              {/* normal routes */}
               <Route path="/about" exact component={About} />
-              {/* <Route path="/connect" exact component={Connect} /> */}
               <Route path="/commissions" exact component={Commissions} />
               <Route path="/artwork/:collection" component={Artwork} />
               <Route path="/cart" component={ShoppingCartScreen} />

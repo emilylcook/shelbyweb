@@ -30,7 +30,6 @@ export default function LoginForm() {
   const [error, setError] = React.useState('');
   const [loading, setLoading] = React.useState(false);
   const {
-    link,
     loginForm,
     loginContainer,
     bottomSpacing,
@@ -49,7 +48,7 @@ export default function LoginForm() {
       setLoading(true);
       await logIn(username, password);
 
-      const redirect = '/admin/arts';
+      const redirect = '/admin/manage';
       history.replace(redirect);
     } catch (error) {
       setLoading(false);

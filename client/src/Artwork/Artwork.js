@@ -38,6 +38,7 @@ const Artwork = ({ match }) => {
       const artInCollection = art.filter(x => x && x.collections.includes(selectedCollection.id));
       setArtToShow(artInCollection);
     }
+    // eslint-disable-next-line
   }, [match, loadingCollections, collections]);
 
   useEffect(() => {

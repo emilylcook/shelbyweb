@@ -21,8 +21,11 @@ export function AuthProvider(props: { children: React.ReactNode }) {
   React.useEffect(() => {
     async function fetchUser() {
       try {
-        const email = cookies.email;
-        setUser({ email: email });
+        const email = cookies.user;
+
+        if (email) {
+          setUser({ email: email });
+        }
       } catch (error) {
         console.log(error);
         setUser(null);
@@ -30,6 +33,7 @@ export function AuthProvider(props: { children: React.ReactNode }) {
       }
     }
     fetchUser();
+    // eslint-disable-next-line
   }, []);
 
   async function logIn(email: string, password: string) {
