@@ -205,7 +205,7 @@ const Artwork = ({ match }) => {
           setImageModalOpen(false);
           setImageModalDetails({});
         }}
-        collection={art}
+        collection={_art}
         details={imageModalDetails}
         open={imageModalOpen}
       />
