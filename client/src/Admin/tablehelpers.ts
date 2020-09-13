@@ -65,8 +65,8 @@ export const columns: Column[] = [
   { id: 'name', label: 'Name', minWidth: 300 },
   { id: 'collections', label: 'Collections', minWidth: 170 },
   { id: 'tags', label: 'Tags', minWidth: 240 },
-  { id: 'price', label: 'Price', minWidth: 170 },
-  { id: 'quantity', label: 'Quantity', minWidth: 170 },
+  { id: 'price', label: 'Price', minWidth: 100 },
+  { id: 'quantity', label: 'Quantity', minWidth: 120 },
   {
     id: 'shipping',
     label: 'Shipping Info',

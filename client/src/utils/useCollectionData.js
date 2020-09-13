@@ -30,28 +30,52 @@ export default function useArtData() {
   };
 
   const loadArt = () => {
-    let collections = [];
-    firebase
-      .database()
-      .ref('arts')
-      .on('value', snapshot => {
-        snapshot.forEach(collectionValues => {
-          var collection = collectionValues.val();
-          collections.push(collection);
+    if (!art || art.length === 0) {
+      let arts = [];
+      firebase
+        .database()
+        .ref('arts')
+        .once('value', snapshot => {
+          snapshot.forEach(collectionValues => {
+            var artt = collectionValues.val();
+            arts.push(artt);
+          });
+
+          setArt(arts);
+          setLoadingArt(false);
         });
-
-        setArt(collections);
-        setLoadingArt(false);
-      });
+    }
   };
-  console.log(art);
 
-  return { loading: loadingArt || loadingCollections, art, collections };
+  const saveArt = async ({ artId, item }) => {
+    if (!artId) {
+      throw Error('no new art');
+    }
+
+    var updates = {};
+    updates['/arts/' + artId] = item;
+
+    await firebase
+      .database()
+      .ref()
+      .update(updates);
+
+    // Update art
+    const updatedArt = [...art];
+    const updatedIndex = updatedArt.findIndex(x => x.id === artId);
+
+    if (updatedIndex > -1) {
+      updatedArt[updatedIndex] = item;
+    }
+
+    return updatedArt;
+  };
+
+  return { loading: loadingArt || loadingCollections, art, collections, saveArt };
 }
 
 export async function removeItemFromCollection(artId, quantity = 1) {
   try {
-    console.log('remove!!', artId);
     const snapshot = firebase
       .database()
       .ref('/arts/' + artId)
@@ -76,8 +100,6 @@ export async function removeItemFromCollection(artId, quantity = 1) {
     // Write the new post's data simultaneously in the posts list and the user's post list.
     var updates = {};
     updates['/arts/' + artId] = item;
-
-    console.log(updates);
 
     await firebase
       .database()

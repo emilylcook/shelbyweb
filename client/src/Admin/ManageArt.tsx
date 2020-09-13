@@ -11,12 +11,14 @@ import TableRow from '@material-ui/core/TableRow';
 
 import { useHistory } from 'react-router-dom';
 
+import EditIcon from '@material-ui/icons/Edit';
 import useAuth from '../utils/useAuth';
 import useArtData from '../utils/useCollectionData';
 import { Art, columns, orderData, OrderType } from './tablehelpers';
-import { Grid, TableSortLabel, Typography } from '@material-ui/core';
+import { Grid, IconButton, TableSortLabel, Typography } from '@material-ui/core';
 import { HorizontalTitle } from '../common';
 import SearchField from './SearchField';
+import EditArtModal from './EditArtModal';
 
 // TODO
 // filters on columns and such
@@ -31,7 +33,9 @@ export default function ManageArt() {
   const [rowsPerPage, setRowsPerPage] = React.useState(25);
   const [searchText, setSearchText] = useState<string>('');
 
-  const [order, setOrder] = React.useState<OrderType>('desc');
+  const [modalData, setModalData] = useState<Art | null>(null);
+
+  const [order, setOrder] = React.useState<OrderType>('asc');
   const [orderBy, setOrderBy] = React.useState<string>('name');
 
   const createSortHandler = (property: string) => (event: React.MouseEvent<unknown>) => {
@@ -56,9 +60,6 @@ export default function ManageArt() {
     }
   }, [art, loading]);
 
-  if (!isAuthenticated) {
-    history.push('/');
-  }
   const classes = useStyles();
   const [page, setPage] = React.useState(0);
 
@@ -70,6 +71,11 @@ export default function ManageArt() {
     setRowsPerPage(+event.target.value);
     setPage(0);
   };
+
+  if (!isAuthenticated) {
+    history.push('/');
+    return null;
+  }
 
   // Handle do search
   const handleDoSearch = (value: string) => {
@@ -85,6 +91,19 @@ export default function ManageArt() {
 
   return (
     <Grid container>
+      <EditArtModal
+        handleClose={(arts?: Art[]) => {
+          if (arts) {
+            setTableData(arts);
+            const sorted = orderData(arts, orderBy, order);
+            setVisibleRows(sorted);
+          }
+          setModalData(null);
+        }}
+        art={modalData}
+        open={!!modalData}
+      />
+
       <Grid item xs={12} className={classes.header}>
         <HorizontalTitle title="Manage Art" includeSpacer />
 
@@ -110,6 +129,11 @@ export default function ManageArt() {
                         <Typography className={classes.headerItem}>{column.label}</Typography>
                       </TableSortLabel>
                     ))}
+
+                    <Typography
+                      className={classes.headerItem}
+                      style={{ minWidth: 20 }}
+                    ></Typography>
                   </TableCell>
                 </TableRow>
               </TableHead>
@@ -128,21 +152,23 @@ export default function ManageArt() {
                         <TableCell className={classes.longCell}>{row.name}</TableCell>
                         <TableCell className={classes.cell}>{row.collections.join(', ')}</TableCell>
                         <TableCell className={classes.mediumCell}>{row.tags.join(', ')}</TableCell>
-                        <TableCell className={classes.cell}>
+                        <TableCell className={classes.priceCell}>
                           {row.price ? `$${row.price}` : ''}
                         </TableCell>
-                        <TableCell className={classes.cell}>{row.quantity}</TableCell>
-                        <TableCell className={classes.lastCell}>TBD</TableCell>
-                        {/* <TableCell>{row.price}</TableCell> */}
-                        {/* {columns.map(column => {
-
-                    const value = row[column.id];
-                    return (
-                      <TableCell key={column.id} align={column.align}>
-                        {column.format && typeof value === 'number' ? column.format(value) : value}
-                      </TableCell>
-                    );
-                  })} */}
+                        <TableCell className={classes.quantityCell}>{row.quantity}</TableCell>
+                        <TableCell className={classes.cell}>TBD</TableCell>
+                        <TableCell className={classes.lastCell}>
+                          {/* TODO pencil icon */}
+                          <div
+                            onClick={() => {
+                              setModalData(row);
+                            }}
+                          >
+                            <IconButton aria-label="edit" color="primary">
+                              <EditIcon />
+                            </IconButton>
+                          </div>
+                        </TableCell>
                       </TableRow>
                     );
                   })}
@@ -173,9 +199,16 @@ const useStyles = makeStyles(theme => ({
   tableContainer: {
     marginLeft: 50,
     marginRight: 50,
+    width: '-webkit-fill-available',
     [theme.breakpoints.down('xs')]: {
       marginBottom: 0
     }
+  },
+  quantityCell: {
+    width: 120
+  },
+  priceCell: {
+    width: 100
   },
   cell: {
     width: 170
@@ -187,7 +220,7 @@ const useStyles = makeStyles(theme => ({
     width: 240
   },
   lastCell: {
-    width: 170,
+    width: 20,
     flex: 1
   },
   row: {

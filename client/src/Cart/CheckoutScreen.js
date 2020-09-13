@@ -45,11 +45,8 @@ export default function CheckoutScreen() {
 
   const handleNext = async () => {
     if (activeStep === 1) {
-      console.log('calculate shipping');
-      // TODO: calculate shipping
       const itemsInCart = getItemsInCart();
       const shippingCost = await calculateShippingCosts(formFields, itemsInCart);
-      console.log('got shipping', shippingCost);
       setFormField('shippingCost', shippingCost);
     }
     setActiveStep(prevActiveStep => prevActiveStep + 1);
@@ -68,7 +65,6 @@ export default function CheckoutScreen() {
     const shipping = formFields?.shippingCost || 0;
     const taxes = 0; //TODO
 
-    console.log('SHIPPING,', shipping);
     let totalAmount = parseFloat(subTotal);
     if (shipping) {
       totalAmount += shipping;
@@ -139,10 +135,7 @@ export default function CheckoutScreen() {
     axios
       .post(`${config.API}/checkout`, paymentRequestJson)
       .then(function(response) {
-        console.log('RESPONSE', response);
-
         if (response.status === 200) {
-          console.log('SUCCESS', lineItems);
           lineItems
             .filter(x => x && x?.type === 'art')
             .forEach(item => {

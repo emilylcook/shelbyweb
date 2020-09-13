@@ -16,6 +16,7 @@ import KeyboardArrowLeftIcon from '@material-ui/icons/KeyboardArrowLeft';
 import { useTheme } from '@material-ui/core/styles';
 
 import { addProductToCart } from '../utils/useCartData';
+import useAuth from '../utils/useAuth';
 
 function DialogTitle({ children, onClose }) {
   const classes = useStyles();
@@ -35,6 +36,7 @@ function ImageModal({ open, collectionId, handleClose, collection, details = {} 
   const fullScreen = useMediaQuery(theme.breakpoints.down('xs'));
   const [modalDetails, setDetails] = useState(details);
   const { enqueueSnackbar } = useSnackbar();
+  const { isAuthenticated } = useAuth();
 
   const { path, key, name, info = {}, price, quantity = 0 } = modalDetails;
 
@@ -163,7 +165,7 @@ function ImageModal({ open, collectionId, handleClose, collection, details = {} 
               {info.type && <Typography>{info.type}</Typography>}
               {info.size && <Typography>{info.size}</Typography>}
               {info.status && info.status !== 'Available' && <Typography>{info.status}</Typography>}
-              {quantity > 0 && price && (
+              {isAuthenticated && quantity > 0 && price && (
                 <>
                   <Typography paragraph>${price}</Typography>
                   <Button color="primary" variant="contained" onClick={addToCart}>

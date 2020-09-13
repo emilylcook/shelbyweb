@@ -17,11 +17,13 @@ import Badge from '@material-ui/core/Badge';
 import { navItems } from '../utils';
 import Logo from './Logo';
 import { getNumberOfItemsInCart } from '../utils/useCartData';
+import useAuth from '../utils/useAuth';
 
 export default function MobileNav() {
   const classes = useStyles();
   const [drawerOpenState, setDrawerOpenState] = React.useState(false);
   const [open, setOpen] = React.useState(new Set());
+  const { isAuthenticated } = useAuth();
 
   const [itemsInCart, setItemsInCart] = useState();
 
@@ -127,18 +129,19 @@ export default function MobileNav() {
                 </ListItem>
               );
             })}
-
-            <ListItem>
-              <ListItemText>
-                <Link smooth to={itemsInCart && '/cart'} className={classes.listItem}>
-                  <Badge badgeContent={itemsInCart} color="primary">
-                    {' '}
-                    <Typography className={classes.listItemText}>Cart</Typography>
-                    <ShoppingCartIcon className={classes.shoppingCartIcon} />
-                  </Badge>
-                </Link>
-              </ListItemText>
-            </ListItem>
+            {isAuthenticated && (
+              <ListItem>
+                <ListItemText>
+                  <Link smooth to={itemsInCart && '/cart'} className={classes.listItem}>
+                    <Badge badgeContent={itemsInCart} color="primary">
+                      {' '}
+                      <Typography className={classes.listItemText}>Cart</Typography>
+                      <ShoppingCartIcon className={classes.shoppingCartIcon} />
+                    </Badge>
+                  </Link>
+                </ListItemText>
+              </ListItem>
+            )}
           </List>
         </div>
       </SwipeableDrawer>
