@@ -8,7 +8,12 @@ import { HashLink as Link } from 'react-router-hash-link';
 import { getItemsInCart, removeItemFromCart } from '../utils/useCartData';
 import { confirmItemIsAvailable } from '../utils/useCollectionData';
 
-export default function OrderSummary({ completed = false, cartView = false, shipping = null }) {
+export default function OrderSummary({
+  completed = false,
+  cartView = false,
+  shipping = null,
+  salesTaxRate = null
+}) {
   const classes = useStyles({});
 
   const [itemsInCart, setItemsInCart] = useState(getItemsInCart() || []);
@@ -32,7 +37,6 @@ export default function OrderSummary({ completed = false, cartView = false, ship
     }
   };
 
-  console.log('ORDER SUMMARY SHIPPING', shipping);
   verifyItemsInCart();
 
   const removeItem = async (id, showMessage = true) => {
@@ -68,14 +72,16 @@ export default function OrderSummary({ completed = false, cartView = false, ship
     }, 0)
     .toFixed(2);
 
-  let taxes = null;
+  let taxes = salesTaxRate ? (subTotal * salesTaxRate).toFixed(2) : null;
   // let shipping = null;
   let totalAmount = parseFloat(subTotal);
+
   if (shipping) {
-    totalAmount += shipping;
+    totalAmount += parseFloat(shipping);
   }
   if (taxes) {
-    totalAmount += taxes;
+    totalAmount += parseFloat(taxes);
+    totalAmount = totalAmount.toFixed(2);
   }
 
   const emptyCart = !itemsInCart || itemsInCart.length === 0;

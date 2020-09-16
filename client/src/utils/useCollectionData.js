@@ -11,6 +11,7 @@ export default function useArtData() {
   React.useEffect(() => {
     loadCollections();
     loadArt();
+    // eslint-disable-next-line
   }, []);
 
   const loadCollections = () => {

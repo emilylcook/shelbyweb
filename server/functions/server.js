@@ -63,16 +63,23 @@ app.post("/checkout/", async function (req, res, next) {
 
   // Charge the customer's card
   const payments_api = new squareConnect.PaymentsApi();
+
+  const totalInCents = parseInt((total * 100).toFixed(0));
+
+  console.log("-----", totalInCents);
   const request_body = {
     source_id: nonce,
     billing_address,
     buyer_email_address: email,
     amount_money: {
-      amount: total,
+      amount: totalInCents,
       currency: "USD",
     },
     idempotency_key: idempotency_key,
   };
+
+  console.log("-----------");
+  console.log(request_body);
 
   try {
     const response = await payments_api.createPayment(request_body);

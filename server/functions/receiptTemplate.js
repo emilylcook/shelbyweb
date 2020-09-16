@@ -12,7 +12,7 @@ function buildReceipt({
     lineItemsHtml = `${lineItemsHtml}
         <tr class="item">
           <td>${x.label}</td>
-          <td>$${x.amount}</td>
+          <td>$${x.amount.fixed(2)}</td>
         </tr>`;
   });
 
@@ -217,7 +217,7 @@ function buildReceipt({
         <tr class="total">
           <td></td>
 
-          <td>Total: $${total}</td>
+          <td>Total: $${total.toFixed(2)}</td>
         </tr>
       </table>
     </div></body>`;

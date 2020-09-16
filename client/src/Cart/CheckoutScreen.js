@@ -13,7 +13,7 @@ import axios from 'axios';
 import clsx from 'clsx';
 import { useSnackbar } from 'notistack';
 
-import { clearCart, getItemsInCart } from '../utils/useCartData';
+import { clearCart, getItemsInCart, getSalesRate } from '../utils/useCartData';
 import Square from './Square';
 import OrderSummary from './OrderSummary';
 import {
@@ -27,12 +27,12 @@ import { removeItemFromCollection } from '../utils/useCollectionData';
 import AddressModal from './AddressModal';
 import config from '../config';
 
-// TODO verify items are in cart are still available at some point
-
 export default function CheckoutScreen() {
   const classes = useStyles({});
   const history = useHistory();
   const { enqueueSnackbar } = useSnackbar();
+
+  // console.log('test sales tax lookup', salesTaxLookup('cat'))
 
   const [isLoad, setLoad] = useState(false);
   const [error, setError] = useState('');
@@ -55,7 +55,9 @@ export default function CheckoutScreen() {
       return false;
     }
 
-    return string1.toUpperCase() === string2.toUpperCase();
+    const result = string1.toUpperCase() === string2.toUpperCase();
+    console.log(string1, string2, result);
+    return result;
   };
 
   const handleNext = async () => {
@@ -97,9 +99,11 @@ export default function CheckoutScreen() {
           !checkIfEqual(shippingStreetAddress2, address2) ||
           !checkIfEqual(shippingCity, city) ||
           !checkIfEqual(shippingState, state) ||
-          !checkIfEqual(shippingPostal, zip5)
+          !checkIfEqual(shippingPostal, `${zip5}-${zip4}`)
         ) {
           showRecommendAddressModal = true;
+        } else {
+          showRecommendAddressModal = false;
         }
 
         // IF showRecommendAddressModal
@@ -107,7 +111,9 @@ export default function CheckoutScreen() {
           setRecommendedAddress(validateAddressResult.address);
         }
 
-        setFormFields({ ...formFields, shippingCost, zip4 });
+        const salesTaxRate = await getSalesRate(zip5, zip4);
+
+        setFormFields({ ...formFields, salesTaxRate, shippingCost, zip4 });
       }
     }
     if (!error && !showRecommendAddressModal) {
@@ -119,7 +125,6 @@ export default function CheckoutScreen() {
     if (address) {
       const { address1, address2, city, state, zip5, zip4 } = address;
 
-      console.log('---before', formFields.shippingCost);
       setFormFields({
         ...formFields,
         ...{
@@ -148,15 +153,18 @@ export default function CheckoutScreen() {
       }, 0)
       .toFixed(2);
 
+    subTotal = parseFloat(subTotal);
+
     const shipping = formFields?.shippingCost || 0;
-    const taxes = 0; //TODO
+    const taxes = parseFloat((subTotal * formFields.salesTaxRate).toFixed(2));
 
     let totalAmount = parseFloat(subTotal);
     if (shipping) {
-      totalAmount += shipping;
+      totalAmount += parseFloat(shipping);
     }
     if (taxes) {
-      totalAmount += taxes;
+      totalAmount += parseFloat(taxes);
+      totalAmount = parseFloat(totalAmount.toFixed(2));
     }
 
     let lineItems = finalItems.map(art => {
@@ -171,7 +179,7 @@ export default function CheckoutScreen() {
 
     lineItems.push({
       label: 'Subtotal',
-      amount: pricesInCart,
+      amount: subTotal,
       pending: false
     });
     lineItems.push({
@@ -483,7 +491,9 @@ export default function CheckoutScreen() {
         >
           {steps.map((label, index) => (
             <Step key={label} className={clsx(classes.step, classes.container)}>
-              <StepLabel onClick={() => (activeStep > index ? setActiveStep(index) : null)}>
+              <StepLabel
+                onClick={() => (activeStep > index && !error ? setActiveStep(index) : null)}
+              >
                 {label}
               </StepLabel>
 
@@ -492,7 +502,7 @@ export default function CheckoutScreen() {
                 {activeStep !== 2 && (
                   <div className={classes.actionsContainer}>
                     <Button
-                      disabled={!canGoToNextStep}
+                      disabled={!canGoToNextStep || error}
                       variant="contained"
                       color="primary"
                       onClick={() =>
@@ -520,7 +530,11 @@ export default function CheckoutScreen() {
       </Grid>
 
       <Grid item xs={12} sm={6} className={classes.container}>
-        <OrderSummary completed={false} shipping={formFields?.shippingCost} />
+        <OrderSummary
+          completed={false}
+          shipping={formFields?.shippingCost}
+          salesTaxRate={formFields?.salesTaxRate}
+        />
       </Grid>
     </Grid>
   );

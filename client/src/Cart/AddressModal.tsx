@@ -1,25 +1,16 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { makeStyles } from '@material-ui/styles';
-import MuiDialogTitle from '@material-ui/core/DialogTitle';
+
 import {
-  IconButton,
   Typography,
   Dialog,
   DialogContent,
   useMediaQuery,
   Button,
   Grid,
-  CircularProgress,
   Theme
 } from '@material-ui/core';
-import { useSnackbar } from 'notistack';
-import CloseIcon from '@material-ui/icons/Close';
-
 import { useTheme } from '@material-ui/core/styles';
-import { useForm, FormContext } from 'react-hook-form';
-
-import Section from '../common/Section';
-import useArtData from '../utils/useCollectionData';
 
 function AddressModal({ open, handleClose, formFields, recommendedAddress }: any) {
   const classes = useStyles();

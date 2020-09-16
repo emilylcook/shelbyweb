@@ -113,11 +113,6 @@ export const billingAddressFields = [
   }
 ];
 
-const taxCalculation = {
-  98021: 0.05,
-  98122: 0.023
-};
-
 const USER_ID = '948EMILY3213';
 
 export const calculateShippingCosts = async (formFields, items) => {
@@ -126,8 +121,13 @@ export const calculateShippingCosts = async (formFields, items) => {
   let totalShipping = 0;
   const SELLER_ORIGIN = '98122';
 
+  let shippingPostalToUse = shippingPostal.slice(0, 5);
+  console.log('shippingPostalToUse', shippingPostalToUse);
+
   let packagesXml = '';
+  console.log('my items', items);
   items.forEach(item => {
+    console.log('0----', item);
     if (!item.shippingDetails) {
       throw Error('Shipping details not provided on item');
     }
@@ -139,7 +139,7 @@ export const calculateShippingCosts = async (formFields, items) => {
     <Package ID="${id}">
       <Service>Priority</Service>
       <ZipOrigination>${SELLER_ORIGIN}</ZipOrigination>
-      <ZipDestination>${shippingPostal}</ZipDestination>
+      <ZipDestination>${shippingPostalToUse}</ZipDestination>
       <Pounds>${pounds}</Pounds>
       <Ounces>${ounces}</Ounces>
       <Container></Container>
@@ -159,6 +159,8 @@ export const calculateShippingCosts = async (formFields, items) => {
    ${packagesXml}
   </RateV4Request>`;
 
+  console.log('test', packagesXml);
+
   // TODO could do package 1-item in the same request
   // 155 = tracking
   // 108 = signature
@@ -169,6 +171,7 @@ export const calculateShippingCosts = async (formFields, items) => {
   const INSURANCE_SERVICE = 125;
 
   console.log('GET SHIPPING');
+
   await axios
     .post(getUrl)
     .then(result => {
@@ -204,7 +207,6 @@ export const calculateShippingCosts = async (formFields, items) => {
       console.log('USPS err', err);
     });
 
-  console.log('donetotalShipping', totalShipping);
   return totalShipping;
 };
 
@@ -217,6 +219,9 @@ export const validateAddress = async formFields => {
     shippingState
   } = formFields;
 
+  const zip = shippingPostal.split('-');
+  const zip5 = zip ? zip[0] : shippingPostal;
+
   const address2 = shippingStreetAddress2 ? shippingStreetAddress2.trim().replaceAll('#', '') : '';
   const XML = `<AddressValidateRequest USERID="948EMILY3213">
       <Revision>1</Revision>
@@ -225,7 +230,7 @@ export const validateAddress = async formFields => {
         <Address2>${address2}</Address2>
         <City>${shippingCity}</City>
         <State>${shippingState}</State>
-        <Zip5>${shippingPostal}</Zip5>
+        <Zip5>${zip5}</Zip5>
         <Zip4 />
       </Address>
     </AddressValidateRequest>`;

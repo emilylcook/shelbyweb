@@ -1,3 +1,5 @@
+import firebase from '../firebase';
+
 // TODO maybe add a time stamp when we add to local storage
 // if pulling and an hour or more later clear cart
 
@@ -81,3 +83,22 @@ export function removeItemFromCart(id) {
 export function clearCart() {
   localStorage.setItem('products', JSON.stringify([]));
 }
+
+export const getSalesRate = async (zip5, zip4) => {
+
+  const snapspot = firebase
+    .database()
+    .ref('/salesTax/' + zip5)
+    .once('value');
+
+  const value = await snapspot;
+  const tax = value.val();
+
+  const combinedRate = tax[zip4];
+
+  if (!combinedRate) {
+    return tax['lowest'];
+  }
+
+  return combinedRate;
+};

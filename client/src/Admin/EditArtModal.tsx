@@ -48,6 +48,8 @@ function EditArtModal({ open, art, handleClose }: any) {
 
   useEffect(() => {
     methods.reset(art);
+
+    // eslint-disable-next-line
   }, [art]);
 
   const onSubmit = async (values: any) => {
