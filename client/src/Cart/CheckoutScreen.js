@@ -32,10 +32,9 @@ export default function CheckoutScreen() {
   const history = useHistory();
   const { enqueueSnackbar } = useSnackbar();
 
-  // console.log('test sales tax lookup', salesTaxLookup('cat'))
-
   const [isLoad, setLoad] = useState(false);
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
   const [activeStep, setActiveStep] = React.useState(0);
   const [recommendedAddress, setRecommendedAddress] = React.useState(null);
 
@@ -56,13 +55,14 @@ export default function CheckoutScreen() {
     }
 
     const result = string1.toUpperCase() === string2.toUpperCase();
-    console.log(string1, string2, result);
     return result;
   };
 
   const handleNext = async () => {
     let error = false;
     let showRecommendAddressModal = false;
+
+    setLoading(true);
 
     if (activeStep === 1) {
       const itemsInCart = getItemsInCart();
@@ -72,8 +72,6 @@ export default function CheckoutScreen() {
         setError('Unable to calculate shipping');
         error = true;
       }
-
-      console.log('SET SHIPPING COST');
 
       const validateAddressResult = await validateAddress(formFields);
 
@@ -119,6 +117,8 @@ export default function CheckoutScreen() {
     if (!error && !showRecommendAddressModal) {
       setActiveStep(prevActiveStep => prevActiveStep + 1);
     }
+
+    setLoading(false);
   };
 
   const handleSelectAddress = address => {
@@ -502,7 +502,7 @@ export default function CheckoutScreen() {
                 {activeStep !== 2 && (
                   <div className={classes.actionsContainer}>
                     <Button
-                      disabled={!canGoToNextStep || error}
+                      disabled={!canGoToNextStep || error || loading}
                       variant="contained"
                       color="primary"
                       onClick={() =>
@@ -511,7 +511,13 @@ export default function CheckoutScreen() {
                       className={classes.button}
                       fullWidth
                     >
-                      {activeStep === steps.length - 1 ? 'Confirm and Pay' : 'Continue'}
+                      {loading ? (
+                        <CircularProgress size={20} />
+                      ) : activeStep === steps.length - 1 ? (
+                        'Confirm and Pay'
+                      ) : (
+                        'Continue'
+                      )}
                     </Button>
                   </div>
                 )}
@@ -547,11 +553,12 @@ const useStyles = makeStyles(theme => ({
   reviewRow: { marginBottom: 10 },
   row: { display: 'flex' },
   removeButton: {
+    height: 36,
     position: 'absolute',
     bottom: 6,
     right: 0,
     color: 'gray',
-    height: 20,
+
     textTransform: 'capitalize',
     fontSize: 12,
     [theme.breakpoints.down('xs')]: {
