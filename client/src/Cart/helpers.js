@@ -160,12 +160,10 @@ export const calculateShippingCosts = async (formFields, items) => {
    ${packagesXml}
   </RateV4Request>`;
 
-  console.log('test', packagesXml);
-
   // TODO could do package 1-item in the same request
   // 155 = tracking
   // 108 = signature
-  const getUrl = `http://secure.shippingapis.com/ShippingAPI.dll?API=RateV4&XML=${encodeURI(XML)}`;
+  const getUrl = `https://secure.shippingapis.com/ShippingAPI.dll?API=RateV4&XML=${encodeURI(XML)}`;
 
   const TRACKING_SERVICE = 155;
   const SIGNATURE_SERVICE = 108;
@@ -236,7 +234,7 @@ export const validateAddress = async formFields => {
       </Address>
     </AddressValidateRequest>`;
 
-  const getUrl = `http://secure.shippingapis.com/ShippingAPI.dll?API=Verify&XML=${encodeURI(XML)}`;
+  const getUrl = `https://secure.shippingapis.com/ShippingAPI.dll?API=Verify&XML=${encodeURI(XML)}`;
 
   let address = null;
   let error = false;
