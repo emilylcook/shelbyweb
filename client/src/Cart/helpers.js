@@ -224,7 +224,7 @@ export const validateAddress = async formFields => {
   const zip5 = zip ? zip[0] : shippingPostal;
 
   const address2 = shippingStreetAddress2 ? shippingStreetAddress2.trim().replaceAll('#', '') : '';
-  const XML = `<AddressValidateRequest USERID="948EMILY3213">
+  const XML = `<AddressValidateRequest USERID="${USER_ID}">
       <Revision>1</Revision>
       <Address ID="0">
         <Address1>${shippingStreetAddress}</Address1>
