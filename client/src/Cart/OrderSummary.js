@@ -32,6 +32,7 @@ export default function OrderSummary({ completed = false, cartView = false, ship
     }
   };
 
+  console.log('ORDER SUMMARY SHIPPING', shipping);
   verifyItemsInCart();
 
   const removeItem = async (id, showMessage = true) => {

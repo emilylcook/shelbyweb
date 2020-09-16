@@ -20,9 +20,11 @@ import {
   billingAddressFields,
   emailRegex,
   calculateShippingCosts,
+  validateAddress,
   shippingAddressFields
 } from './helpers';
 import { removeItemFromCollection } from '../utils/useCollectionData';
+import AddressModal from './AddressModal';
 import config from '../config';
 
 // TODO verify items are in cart are still available at some point
@@ -33,7 +35,9 @@ export default function CheckoutScreen() {
   const { enqueueSnackbar } = useSnackbar();
 
   const [isLoad, setLoad] = useState(false);
+  const [error, setError] = useState('');
   const [activeStep, setActiveStep] = React.useState(0);
+  const [recommendedAddress, setRecommendedAddress] = React.useState(null);
 
   const steps = getSteps();
 
@@ -43,12 +47,94 @@ export default function CheckoutScreen() {
     setFormFields({ ...formFields, [name]: val });
   };
 
+  const checkIfEqual = (string1, string2) => {
+    if (!string1 && !string2) {
+      return true;
+    }
+    if ((string1 && !string2) || (!string1 && string2)) {
+      return false;
+    }
+
+    return string1.toUpperCase() === string2.toUpperCase();
+  };
+
   const handleNext = async () => {
+    let error = false;
+    let showRecommendAddressModal = false;
+
     if (activeStep === 1) {
       const itemsInCart = getItemsInCart();
       const shippingCost = await calculateShippingCosts(formFields, itemsInCart);
-      setFormField('shippingCost', shippingCost);
+
+      if (shippingCost === null || shippingCost === 0 || shippingCost >= 100000) {
+        setError('Unable to calculate shipping');
+        error = true;
+      }
+
+      console.log('SET SHIPPING COST');
+
+      const validateAddressResult = await validateAddress(formFields);
+
+      if (validateAddressResult.error || !validateAddressResult.address) {
+        enqueueSnackbar('Unable to verify address, Please check and try again', {
+          variant: 'error',
+          autoHideDuration: 4500
+        });
+        error = true;
+      } else {
+        const { address1, address2, city, state, zip5, zip4 } = validateAddressResult.address;
+
+        const {
+          shippingStreetAddress,
+          shippingStreetAddress2 = null,
+          shippingPostal,
+          shippingCity,
+          shippingState
+        } = formFields;
+
+        if (
+          !checkIfEqual(shippingStreetAddress, address1) ||
+          !checkIfEqual(shippingStreetAddress2, address2) ||
+          !checkIfEqual(shippingCity, city) ||
+          !checkIfEqual(shippingState, state) ||
+          !checkIfEqual(shippingPostal, zip5)
+        ) {
+          showRecommendAddressModal = true;
+        }
+
+        // IF showRecommendAddressModal
+        if (showRecommendAddressModal) {
+          setRecommendedAddress(validateAddressResult.address);
+        }
+
+        setFormFields({ ...formFields, shippingCost, zip4 });
+      }
     }
+    if (!error && !showRecommendAddressModal) {
+      setActiveStep(prevActiveStep => prevActiveStep + 1);
+    }
+  };
+
+  const handleSelectAddress = address => {
+    if (address) {
+      const { address1, address2, city, state, zip5, zip4 } = address;
+
+      console.log('---before', formFields.shippingCost);
+      setFormFields({
+        ...formFields,
+        ...{
+          shippingStreetAddress: address1,
+          shippingStreetAddress2: address2,
+          shippingCity: city,
+          shippingState: state,
+          shippingPostal: `${zip5}-${zip4}`
+        }
+      });
+    }
+
+    // and move forward!
+    setRecommendedAddress(null);
+
     setActiveStep(prevActiveStep => prevActiveStep + 1);
   };
 
@@ -168,7 +254,7 @@ export default function CheckoutScreen() {
     // clearCart();
   };
 
-  const checkIfValid = async () => {
+  const checkIfValid = () => {
     let valid = false;
     switch (activeStep) {
       case 0:
@@ -197,14 +283,6 @@ export default function CheckoutScreen() {
             valid = true;
           }
         }
-
-        // if (valid) {
-        //   // TODO: calculate shipping
-        //   const itemsInCart = getItemsInCart();
-        //   const shippingCost = await calculateShippingCosts(formFields, itemsInCart);
-        //   console.log('got shipping', shippingCost);
-        //   setFormField('shippingCost', shippingCost);
-        // }
 
         break;
       case 2:
@@ -329,6 +407,13 @@ export default function CheckoutScreen() {
                   </Grid>
                 );
               })}
+
+            {error && (
+              <Grid item xs={12}>
+                <Typography color="error">{error}</Typography>
+                <Typography>Please contact shelbykcook19@gmail.com for assistance.</Typography>
+              </Grid>
+            )}
           </Grid>
         );
       case 2:
@@ -381,6 +466,13 @@ export default function CheckoutScreen() {
 
   return (
     <Grid container className={classes.root}>
+      <AddressModal
+        handleClose={handleSelectAddress}
+        formFields={formFields}
+        recommendedAddress={recommendedAddress}
+        open={!!recommendedAddress}
+      />
+
       <Grid item xs={12} sm={6}>
         {/* <Square paymentForm={window.SqPaymentForm} /> */}
         <Stepper

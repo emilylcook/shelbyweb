@@ -118,6 +118,8 @@ const taxCalculation = {
   98122: 0.023
 };
 
+const USER_ID = '948EMILY3213';
+
 export const calculateShippingCosts = async (formFields, items) => {
   const { shippingPostal } = formFields;
 
@@ -151,7 +153,6 @@ export const calculateShippingCosts = async (formFields, items) => {
     `;
   });
 
-  const USER_ID = '948EMILY3213';
   // const value = 1524;
   const XML = `<RateV4Request USERID="${USER_ID}">
   <Revision>2</Revision>
@@ -163,13 +164,11 @@ export const calculateShippingCosts = async (formFields, items) => {
   // 108 = signature
   const getUrl = `http://secure.shippingapis.com/ShippingAPI.dll?API=RateV4&XML=${encodeURI(XML)}`;
 
-  // let totalShipping = 0;
-
   const TRACKING_SERVICE = 155;
   const SIGNATURE_SERVICE = 108;
   const INSURANCE_SERVICE = 125;
 
-  // NOTE this is just one item, we need every item.
+  console.log('GET SHIPPING');
   await axios
     .post(getUrl)
     .then(result => {
@@ -193,7 +192,7 @@ export const calculateShippingCosts = async (formFields, items) => {
               parseInt(specialServices[SIGNATURE_SERVICE]) +
               parseInt(specialServices[TRACKING_SERVICE]);
           } catch (e) {
-            totalShipping += 999;
+            totalShipping += 100000;
             console.log('Error - setting max shipping', e);
           }
         });
@@ -201,9 +200,74 @@ export const calculateShippingCosts = async (formFields, items) => {
     })
     .catch(err => {
       // Do something
+      totalShipping += 100000;
       console.log('USPS err', err);
     });
 
-  console.log('am i done', totalShipping);
+  console.log('donetotalShipping', totalShipping);
   return totalShipping;
+};
+
+export const validateAddress = async formFields => {
+  const {
+    shippingStreetAddress,
+    shippingStreetAddress2,
+    shippingPostal,
+    shippingCity,
+    shippingState
+  } = formFields;
+
+  const address2 = shippingStreetAddress2 ? shippingStreetAddress2.trim().replaceAll('#', '') : '';
+  const XML = `<AddressValidateRequest USERID="948EMILY3213">
+      <Revision>1</Revision>
+      <Address ID="0">
+        <Address1>${shippingStreetAddress}</Address1>
+        <Address2>${address2}</Address2>
+        <City>${shippingCity}</City>
+        <State>${shippingState}</State>
+        <Zip5>${shippingPostal}</Zip5>
+        <Zip4 />
+      </Address>
+    </AddressValidateRequest>`;
+
+  const getUrl = `http://secure.shippingapis.com/ShippingAPI.dll?API=Verify&XML=${encodeURI(XML)}`;
+
+  let address = null;
+  let error = false;
+  await axios
+    .post(getUrl)
+    .then(result => {
+      parseString(result.data, function(err, response) {
+        if (response.Error) {
+          address = false;
+          error = response.Error[0].Description;
+          return false;
+        }
+
+        if (response?.AddressValidateResponse?.Address[0].Error) {
+          address = false;
+          error = response?.AddressValidateResponse?.Address[0].Error[0].Description;
+          return false;
+        }
+
+        if (response?.AddressValidateResponse?.Address[0]?.Zip4[0]) {
+          // get USPS address
+          const recommendedAddress = response?.AddressValidateResponse?.Address[0];
+          address = {
+            address1: recommendedAddress.Address2[0],
+            address2: recommendedAddress.Address1 ? recommendedAddress.Address1[0] : null,
+            city: recommendedAddress.City[0],
+            state: recommendedAddress.State[0],
+            zip5: recommendedAddress.Zip5[0],
+            zip4: recommendedAddress.Zip4[0]
+          };
+        }
+      });
+    })
+    .catch(err => {
+      // Do something
+      console.log('USPS validate address err', err);
+    });
+
+  return { address, error };
 };
