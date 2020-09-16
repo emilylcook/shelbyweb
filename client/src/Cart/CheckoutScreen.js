@@ -419,7 +419,7 @@ export default function CheckoutScreen() {
             {error && (
               <Grid item xs={12}>
                 <Typography color="error">{error}</Typography>
-                <Typography>Please contact shelbykcook19@gmail.com for assistance.</Typography>
+                <Typography>Please contact shelbykcook.art@gmail.com for assistance.</Typography>
               </Grid>
             )}
           </Grid>

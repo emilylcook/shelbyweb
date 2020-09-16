@@ -1,4 +1,5 @@
 import axios from 'axios';
+import config from '../config';
 
 const parseString = require('xml2js').parseString;
 
@@ -113,7 +114,7 @@ export const billingAddressFields = [
   }
 ];
 
-const USER_ID = '948EMILY3213';
+const USER_ID = config.USPS_USER_ID;
 
 export const calculateShippingCosts = async (formFields, items) => {
   const { shippingPostal } = formFields;
