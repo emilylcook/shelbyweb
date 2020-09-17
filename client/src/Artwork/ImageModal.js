@@ -107,7 +107,6 @@ function ImageModal({ open, collectionId, handleClose, collection, details = {} 
       path: modalDetails.path,
       info: modalDetails.info
     };
-    console.log(item);
 
     const result = addProductToCart(item);
 

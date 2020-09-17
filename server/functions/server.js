@@ -16,8 +16,8 @@ app.use(bodyParser.json());
 
 var corsOptions = {
   origin: function (origin, callback) {
-    // if ("https://shelbykcook.com" === origin || !origin) {
-    if ("http://localhost:3000" === origin || !origin) {
+    if ("https://shelbykcook.com" === origin || !origin) {
+      // if ("http://localhost:3000" === origin || !origin) {
       callback(null, true);
     } else {
       console.log("ORIGIN NOT ALLOWED:" + origin);
@@ -66,7 +66,6 @@ app.post("/checkout/", async function (req, res, next) {
 
   const totalInCents = parseInt((total * 100).toFixed(0));
 
-  console.log("-----", totalInCents);
   const request_body = {
     source_id: nonce,
     billing_address,
@@ -78,22 +77,32 @@ app.post("/checkout/", async function (req, res, next) {
     idempotency_key: idempotency_key,
   };
 
-  console.log("-----------");
-  console.log(request_body);
-
   try {
     const response = await payments_api.createPayment(request_body);
 
     // TODO handle not success? if card is declined? etc.
-
     console.log("response", response);
+
+    let last_four = "";
+    let receipt_number = "";
+
+    if (
+      response &&
+      response.payment &&
+      response.payment.card_details &&
+      response.payment.card_details.card
+    ) {
+      last_four = response.payment.card_details.card.last_4;
+      receipt_number = response.payment.receipt_number;
+    }
+
     const mailBody = buildReceipt({
       lineItems,
       total,
       shipping_address,
       billing_address,
-      last_four: response?.payment?.card_details?.card?.last_4,
-      receipt_number: response?.payment?.receipt_number,
+      last_four: last_four,
+      receipt_number: receipt_number,
     });
 
     // send to user and shelby
@@ -131,7 +140,7 @@ app.post("/checkout/", async function (req, res, next) {
     });
   } catch (error) {
     console.log(error);
-    console.log("error", error.response?.text);
+    console.log("error", error.response.text);
 
     return res.status(500).send({
       message: error,

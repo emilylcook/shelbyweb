@@ -123,12 +123,10 @@ export const calculateShippingCosts = async (formFields, items) => {
   const SELLER_ORIGIN = '98122';
 
   let shippingPostalToUse = shippingPostal.slice(0, 5);
-  console.log('shippingPostalToUse', shippingPostalToUse);
 
   let packagesXml = '';
-  console.log('my items', items);
+
   items.forEach(item => {
-    console.log('0----', item);
     if (!item.shippingDetails) {
       throw Error('Shipping details not provided on item');
     }
@@ -168,8 +166,6 @@ export const calculateShippingCosts = async (formFields, items) => {
   const TRACKING_SERVICE = 155;
   const SIGNATURE_SERVICE = 108;
   const INSURANCE_SERVICE = 125;
-
-  console.log('GET SHIPPING');
 
   await axios
     .post(getUrl)
