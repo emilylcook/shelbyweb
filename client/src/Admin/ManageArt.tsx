@@ -141,6 +141,14 @@ export default function ManageArt() {
                 {matchedVisibleList
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map(row => {
+                    const VALID_SHIPPING_DETAILS =
+                      row.shippingDetails &&
+                      typeof row.shippingDetails.length === 'number' &&
+                      typeof row.shippingDetails.height === 'number' &&
+                      typeof row.shippingDetails.width === 'number' &&
+                      typeof row.shippingDetails.pounds === 'number' &&
+                      typeof row.shippingDetails.ounces === 'number';
+
                     return (
                       <TableRow
                         className={classes.row}
@@ -156,7 +164,9 @@ export default function ManageArt() {
                           {row.price ? `$${row.price}` : ''}
                         </TableCell>
                         <TableCell className={classes.quantityCell}>{row.quantity}</TableCell>
-                        <TableCell className={classes.cell}>TBD</TableCell>
+                        <TableCell className={classes.cell}>
+                          {VALID_SHIPPING_DETAILS ? 'Valid' : 'Missing/Incomplete'}
+                        </TableCell>
                         <TableCell className={classes.lastCell}>
                           {/* TODO pencil icon */}
                           <div

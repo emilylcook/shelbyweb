@@ -123,6 +123,18 @@ function ImageModal({ open, collectionId, handleClose, collection, details = {} 
     }
   };
 
+  const VALID_QUANTITY = quantity > 0 && price;
+  const VALID_SHIPPING_DETAILS =
+    modalDetails &&
+    modalDetails.shippingDetails &&
+    typeof modalDetails.shippingDetails.length === 'number' &&
+    typeof modalDetails.shippingDetails.height === 'number' &&
+    typeof modalDetails.shippingDetails.width === 'number' &&
+    typeof modalDetails.shippingDetails.pounds === 'number' &&
+    typeof modalDetails.shippingDetails.ounces === 'number';
+
+  const CAN_ADD_TO_CART = isAuthenticated && VALID_QUANTITY && VALID_SHIPPING_DETAILS;
+
   return (
     <Dialog
       fullScreen={fullScreen}
@@ -164,7 +176,7 @@ function ImageModal({ open, collectionId, handleClose, collection, details = {} 
               {info.type && <Typography>{info.type}</Typography>}
               {info.size && <Typography>{info.size}</Typography>}
               {info.status && info.status !== 'Available' && <Typography>{info.status}</Typography>}
-              {isAuthenticated && quantity > 0 && price && (
+              {CAN_ADD_TO_CART && (
                 <>
                   <Typography paragraph>${price}</Typography>
                   <Button color="primary" variant="contained" onClick={addToCart}>
