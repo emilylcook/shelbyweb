@@ -2,9 +2,16 @@ import React from 'react';
 import { Grid, Typography, makeStyles } from '@material-ui/core';
 
 import treelineImage from '../assets/treeline.png';
+import useArtData from '../utils/useCollectionData';
 
 export default function CheckoutSuccessScreen() {
   const classes = useStyles({});
+  const { clearArtData } = useArtData();
+
+  React.useEffect(() => {
+    clearArtData();
+    // eslint-disable-next-line
+  }, []);
 
   const queryString = window.location.search;
   const params = new URLSearchParams(queryString);

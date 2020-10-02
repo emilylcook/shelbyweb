@@ -9,10 +9,19 @@ export default function useArtData() {
 
   // initial load
   React.useEffect(() => {
-    loadCollections();
-    loadArt();
+    if (collections.length === 0) {
+      loadCollections();
+      loadArt();
+    }
     // eslint-disable-next-line
   }, []);
+
+  const clearArtData = () => {
+    if (collections.length > 0) {
+      setCollections();
+      setArt([]);
+    }
+  };
 
   const loadCollections = () => {
     let collections = [];
@@ -72,7 +81,7 @@ export default function useArtData() {
     return updatedArt;
   };
 
-  return { loading: loadingArt || loadingCollections, art, collections, saveArt };
+  return { clearArtData, loading: loadingArt || loadingCollections, art, collections, saveArt };
 }
 
 export async function removeItemFromCollection(artId, quantity = 1) {
@@ -90,7 +99,8 @@ export async function removeItemFromCollection(artId, quantity = 1) {
     item.quantity = item.quantity - quantity;
 
     if (item.quantity === 0) {
-      item.status = 'Sold';
+      console.log(item);
+      item.info.status = 'Sold';
       const index = item.tags.indexOf('available');
 
       if (index !== -1) {

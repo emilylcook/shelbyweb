@@ -16,7 +16,7 @@ app.use(bodyParser.json());
 
 var corsOptions = {
   origin: function (origin, callback) {
-    const allowedOrigin = functions.config().allowedOrigin;
+    const allowedOrigin = functions.config().origin.allowed;
     if (allowedOrigin === origin || !origin) {
       callback(null, true);
     } else {
@@ -80,11 +80,6 @@ app.post("/checkout/", async function (req, res, next) {
   try {
     const response = await payments_api.createPayment(request_body);
 
-    // TODO handle not success? if card is declined? etc.
-    console.log("PAYMENT RESPONSE", response);
-
-    // if fail we need to do not continue, obviously
-
     let last_four = "";
     let receipt_number = "";
 
@@ -112,7 +107,7 @@ app.post("/checkout/", async function (req, res, next) {
       to: "emilycookx@gmail.com",
       cc: "shelbykcook.art@gmail.com",
       from: "no-reply@myemail.com",
-      subject: `Receipt from shelbykcook.art`,
+      subject: `Order confirmation from Shelby K Cook Art`,
       text: JSON.stringify(mailBody),
       html: mailBody,
     };
@@ -140,7 +135,7 @@ app.post("/checkout/", async function (req, res, next) {
       orderNumber: response.payment.receipt_number,
     });
   } catch (error) {
-    console.log("-----ERROR1------");
+    console.log("-----ERROR------");
     console.log(error.response.text);
 
     let errorCode = -1;
