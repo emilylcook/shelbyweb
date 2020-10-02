@@ -13,7 +13,7 @@ import axios from 'axios';
 import clsx from 'clsx';
 import { useSnackbar } from 'notistack';
 
-import { clearCart, getItemsInCart, getSalesRate } from '../utils/useCartData';
+import { clearCart, getItemsInCart, removeItemFromCart, getSalesRate } from '../utils/useCartData';
 import Square from './Square';
 import OrderSummary from './OrderSummary';
 import {
@@ -26,6 +26,7 @@ import {
 import { removeItemFromCollection } from '../utils/useCollectionData';
 import AddressModal from './AddressModal';
 import config from '../config';
+import { confirmItemIsAvailable } from '../utils/useCollectionData';
 
 export default function CheckoutScreen() {
   const classes = useStyles({});
@@ -143,8 +144,40 @@ export default function CheckoutScreen() {
     setActiveStep(prevActiveStep => prevActiveStep + 1);
   };
 
-  const handleCompletePayment = () => {
-    const finalItems = getItemsInCart();
+  const handleCompletePayment = async () => {
+    let finalItems = getItemsInCart();
+
+    if (finalItems && finalItems.length > 0) {
+      await Promise.all(
+        finalItems.map(async x => {
+          const availableInDatabase = await confirmItemIsAvailable(x.collectionId, x.id);
+
+          if (!availableInDatabase) {
+            // if item is not available, remove it
+            const result = await removeItemFromCart(x.id);
+            if (result) {
+              const modifiedItems = [...finalItems];
+              const itemToRemove = modifiedItems.findIndex(y => y.id === x.id);
+              modifiedItems.splice(itemToRemove, 1);
+
+              finalItems = modifiedItems;
+            }
+
+            enqueueSnackbar(`${x.name} is no longer available`, {
+              variant: 'error',
+              autoHideDuration: 4500
+            });
+          }
+          return;
+        })
+      );
+    }
+
+    if (!finalItems || finalItems.length === 0) {
+      setTimeout(function() {
+        history.push('/cart');
+      }, 4500);
+    }
 
     const pricesInCart = finalItems?.flatMap(x => x.price);
     let subTotal = pricesInCart
@@ -248,13 +281,16 @@ export default function CheckoutScreen() {
         }
       })
       .catch(function(error) {
-        console.log('ERROR', error);
-        enqueueSnackbar('Unable to complete order', {
+        console.log('RETURN VALUE');
+
+        const errorMessage = error?.response?.data?.message || 'Unable to complete order';
+
+        enqueueSnackbar(errorMessage, {
           variant: 'error',
           autoHideDuration: 4500
         });
-        // setSubscribed('error');
-        // setLoading(false);
+
+        setActiveStep(2);
       });
 
     // on success:

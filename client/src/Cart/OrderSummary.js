@@ -5,6 +5,8 @@ import Typography from '@material-ui/core/Typography';
 import { useSnackbar } from 'notistack';
 import { HashLink as Link } from 'react-router-hash-link';
 
+import { useHistory } from 'react-router';
+
 import { getItemsInCart, removeItemFromCart } from '../utils/useCartData';
 import { confirmItemIsAvailable } from '../utils/useCollectionData';
 
@@ -15,6 +17,7 @@ export default function OrderSummary({
   salesTaxRate = null
 }) {
   const classes = useStyles({});
+  const history = useHistory();
 
   const [itemsInCart, setItemsInCart] = useState(getItemsInCart() || []);
   const { enqueueSnackbar } = useSnackbar();
@@ -29,7 +32,7 @@ export default function OrderSummary({
 
           removeItem(x.id, false);
           enqueueSnackbar(`${x.name} is no longer available`, {
-            variant: 'warning',
+            variant: 'error',
             autoHideDuration: 4500
           });
         }
@@ -38,6 +41,12 @@ export default function OrderSummary({
   };
 
   verifyItemsInCart();
+
+  if (!cartView && itemsInCart.length === 0) {
+    setTimeout(function() {
+      history.push('/cart');
+    }, 4500);
+  }
 
   const removeItem = async (id, showMessage = true) => {
     const result = await removeItemFromCart(id);

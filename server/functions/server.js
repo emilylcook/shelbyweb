@@ -16,8 +16,8 @@ app.use(bodyParser.json());
 
 var corsOptions = {
   origin: function (origin, callback) {
-    if ("https://shelbykcook.com" === origin || !origin) {
-      // if ("http://localhost:3000" === origin || !origin) {
+    const allowedOrigin = functions.config().allowedOrigin;
+    if (allowedOrigin === origin || !origin) {
       callback(null, true);
     } else {
       console.log("ORIGIN NOT ALLOWED:" + origin);
@@ -81,7 +81,9 @@ app.post("/checkout/", async function (req, res, next) {
     const response = await payments_api.createPayment(request_body);
 
     // TODO handle not success? if card is declined? etc.
-    console.log("response", response);
+    console.log("PAYMENT RESPONSE", response);
+
+    // if fail we need to do not continue, obviously
 
     let last_four = "";
     let receipt_number = "";
@@ -110,7 +112,7 @@ app.post("/checkout/", async function (req, res, next) {
       to: "emilycookx@gmail.com",
       cc: "shelbykcook.art@gmail.com",
       from: "no-reply@myemail.com",
-      subject: `PURCHASE`,
+      subject: `Receipt from shelbykcook.art`,
       text: JSON.stringify(mailBody),
       html: mailBody,
     };
@@ -128,7 +130,6 @@ app.post("/checkout/", async function (req, res, next) {
       })
     );
 
-    // TODO put this at end
     transporter.sendMail(mailOptions, function (error, info) {
       console.log("errorEmail", error);
       console.log("errorInfo", info);
@@ -139,17 +140,40 @@ app.post("/checkout/", async function (req, res, next) {
       orderNumber: response.payment.receipt_number,
     });
   } catch (error) {
-    console.log(error);
-    console.log("error", error.response.text);
+    console.log("-----ERROR1------");
+    console.log(error.response.text);
 
-    return res.status(500).send({
-      message: error,
+    let errorCode = -1;
+    at;
+    try {
+      const errorJson = JSON.parse(error.response.text);
+      errorCode = errorJson.errors[0].code;
+    } catch (e) {}
+
+    let errorMessage = "Unable to complete order";
+    switch (errorCode) {
+      case "CARD_TOKEN_USED":
+        errorMessage = "Unable to complete payment";
+        break;
+      case "CVV_FAILURE":
+        errorMessage = "Invalid CVV number";
+        break;
+      case "ADDRESS_VERIFICATION_FAILURE":
+        errorMessage = "Invalid billing address";
+        break;
+      case "INVALID_EXPIRATION":
+        errorMessage = "Invalid expiration";
+        break;
+      case "GENERIC_DECLINE":
+        errorMessage = "Card was declined";
+        break;
+      default:
+        errorMessage = "Unable to complete payment";
+    }
+
+    return res.status(400).send({
+      message: errorMessage,
     });
-
-    // res.render("process-payment", {
-    //   title: "Payment Failure",
-    //   result: error.response.text,
-    // });
   }
 });
 

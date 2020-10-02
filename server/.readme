@@ -5,4 +5,5 @@ setting firebase envs
  run locally
  firebase emulators:start
  
- //firebase functions:config:get > .runtimeconfig.json
+//firebase functions:config:set orgin.allowed=https://shelbykcook.com
+ 
