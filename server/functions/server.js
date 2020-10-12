@@ -102,12 +102,18 @@ app.post("/checkout/", async function (req, res, next) {
       receipt_number: receipt_number,
     });
 
+    const ENV = functions.config().env.name;
+    let subject =
+      ENV === "DEV"
+        ? `DEV - Order confirmation from Shelby K Cook Art`
+        : `Order confirmation from Shelby K Cook Art`;
+
     // send to user and shelby
     const mailOptions = {
       to: "emilycookx@gmail.com",
       cc: "shelbykcook.art@gmail.com",
       from: "no-reply@myemail.com",
-      subject: `Order confirmation from Shelby K Cook Art`,
+      subject,
       text: JSON.stringify(mailBody),
       html: mailBody,
     };
@@ -126,8 +132,9 @@ app.post("/checkout/", async function (req, res, next) {
     );
 
     transporter.sendMail(mailOptions, function (error, info) {
-      console.log("errorEmail", error);
-      console.log("errorInfo", info);
+      if (error) {
+        console.log("errorEmail", error);
+      }
     });
 
     return res.status(200).send({

@@ -217,11 +217,13 @@ export const validateAddress = async formFields => {
   const zip = shippingPostal.split('-');
   const zip5 = zip ? zip[0] : shippingPostal;
 
+  const address1 = shippingStreetAddress.trim().replaceAll('#', '');
   const address2 = shippingStreetAddress2 ? shippingStreetAddress2.trim().replaceAll('#', '') : '';
+
   const XML = `<AddressValidateRequest USERID="${USER_ID}">
       <Revision>1</Revision>
       <Address ID="0">
-        <Address1>${shippingStreetAddress}</Address1>
+        <Address1>${address1}</Address1>
         <Address2>${address2}</Address2>
         <City>${shippingCity}</City>
         <State>${shippingState}</State>

@@ -85,7 +85,6 @@ export function clearCart() {
 }
 
 export const getSalesRate = async (zip5, zip4) => {
-
   const snapspot = firebase
     .database()
     .ref('/salesTax/' + zip5)
@@ -101,4 +100,17 @@ export const getSalesRate = async (zip5, zip4) => {
   }
 
   return combinedRate;
+};
+
+export const addOrderToDatabase = async ({ orderNumber, order }) => {
+  const data = { ...order, orderNumber };
+
+  const collection = process.env.NODE_ENV !== 'production' ? 'devOrders' : 'Orders';
+
+  await firebase
+    .database()
+    .ref(`${collection}/${orderNumber}`)
+    .set(data);
+
+  return true;
 };

@@ -13,7 +13,13 @@ import axios from 'axios';
 import clsx from 'clsx';
 import { useSnackbar } from 'notistack';
 
-import { clearCart, getItemsInCart, removeItemFromCart, getSalesRate } from '../utils/useCartData';
+import {
+  clearCart,
+  getItemsInCart,
+  removeItemFromCart,
+  getSalesRate,
+  addOrderToDatabase
+} from '../utils/useCartData';
 import Square from './Square';
 import OrderSummary from './OrderSummary';
 import {
@@ -274,15 +280,15 @@ export default function CheckoutScreen() {
           setFormFields({});
           setLoad(false);
 
-          // removeItemFromDatabase();
           const orderNumber = response.data.orderNumber;
+
+          // add item to cart
+          addOrderToDatabase({ orderNumber, order: paymentRequestJson });
 
           history.push(`/checkout/success?orderNumber=${orderNumber}`);
         }
       })
       .catch(function(error) {
-        console.log('RETURN VALUE');
-
         const errorMessage = error?.response?.data?.message || 'Unable to complete order';
 
         enqueueSnackbar(errorMessage, {
