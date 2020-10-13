@@ -40,18 +40,40 @@ export default function useArtData() {
   };
 
   const loadArt = () => {
+    const storageRef = firebase.storage().ref();
+
     if (!art || art.length === 0) {
       let arts = [];
       firebase
         .database()
         .ref('arts')
-        .once('value', snapshot => {
+        .once('value', async snapshot => {
           snapshot.forEach(collectionValues => {
             var artt = collectionValues.val();
             arts.push(artt);
           });
 
-          setArt(arts);
+          let artsWithImages = await Promise.all(
+            arts.map(async art => {
+              let imageUrl = null;
+              const imageName = art.image;
+
+              if (!imageName) {
+                return art;
+              }
+
+              imageUrl = await storageRef
+                .child('images/' + imageName)
+                .getDownloadURL()
+                .then(url => {
+                  return url;
+                });
+
+              return { ...art, path: imageUrl, imageUrl };
+            })
+          );
+
+          setArt(artsWithImages);
           setLoadingArt(false);
         });
     }
@@ -65,6 +87,7 @@ export default function useArtData() {
     var updates = {};
     updates['/arts/' + artId] = item;
 
+    console.log(item);
     await firebase
       .database()
       .ref()
@@ -83,6 +106,17 @@ export default function useArtData() {
 
   return { clearArtData, loading: loadingArt || loadingCollections, art, collections, saveArt };
 }
+
+export const getDownloadUrl = async imageName => {
+  const storageRef = firebase.storage().ref();
+
+  return await storageRef
+    .child('images/' + imageName)
+    .getDownloadURL()
+    .then(url => {
+      return url;
+    });
+};
 
 export async function removeItemFromCollection(artId, quantity = 1) {
   try {
@@ -147,3 +181,18 @@ export async function confirmItemIsAvailable(collectionId, artId) {
     return true;
   }
 }
+
+export const uploadImage = async ({ file, name }) => {
+  const storageRef = firebase.storage().ref();
+  try {
+    const imageRef = storageRef.child(`images/${name}`);
+
+    console.log('upload-', file);
+    imageRef.put(file).then(function(snapshot) {
+      console.log('Uploaded a blob or file!');
+    });
+  } catch (e) {
+    console.log(e);
+    return true;
+  }
+};

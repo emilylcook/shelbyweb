@@ -1,6 +1,7 @@
 import { InputTextField } from '../common';
 import { FormField } from '../models/FormFields';
 import CollectionsDropdown from './CollectionsDropdown';
+import ImageSection from './ImageSection';
 
 export const artMainFields: { [fieldName: string]: FormField } = {
   id: {
@@ -107,6 +108,19 @@ export const artInfo: { [fieldName: string]: FormField } = {
     name: 'type',
     label: 'Type',
     InputComponent: InputTextField,
+    validator: {
+      required: true
+    },
+    variant: 'outlined'
+  }
+};
+
+export const imageFields: { [fieldName: string]: FormField } = {
+  image: {
+    gridWidth: { xs: 12, sm: 6, md: 4 },
+    name: 'image',
+    label: 'Image',
+    InputComponent: ImageSection,
     validator: {
       required: true
     },

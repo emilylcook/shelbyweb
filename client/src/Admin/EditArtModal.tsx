@@ -17,9 +17,9 @@ import CloseIcon from '@material-ui/icons/Close';
 import { useTheme } from '@material-ui/core/styles';
 import { useForm, FormContext } from 'react-hook-form';
 
-import { artInfo, artMainFields, shippingDetails } from './fields';
+import { artInfo, artMainFields, shippingDetails, imageFields } from './fields';
 import Section from '../common/Section';
-import useArtData from '../utils/useCollectionData';
+import useArtData, { uploadImage } from '../utils/useCollectionData';
 
 function DialogTitle({ children, onClose }: any) {
   const classes = useStyles();
@@ -61,7 +61,8 @@ function EditArtModal({ open, art, handleClose }: any) {
     const checkInt = (val: any) => {
       return val ? parseInt(val) : null;
     };
-    const saveableArt = {
+
+    let saveableArt = {
       ...values,
       quantity: checkInt(values.quantity),
       price: checkInt(values.price),
@@ -76,6 +77,20 @@ function EditArtModal({ open, art, handleClose }: any) {
       tags: values.tags.split(',').map((s: string) => s.trim()),
       collections: collections // todo eventually be an arrray
     };
+
+    const imageFile = values.imageFile;
+
+    if (imageFile) {
+      const date = new Date().toISOString();
+      const imageName = `${imageFile.name}_${date}`;
+
+      saveableArt.image = imageName;
+
+      console.log('imageName', imageName);
+      await uploadImage({ file: imageFile, name: imageName });
+    }
+
+    delete saveableArt.imageFile;
 
     const updatedArt = await saveArt({ artId: values.id, item: saveableArt });
 
@@ -110,7 +125,9 @@ function EditArtModal({ open, art, handleClose }: any) {
                   formGroup="shippingDetails"
                   title="Shipping Details"
                 />
+                <Section fields={imageFields} title="Image" />
               </Grid>
+
               <Grid item xs={12} className={classes.buttonContainer}>
                 <Button
                   disabled={saving}
