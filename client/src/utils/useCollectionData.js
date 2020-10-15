@@ -79,26 +79,38 @@ export default function useArtData() {
     }
   };
 
-  const saveArt = async ({ artId, item }) => {
+  const saveArt = async ({ artId, isNew, item }) => {
     if (!artId) {
       throw Error('no new art');
     }
 
-    var updates = {};
-    updates['/arts/' + artId] = item;
+    let updatedArt = [...art];
 
-    console.log(item);
-    await firebase
-      .database()
-      .ref()
-      .update(updates);
+    if (isNew) {
+      const newArt = { ...item, id: artId };
 
-    // Update art
-    const updatedArt = [...art];
-    const updatedIndex = updatedArt.findIndex(x => x.id === artId);
+      // Update art
+      await firebase
+        .database()
+        .ref(`arts/${artId}`)
+        .set(newArt);
 
-    if (updatedIndex > -1) {
-      updatedArt[updatedIndex] = item;
+      updatedArt.push(newArt);
+    } else {
+      var updates = {};
+      updates['/arts/' + artId] = item;
+
+      await firebase
+        .database()
+        .ref()
+        .update(updates);
+
+      // Update art
+      const updatedIndex = updatedArt.findIndex(x => x.id === artId);
+
+      if (updatedIndex > -1) {
+        updatedArt[updatedIndex] = item;
+      }
     }
 
     return updatedArt;

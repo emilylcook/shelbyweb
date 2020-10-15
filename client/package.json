@@ -1,6 +1,6 @@
 {
   "name": "shelbyweb",
-  "version": "0.5.62",
+  "version": "0.5.63",
   "private": true,
   "dependencies": {
     "@fortawesome/fontawesome-free": "^5.11.2",

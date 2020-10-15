@@ -55,6 +55,10 @@ function EditArtModal({ open, art, handleClose }: any) {
   const onSubmit = async (values: any) => {
     setSaving(true);
 
+    const isNew = values.id === '-1';
+
+    const artId = isNew ? values.name.replace(/ /g, '') : values.id;
+
     const collections =
       typeof values.collections === 'string' ? [values.collections] : values.collections;
 
@@ -92,7 +96,7 @@ function EditArtModal({ open, art, handleClose }: any) {
 
     delete saveableArt.imageFile;
 
-    const updatedArt = await saveArt({ artId: values.id, item: saveableArt });
+    const updatedArt = await saveArt({ artId: artId, isNew, item: saveableArt });
 
     enqueueSnackbar('Updated!', {
       variant: 'success',

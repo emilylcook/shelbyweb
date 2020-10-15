@@ -29,7 +29,6 @@ export interface Art {
   id: string;
   name: string;
   image: string;
-  imageUrl: string;
   collections: string[];
   tags: string[];
   path: string;

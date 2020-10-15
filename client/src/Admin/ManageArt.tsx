@@ -33,7 +33,7 @@ export default function ManageArt() {
   const [rowsPerPage, setRowsPerPage] = React.useState(25);
   const [searchText, setSearchText] = useState<string>('');
 
-  const [modalData, setModalData] = useState<Art | null>(null);
+  const [modalData, setModalData] = useState<Art | any | null>(null);
 
   const [order, setOrder] = React.useState<OrderType>('asc');
   const [orderBy, setOrderBy] = React.useState<string>('name');
@@ -107,8 +107,18 @@ export default function ManageArt() {
       <Grid item xs={12} className={classes.header}>
         <HorizontalTitle title="Manage Art" includeSpacer />
 
-        <Grid item xs={12} className={classes.search}>
+        <Grid item xs={12} sm={6} className={classes.search}>
           <SearchField onChange={(e: string) => handleDoSearch(e)} />
+        </Grid>
+
+        <Grid item xs={12} sm={6}>
+          <div
+            onClick={() => {
+              setModalData({ id: -1 });
+            }}
+          >
+            Add Art
+          </div>
         </Grid>
       </Grid>
       <Grid item xs={12} className={classes.tableContainer}>
