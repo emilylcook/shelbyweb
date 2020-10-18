@@ -20,6 +20,7 @@ import ShoppingCartScreen from './Cart/ShoppingCartScreen';
 import LoginForm from './LoginForm';
 import LogOutScreen from './LogoutScreen';
 import ManageArt from './Admin/ManageArt';
+import ManageCollections from './Admin/ManageCollections';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -90,6 +91,7 @@ const App = () => {
               {/* admin routes */}
 
               <Route path="/admin/manage" component={ManageArt} />
+              <Route path="/admin/manage-collections" component={ManageCollections} />
               {/* normal routes */}
               <Route path="/about" exact component={About} />
               <Route path="/commissions" exact component={Commissions} />

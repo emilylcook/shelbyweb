@@ -80,10 +80,6 @@ export default function useArtData() {
   };
 
   const saveArt = async ({ artId, isNew, item }) => {
-    if (!artId) {
-      throw Error('no new art');
-    }
-
     let updatedArt = [...art];
 
     if (isNew) {
@@ -116,7 +112,54 @@ export default function useArtData() {
     return updatedArt;
   };
 
-  return { clearArtData, loading: loadingArt || loadingCollections, art, collections, saveArt };
+  const saveCollection = async ({ collectionId, isNew, item }) => {
+    let updatedCollections = [...collections];
+
+    console.log('-- TODO SAVE ---');
+    console.log(item);
+
+    if (isNew) {
+      console.log('NEW!');
+      const newCollection = { ...item, id: collectionId };
+
+      // Update art
+      await firebase
+        .database()
+        .ref(`newCollection/${collectionId}`)
+        .set(newCollection);
+
+      updatedCollections.push(newCollection);
+    } else {
+      console.log('UPDATE');
+      var updates = {};
+      updates['/newCollection/' + collectionId] = item;
+
+      await firebase
+        .database()
+        .ref()
+        .update(updates);
+
+      // Update art
+      const updatedIndex = updatedCollections.findIndex(x => x.id === collectionId);
+
+      if (updatedIndex > -1) {
+        updatedCollections[updatedIndex] = item;
+      }
+
+      setCollections(updatedCollections);
+    }
+
+    return updatedCollections;
+  };
+
+  return {
+    clearArtData,
+    loading: loadingArt || loadingCollections,
+    art,
+    collections,
+    saveArt,
+    saveCollection
+  };
 }
 
 export const getDownloadUrl = async imageName => {

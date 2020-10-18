@@ -190,3 +190,37 @@ export const shippingDetails: { [fieldName: string]: FormField } = {
     variant: 'outlined'
   }
 };
+
+export const collectionInfoFields: { [fieldName: string]: FormField } = {
+  id: {
+    gridWidth: { xs: 12, sm: 6, md: 4 },
+    name: 'id',
+    label: 'Id',
+    InputComponent: InputTextField,
+    disabled: true
+  },
+  title: {
+    gridWidth: { xs: 12, sm: 6, md: 4 },
+    name: 'title',
+    label: 'Name',
+    InputComponent: InputTextField,
+    validator: {
+      required: true
+    },
+    variant: 'outlined',
+    transformation: {
+      capitalize: true
+    }
+  },
+  filters: {
+    gridWidth: { xs: 12, sm: 6, md: 4 },
+    name: 'filters',
+    label: 'Filters',
+    InputComponent: InputTextField,
+    validator: {
+      required: true
+    },
+    helperText: 'Comma separated (CASE SENSITIVE) list: "Available, Landscapes, Still Life"',
+    variant: 'outlined'
+  }
+};

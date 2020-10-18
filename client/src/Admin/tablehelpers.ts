@@ -54,6 +54,12 @@ export interface Art {
   };
 }
 
+export interface Collection {
+  id: string;
+  title: string;
+  filters: string[];
+}
+
 export interface Column {
   id: any;
   label: string;
@@ -74,4 +80,9 @@ export const columns: Column[] = [
     minWidth: 170,
     format: (value: number) => 'MISSING' // TODO
   }
+];
+
+export const collectionColumns: Column[] = [
+  { id: 'name', label: 'Name', minWidth: 300 },
+  { id: 'filters', label: 'Filters', minWidth: 500 }
 ];

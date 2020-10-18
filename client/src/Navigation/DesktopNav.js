@@ -107,6 +107,12 @@ export default function ButtonAppBar() {
                       manage arts
                     </Link>
                   </div>
+
+                  <div key="admin/manage-collections" className={classes.subMenuItemContainer}>
+                    <Link to={'/admin/manage-collections'} className={classes.subMenuItem}>
+                      manage collections
+                    </Link>
+                  </div>
                 </div>
               </div>
             </div>

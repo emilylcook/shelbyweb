@@ -17,9 +17,9 @@ import CloseIcon from '@material-ui/icons/Close';
 import { useTheme } from '@material-ui/core/styles';
 import { useForm, FormContext } from 'react-hook-form';
 
-import { artInfo, artMainFields, shippingDetails, imageFields } from './fields';
+import { collectionInfoFields } from './fields';
 import Section from '../common/Section';
-import useArtData, { uploadImage } from '../utils/useCollectionData';
+import useArtData from '../utils/useCollectionData';
 
 function DialogTitle({ children, onClose }: any) {
   const classes = useStyles();
@@ -33,11 +33,11 @@ function DialogTitle({ children, onClose }: any) {
   );
 }
 
-function EditArtModal({ open, art, handleClose }: any) {
+function EditCollectionModal({ open, art, handleClose }: any) {
   const classes = useStyles();
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('xs'));
-  const { saveArt } = useArtData();
+  const { saveCollection } = useArtData();
   const [saving, setSaving] = useState(false);
   const { enqueueSnackbar } = useSnackbar();
 
@@ -57,46 +57,19 @@ function EditArtModal({ open, art, handleClose }: any) {
 
     const isNew = values.id === '-1';
 
-    const artId = isNew ? values.name.replace(/ /g, '') : values.id;
+    const collectionId = isNew ? values.title.replace(/ /g, '') : values.id;
 
-    const collections =
-      typeof values.collections === 'string' ? [values.collections] : values.collections;
-
-    const checkInt = (val: any) => {
-      return val ? parseInt(val) : null;
-    };
-
-    let saveableArt = {
+    let item = {
       ...values,
-      quantity: checkInt(values.quantity),
-      price: checkInt(values.price),
-      shippingDetails: {
-        pounds: checkInt(values?.shippingDetails.pounds),
-        ounces: checkInt(values?.shippingDetails.ounces),
-        width: checkInt(values?.shippingDetails.width),
-        length: checkInt(values?.shippingDetails['length']),
-        height: checkInt(values?.shippingDetails.height),
-        girth: checkInt(values?.shippingDetails.girth)
-      },
-      tags: values?.tags?.split(',').map((s: string) => s.trim()),
-      collections: collections // todo eventually be an arrray
+      title: values.title,
+      filters: values?.filters?.split(',').map((s: string) => s.trim())
     };
 
-    const imageFile = values.imageFile;
-
-    if (imageFile) {
-      const date = new Date().toISOString();
-      const imageName = `${imageFile.name}_${date}`;
-
-      saveableArt.image = imageName;
-
-      console.log('imageName', imageName);
-      await uploadImage({ file: imageFile, name: imageName });
-    }
-
-    delete saveableArt.imageFile;
-
-    const updatedArt = await saveArt({ artId: artId, isNew, item: saveableArt });
+    const updatedCollections = await saveCollection({
+      collectionId: collectionId,
+      isNew,
+      item
+    });
 
     enqueueSnackbar('Updated!', {
       variant: 'success',
@@ -104,7 +77,7 @@ function EditArtModal({ open, art, handleClose }: any) {
     });
 
     setSaving(false);
-    handleClose(updatedArt);
+    handleClose(updatedCollections);
   };
 
   return (
@@ -122,14 +95,7 @@ function EditArtModal({ open, art, handleClose }: any) {
           <form id="edit-art" onSubmit={methods.handleSubmit(onSubmit)}>
             <Grid container>
               <Grid item xs={12}>
-                <Section fields={artMainFields} title="Info" />
-                <Section fields={artInfo} formGroup="info" title="About" />
-                <Section
-                  fields={shippingDetails}
-                  formGroup="shippingDetails"
-                  title="Shipping Details"
-                />
-                <Section fields={imageFields} title="Image" />
+                <Section fields={collectionInfoFields} title="Info" />
               </Grid>
 
               <Grid item xs={12} className={classes.buttonContainer}>
@@ -160,7 +126,7 @@ function EditArtModal({ open, art, handleClose }: any) {
   );
 }
 
-export default EditArtModal;
+export default EditCollectionModal;
 
 const useStyles = makeStyles(theme => ({
   contentRoot: {},
