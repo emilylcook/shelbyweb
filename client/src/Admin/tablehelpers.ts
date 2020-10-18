@@ -52,12 +52,15 @@ export interface Art {
     height: string;
     girth: string;
   };
+
+  hidden: boolean;
 }
 
 export interface Collection {
   id: string;
   title: string;
   filters: string[];
+  hidden: boolean;
 }
 
 export interface Column {
@@ -69,9 +72,9 @@ export interface Column {
 }
 
 export const columns: Column[] = [
-  { id: 'name', label: 'Name', minWidth: 300 },
+  { id: 'name', label: 'Name', minWidth: 240 },
   { id: 'collections', label: 'Collections', minWidth: 170 },
-  { id: 'tags', label: 'Tags', minWidth: 240 },
+  { id: 'tags', label: 'Tags', minWidth: 170 },
   { id: 'price', label: 'Price', minWidth: 100 },
   { id: 'quantity', label: 'Quantity', minWidth: 120 },
   {
@@ -79,10 +82,12 @@ export const columns: Column[] = [
     label: 'Shipping Info',
     minWidth: 170,
     format: (value: number) => 'MISSING' // TODO
-  }
+  },
+  { id: 'hidden', label: 'hidden', minWidth: 170 }
 ];
 
 export const collectionColumns: Column[] = [
   { id: 'name', label: 'Name', minWidth: 300 },
-  { id: 'filters', label: 'Filters', minWidth: 500 }
+  { id: 'filters', label: 'Filters', minWidth: 300 },
+  { id: 'hidden', label: 'hidden', minWidth: 170 }
 ];

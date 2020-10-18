@@ -1,4 +1,4 @@
-import { InputTextField } from '../common';
+import { InputTextField, CheckboxField } from '../common';
 import { FormField } from '../models/FormFields';
 import CollectionsDropdown from './CollectionsDropdown';
 import ImageSection from './ImageSection';
@@ -23,6 +23,12 @@ export const artMainFields: { [fieldName: string]: FormField } = {
     transformation: {
       capitalize: true
     }
+  },
+  hidden: {
+    gridWidth: { xs: 12, sm: 6, md: 4 },
+    name: 'hidden',
+    label: 'Hidden',
+    InputComponent: CheckboxField
   },
   path: {
     gridWidth: { xs: 12, sm: 6, md: 4 },
@@ -222,5 +228,11 @@ export const collectionInfoFields: { [fieldName: string]: FormField } = {
     },
     helperText: 'Comma separated (CASE SENSITIVE) list: "Available, Landscapes, Still Life"',
     variant: 'outlined'
+  },
+  hidden: {
+    gridWidth: { xs: 12, sm: 6, md: 4 },
+    name: 'hidden',
+    label: 'Hidden',
+    InputComponent: CheckboxField
   }
 };

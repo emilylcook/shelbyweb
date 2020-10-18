@@ -35,7 +35,10 @@ const Artwork = ({ match }) => {
       );
       setCollection(selectedCollection);
 
-      const artInCollection = art.filter(x => x && x.collections.includes(selectedCollection.id));
+      const artInCollection = art
+        .filter(x => x && x.collections.includes(selectedCollection.id))
+        .filter(x => !x.hidden);
+
       setArtToShow(artInCollection);
     }
     // eslint-disable-next-line

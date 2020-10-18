@@ -163,7 +163,8 @@ export default function ManageArt() {
                         key={row.id}
                       >
                         <TableCell className={classes.longCell}>{row.title}</TableCell>
-                        <TableCell className={classes.cell}>{row.filters.join(', ')}</TableCell>
+                        <TableCell className={classes.longCell}>{row.filters.join(', ')}</TableCell>
+                        <TableCell className={classes.cell}>{row.hidden ? 'hidden' : ''}</TableCell>
 
                         <TableCell className={classes.lastCell}>
                           <div

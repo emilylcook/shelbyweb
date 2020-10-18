@@ -68,6 +68,7 @@ function EditArtModal({ open, art, handleClose }: any) {
 
     let saveableArt = {
       ...values,
+      hidden: values.hidden ? true : false,
       quantity: checkInt(values.quantity),
       price: checkInt(values.price),
       shippingDetails: {

@@ -61,6 +61,7 @@ function EditCollectionModal({ open, art, handleClose }: any) {
 
     let item = {
       ...values,
+      hidden: values.hidden ? true : false,
       title: values.title,
       filters: values?.filters?.split(',').map((s: string) => s.trim())
     };

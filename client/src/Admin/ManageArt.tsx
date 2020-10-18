@@ -167,9 +167,9 @@ export default function ManageArt() {
                         tabIndex={-1}
                         key={row.id}
                       >
-                        <TableCell className={classes.longCell}>{row.name}</TableCell>
+                        <TableCell className={classes.mediumCell}>{row.name}</TableCell>
                         <TableCell className={classes.cell}>{row.collections.join(', ')}</TableCell>
-                        <TableCell className={classes.mediumCell}>{row.tags.join(', ')}</TableCell>
+                        <TableCell className={classes.cell}>{row.tags.join(', ')}</TableCell>
                         <TableCell className={classes.priceCell}>
                           {row.price ? `$${row.price}` : ''}
                         </TableCell>
@@ -177,6 +177,8 @@ export default function ManageArt() {
                         <TableCell className={classes.cell}>
                           {VALID_SHIPPING_DETAILS ? 'Valid' : 'Missing/Incomplete'}
                         </TableCell>
+                        <TableCell className={classes.cell}>{row.hidden ? 'hidden' : ''}</TableCell>
+
                         <TableCell className={classes.lastCell}>
                           {/* TODO pencil icon */}
                           <div
