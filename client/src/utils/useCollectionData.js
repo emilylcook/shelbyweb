@@ -115,11 +115,7 @@ export default function useArtData() {
   const saveCollection = async ({ collectionId, isNew, item }) => {
     let updatedCollections = [...collections];
 
-    console.log('-- TODO SAVE ---');
-    console.log(item);
-
     if (isNew) {
-      console.log('NEW!');
       const newCollection = { ...item, id: collectionId };
 
       // Update art
@@ -130,7 +126,6 @@ export default function useArtData() {
 
       updatedCollections.push(newCollection);
     } else {
-      console.log('UPDATE');
       var updates = {};
       updates['/newCollection/' + collectionId] = item;
 
@@ -188,7 +183,6 @@ export async function removeItemFromCollection(artId, quantity = 1) {
     item.quantity = item.quantity - quantity;
 
     if (item.quantity === 0) {
-      console.log(item);
       item.info.status = 'Sold';
       const index = item.tags.indexOf('available');
 
@@ -242,10 +236,7 @@ export const uploadImage = async ({ file, name }) => {
   try {
     const imageRef = storageRef.child(`images/${name}`);
 
-    console.log('upload-', file);
-    imageRef.put(file).then(function(snapshot) {
-      console.log('Uploaded a blob or file!');
-    });
+    imageRef.put(file).then(function(snapshot) {});
   } catch (e) {
     console.log(e);
     return true;
