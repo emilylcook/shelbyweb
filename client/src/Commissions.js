@@ -1,26 +1,88 @@
-import React, { useState, useEffect } from 'react'
-import { makeStyles } from '@material-ui/core/styles'
-import { TextField, Typography, Grid, Button } from '@material-ui/core'
-import clsx from 'clsx'
-import axios from 'axios'
-import { useFormState } from 'react-use-form-state'
-import { useSnackbar } from 'notistack'
+import React, { useState, useEffect } from 'react';
+import { makeStyles } from '@material-ui/core/styles';
+import { TextField, Typography, Grid, Button } from '@material-ui/core';
+import clsx from 'clsx';
+import axios from 'axios';
+import { useFormState } from 'react-use-form-state';
+import { useSnackbar } from 'notistack';
 
-import WidthContainer from './WidthContainer'
-import { HorizontalTitle } from './common/'
-import { isFormSubmitDisabled } from './utils'
-import config from './config'
+import WidthContainer from './WidthContainer';
+import { HorizontalTitle } from './common/';
+import { isFormSubmitDisabled } from './utils';
+import config from './config';
+import useCollectionData from './utils/useCollectionData';
 
-import Hero from './Hero'
-import heroImg from './assets/hero/Tofino3.jpg'
+import Hero from './Hero';
+import heroImg from './assets/hero/Tofino3.jpg';
+import CarouselSlider from './Carousel';
+
+const SLIDESHOW_ITEMS = 3;
 
 const Commissions = () => {
-  const classes = useStyles()
+  const classes = useStyles();
 
-  const [formState, { text, email }] = useFormState({})
-  const [emailSent, setEmailSent] = useState(false)
-  const [loading, setLoading] = useState(false)
-  const { enqueueSnackbar } = useSnackbar()
+  const [formState, { text, email }] = useFormState({});
+  const [emailSent, setEmailSent] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const { enqueueSnackbar } = useSnackbar();
+
+  const [commissions, setCommissions] = useState(null);
+  const [artToShow, setArtToShow] = useState([]);
+  const { loading: loadingCollections, art, collections } = useCollectionData();
+
+  const [sliderIndex, setSliderIndex] = useState(0);
+
+  const setItemsToShow = startIndex => {
+    if (!commissions) {
+      return;
+    }
+    const length = commissions.length - 1;
+
+    let min = startIndex;
+
+    if (min > length) {
+      min = min - length - 1;
+    }
+
+    if (min < 0) {
+      min = min * -1;
+    }
+
+    setSliderIndex(min);
+
+    let items = [];
+    for (var s = 0; s < SLIDESHOW_ITEMS; s++) {
+      console.log('find', s);
+      let c = min + s;
+      if (c <= length) {
+        items.push(commissions[c]);
+      } else {
+        items.push(commissions[c - length - 1]);
+      }
+    }
+
+    setArtToShow(items || []);
+  };
+
+  useEffect(() => {
+    if (commissions) {
+      setItemsToShow(0);
+    }
+  }, [commissions]);
+
+  console.log('TODO, show these', artToShow);
+  console.log('sliderIndex', sliderIndex);
+
+  useEffect(() => {
+    if (!loadingCollections) {
+      const arts = art.filter(x => !x.hidden);
+      // const arts = art.filter(x => x.tags?.includes('commissions') && !x.hidden);
+
+      setCommissions(arts);
+      // setArtToShow(0, SLIDESHOW_ITEMS);
+    }
+    // eslint-disable-next-line
+  }, [loadingCollections, art]);
 
   const inputs = {
     name: {
@@ -79,30 +141,30 @@ const Commissions = () => {
         required: false
       }
     }
-  }
+  };
 
   useEffect(() => {
     const touchedForm = Object.keys(formState.touched).some(name => {
-      return formState.touched[name]
-    })
+      return formState.touched[name];
+    });
 
     if (emailSent && touchedForm) {
-      formState.reset()
+      formState.reset();
 
       enqueueSnackbar('Request Sent', {
         variant: 'success',
         autoHideDuration: 4500
-      })
+      });
 
-      setEmailSent(false)
+      setEmailSent(false);
     }
-  }, [emailSent, formState, enqueueSnackbar])
+  }, [emailSent, formState, enqueueSnackbar]);
 
-  const disableSubmit = isFormSubmitDisabled(inputs, formState)
+  const disableSubmit = isFormSubmitDisabled(inputs, formState);
 
   function sendEmail() {
-    const { name, email, paintingSize, inspiration, questions } = formState.values
-    setLoading(true)
+    const { name, email, paintingSize, inspiration, questions } = formState.values;
+    setLoading(true);
     axios
       .post(`${config.API}/sendEmail`, {
         name,
@@ -112,13 +174,13 @@ const Commissions = () => {
         questions
       })
       .then(function(response) {
-        setEmailSent(true)
-        setLoading(false)
+        setEmailSent(true);
+        setLoading(false);
       })
       .catch(function(error) {
-        setEmailSent(false)
-        setLoading(false)
-      })
+        setEmailSent(false);
+        setLoading(false);
+      });
   }
 
   return (
@@ -126,6 +188,32 @@ const Commissions = () => {
       <Hero heroImg={heroImg} />
       <WidthContainer className={classes.columnWrapper}>
         <Grid container>
+          <Grid item xs={12} className={clsx(classes.header)}>
+            <CarouselSlider />
+            {/* <Grid container className={classes.sliderContainer}>
+              <div
+                className={classes.sliderLeft}
+                onClick={x => setItemsToShow(sliderIndex - SLIDESHOW_ITEMS)}
+              >
+                {'<'}
+              </div>
+              <div
+                className={classes.sliderRight}
+                onClick={x => setItemsToShow(sliderIndex + SLIDESHOW_ITEMS)}
+              >
+                {'>'}
+              </div>
+              {artToShow?.map(art => {
+                console.log(art);
+                const { path, name } = art;
+                return (
+                  <Grid key={name} item className={classes.sliderImageContainer}>
+                    <img className={classes.sliderImage} alt={name} src={path} />
+                  </Grid>
+                );
+              })}
+            </Grid> */}
+          </Grid>
           <Grid item xs={12} className={clsx(classes.header)}>
             <HorizontalTitle title="Commissions" titleClass={classes.horizontalTitle} />
           </Grid>
@@ -153,9 +241,9 @@ const Commissions = () => {
             </Typography>
             <Typography paragraph>
               As soon as we have settled on a composition/color scheme and the deposit has been
-              paid, I start with a small color study to get approval on the
-              composition and color scheme before starting the final piece (this color study becomes
-              a bonus for you and will be shipped with the completed painting!)
+              paid, I start with a small color study to get approval on the composition and color
+              scheme before starting the final piece (this color study becomes a bonus for you and
+              will be shipped with the completed painting!)
             </Typography>
             <Typography paragraph>
               At this point, I typically allow for 10-12 weeks for completion of each piece,
@@ -168,10 +256,10 @@ const Commissions = () => {
               Pricing
             </Typography>
             <Typography paragraph>
-              The price of a commission will depend on the size and complexity of the painting, and will
-              account for the time spent putting together a cohesive piece that
-              meets all of your wishes. I ask for a 50% deposit to begin, with the remaining
-              balance, plus shipping, due once your painting is complete.
+              The price of a commission will depend on the size and complexity of the painting, and
+              will account for the time spent putting together a cohesive piece that meets all of
+              your wishes. I ask for a 50% deposit to begin, with the remaining balance, plus
+              shipping, due once your painting is complete.
             </Typography>
           </Grid>
           <Grid item xs={12} className={classes.section}>
@@ -224,12 +312,41 @@ const Commissions = () => {
         </Grid>
       </WidthContainer>
     </div>
-  )
-}
+  );
+};
 
-export default Commissions
+export default Commissions;
 
 const useStyles = makeStyles(theme => ({
+  sliderLeft: {
+    fontSize: 40,
+    fontWeight: 'bold',
+    position: 'absolute',
+    top: '50%',
+    left: 0,
+    cursor: 'pointer',
+    transform: 'translateY(-50%)'
+  },
+  sliderRight: {
+    fontSize: 40,
+    fontWeight: 'bold',
+    position: 'absolute',
+    top: '50%',
+    cursor: 'pointer',
+    right: 10,
+    transform: 'translateY(-50%)'
+  },
+  sliderContainer: { position: 'relative', justifyContent: 'center' },
+  sliderImageContainer: {
+    paddingLeft: 20,
+    paddingRight: 20,
+    height: 250,
+    width: 250
+  },
+  sliderImage: {
+    height: 225,
+    width: 225
+  },
   root: {
     display: 'flex' /* or inline-flex */,
     minHeight: '100%'
@@ -272,4 +389,4 @@ const useStyles = makeStyles(theme => ({
     letterSpacing: 1,
     opacity: 0.8
   }
-}))
+}));
