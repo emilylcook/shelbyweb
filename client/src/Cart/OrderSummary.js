@@ -152,15 +152,28 @@ export default function OrderSummary({
                     {taxes ? `$${taxes} USD` : '-'}
                   </Typography>
                 </div>
+
                 <div className={classes.row}>
                   <Typography className={classes.costLabel}>Shipping</Typography>
-                  <Typography className={classes.dollarAmount}>
-                    {shipping ? `$${shipping} USD` : '-'}
-                  </Typography>
+                  {shipping >= 10000 ? (
+                    <Typography color="Error" className={classes.dollarAmount}>
+                      Error
+                    </Typography>
+                  ) : (
+                    <Typography className={classes.dollarAmount}>
+                      {shipping ? `$${shipping} USD` : '-'}
+                    </Typography>
+                  )}
                 </div>
                 <div className={classes.totalRow}>
                   <Typography className={classes.totalLabel}>Total</Typography>
-                  <Typography className={classes.totalPrice}>${totalAmount} USD</Typography>
+                  {shipping >= 10000 ? (
+                    <Typography color="Error" className={classes.dollarAmount}>
+                      Error
+                    </Typography>
+                  ) : (
+                    <Typography className={classes.totalPrice}>${totalAmount} USD</Typography>
+                  )}
                 </div>
               </>
             )}
@@ -244,7 +257,7 @@ const useStyles = makeStyles(theme => ({
       height: 70
     }
   },
-  quantity: { fontColor: 'gray', fontSize: 12 },
+  quantity: { fontColor: 'gray', fontSize: 12, height: 35 },
   imageDetails: {
     flex: 1,
     [theme.breakpoints.down('xs')]: {

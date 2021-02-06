@@ -75,7 +75,7 @@ export default function CheckoutScreen() {
       const itemsInCart = getItemsInCart();
       const shippingCost = await calculateShippingCosts(formFields, itemsInCart);
 
-      if (shippingCost === null || shippingCost === 0 || shippingCost >= 100000) {
+      if (shippingCost === null || shippingCost === 0 || shippingCost || shippingCost >= 100000) {
         setError('Unable to calculate shipping');
         error = true;
       }
@@ -100,11 +100,12 @@ export default function CheckoutScreen() {
         } = formFields;
 
         if (
-          !checkIfEqual(shippingStreetAddress, address1) ||
-          !checkIfEqual(shippingStreetAddress2, address2) ||
-          !checkIfEqual(shippingCity, city) ||
-          !checkIfEqual(shippingState, state) ||
-          !checkIfEqual(shippingPostal, `${zip5}-${zip4}`)
+          !error &&
+          (!checkIfEqual(shippingStreetAddress, address1) ||
+            !checkIfEqual(shippingStreetAddress2, address2) ||
+            !checkIfEqual(shippingCity, city) ||
+            !checkIfEqual(shippingState, state) ||
+            !checkIfEqual(shippingPostal, `${zip5}-${zip4}`))
         ) {
           showRecommendAddressModal = true;
         } else {

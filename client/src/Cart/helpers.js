@@ -190,7 +190,7 @@ export const calculateShippingCosts = async (formFields, items) => {
               parseInt(specialServices[SIGNATURE_SERVICE]) +
               parseInt(specialServices[TRACKING_SERVICE]);
           } catch (e) {
-            totalShipping += 100000;
+            totalShipping = 100000;
             console.log('Error - setting max shipping', e);
           }
         });
@@ -198,7 +198,7 @@ export const calculateShippingCosts = async (formFields, items) => {
     })
     .catch(err => {
       // Do something
-      totalShipping += 100000;
+      totalShipping = 100000;
       console.log('USPS err', err);
     });
 
