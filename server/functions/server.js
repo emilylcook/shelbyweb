@@ -32,17 +32,22 @@ const defaultClient = squareConnect.ApiClient.instance;
 
 // Configure OAuth2 access token for authorization: oauth2
 const oauth2 = defaultClient.authentications["oauth2"];
-oauth2.accessToken = functions.config().sandbox.squareaccesstoken;
+
+const ENV = functions.config().env.name;
+
+oauth2.accessToken =
+  ENV === "DEV"
+    ? functions.config().sandbox.squareaccesstoken
+    : functions.config().square.squareaccesstoken;
 
 // Set 'basePath' to switch between sandbox env and production env
 // sandbox: https://connect.squareupsandbox.com
 // production: https://connect.squareup.com
 
-// SANDBOX
-defaultClient.basePath = "https://connect.squareupsandbox.com";
-
-// PRODUCTION
-// defaultClient.basePath = "https://connect.squareup.com";
+defaultClient.basePath =
+  ENV === "DEV"
+    ? "https://connect.squareupsandbox.com" // DEV
+    : "https://connect.squareup.com"; // PRODUCTION
 
 app.post("/checkout/", async function (req, res, next) {
   const {

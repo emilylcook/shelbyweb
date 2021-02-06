@@ -6,4 +6,3 @@ setting firebase envs
  firebase emulators:start
  
 //firebase functions:config:set orgin.allowed=https://shelbykcook.com
- 
