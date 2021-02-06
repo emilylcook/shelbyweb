@@ -81,7 +81,7 @@ const CarouselSlider = () => {
       autoPlay={false}
       //   partialVisible={true}
       //   slidesToSlide={3}
-      //   centerMode={true}
+      centerMode={true}
       //   keyBoardControl={true}
       //   customTransition="all .5"
       //   transitionDuration={500}
