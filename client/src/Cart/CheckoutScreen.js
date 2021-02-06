@@ -48,10 +48,28 @@ export default function CheckoutScreen() {
   const steps = getSteps();
 
   const [formFields, setFormFields] = React.useState({ billingSameAsShipping: true });
+  const [discount, setDiscount] = useState('')
+  const [promoCode, setPromoCode] = useState('')
+
+
+  const handleApplyPromo = (promo) => {
+    if (!promo){
+
+      setDiscount(0)
+      setPromoCode(null)
+      return
+    }
+
+    const {code,discount} = promo
+      setDiscount(discount)
+      setPromoCode(code)
+    
+  }
 
   const setFormField = (name, val) => {
     setFormFields({ ...formFields, [name]: val });
   };
+  
 
   const checkIfEqual = (string1, string2) => {
     if (!string1 && !string2) {
@@ -75,7 +93,7 @@ export default function CheckoutScreen() {
       const itemsInCart = getItemsInCart();
       const shippingCost = await calculateShippingCosts(formFields, itemsInCart);
 
-      if (shippingCost === null || shippingCost === 0 || shippingCost || shippingCost >= 100000) {
+      if (shippingCost === null || shippingCost === 0 || !shippingCost || shippingCost >= 100000) {
         setError('Unable to calculate shipping');
         error = true;
       }
@@ -207,6 +225,10 @@ export default function CheckoutScreen() {
       totalAmount = parseFloat(totalAmount.toFixed(2));
     }
 
+    if (discount){
+      totalAmount = totalAmount - discount
+    }
+
     let lineItems = finalItems.map(art => {
       return {
         id: art.id,
@@ -222,11 +244,21 @@ export default function CheckoutScreen() {
       amount: subTotal,
       pending: false
     });
+
     lineItems.push({
       label: 'Shipping',
       amount: shipping,
       pending: false
     });
+
+    if (discount && promoCode){
+      lineItems.push({
+        label: `Promo ${promoCode}`,
+        amount: -discount,
+        pending: false
+      })
+    }
+
     lineItems.push({
       label: 'Taxes',
       amount: taxes,
@@ -358,9 +390,7 @@ export default function CheckoutScreen() {
 
   useEffect(() => {
     let sqPaymentScript = document.createElement('script');
-    // sandbox: https://js.squareupsandbox.com/v2/paymentform
-    // production: https://js.squareup.com/v2/paymentform
-    sqPaymentScript.src = 'https://js.squareupsandbox.com/v2/paymentform';
+    sqPaymentScript.src = config.SQUARE_URL;
     sqPaymentScript.type = 'text/javascript';
     sqPaymentScript.async = false;
     sqPaymentScript.onload = () => {
@@ -580,6 +610,7 @@ export default function CheckoutScreen() {
 
       <Grid item xs={12} sm={6} className={classes.container}>
         <OrderSummary
+          onApplyPromo={handleApplyPromo}
           completed={false}
           shipping={formFields?.shippingCost}
           salesTaxRate={formFields?.salesTaxRate}

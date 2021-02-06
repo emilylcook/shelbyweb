@@ -2,7 +2,7 @@ export function getConfig(handleReturnNonce) {
   // Initialize the payment form elements
   return {
     //TODO: Replace with your sandbox application ID
-    applicationId: process.env.REACT_APP_APPLICATION_ID,
+    applicationId: process.env.REACT_APP_SQUARE_APPLICATION_ID,
     inputClass: 'sq-input',
     autoBuild: false,
     // Customize the CSS for SqPaymentForm iframe elements
