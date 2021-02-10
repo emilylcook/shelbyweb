@@ -117,14 +117,18 @@ export const billingAddressFields = [
 const USER_ID = config.USPS_USER_ID;
 
 export const calculateShippingCosts = async (formFields, items) => {
-  const { shippingPostal } = formFields;
+  const { shippingPostal, shippingCountry = 'UnitedStates' } = formFields;
+
+  console.log(shippingCountry);
 
   let totalShipping = 0;
   const SELLER_ORIGIN = '98122';
 
-  let shippingPostalToUse = shippingPostal.slice(0, 5);
+  let shippingPostalToUse = shippingPostal;
 
   let packagesXml = '';
+
+  const shippingInternational = shippingCountry !== 'UnitedStates';
 
   items.forEach(item => {
     if (!item.shippingDetails) {
@@ -134,34 +138,63 @@ export const calculateShippingCosts = async (formFields, items) => {
     const { pounds, ounces, width, length, height, girth } = item?.shippingDetails;
     const { price, id } = item;
 
-    packagesXml = `${packagesXml}
-    <Package ID="${id}">
-      <Service>Priority</Service>
-      <ZipOrigination>${SELLER_ORIGIN}</ZipOrigination>
-      <ZipDestination>${shippingPostalToUse}</ZipDestination>
-      <Pounds>${pounds}</Pounds>
-      <Ounces>${ounces}</Ounces>
-      <Container></Container>
-      <Width>${width || ''}</Width>
-      <Length>${length || ''}</Length>
-      <Height>${height || ''}</Height>
-      <Girth>${girth || ''}</Girth>
-      <Value>${price}</Value>
-      <Machinable>TRUE</Machinable>
-    </Package>
-    `;
+    // TODO do this a week from now?
+    const acceptanceDate = '2021-02-24T13:15:00-06:00';
+
+    if (shippingInternational) {
+      packagesXml = `${packagesXml}
+      <Package ID="${id}">
+        <Pounds>${pounds}</Pounds>
+        <Ounces>${ounces}</Ounces>
+        <Machinable>True</Machinable>
+        <MailType>Package</MailType>
+        <ValueOfContents>${price}</ValueOfContents>
+        <Country>Canada</Country> 
+        <Width>${width || ''}</Width>
+        <Length>${length || ''}</Length>
+        <Height>${height || ''}</Height>
+        <Girth>${girth || ''}</Girth>
+        <OriginZip>${SELLER_ORIGIN}</OriginZip>
+        <CommercialFlag>N</CommercialFlag>
+        <AcceptanceDateTime>${acceptanceDate}</AcceptanceDateTime>
+        <DestinationPostalCode>${shippingPostalToUse}</DestinationPostalCode>
+      </Package>
+      `;
+    } else {
+      shippingPostalToUse = shippingPostal.slice(0, 5);
+
+      packagesXml = `${packagesXml}
+      <Package ID="${id}">
+        <Service>Priority</Service>
+        <ZipOrigination>${SELLER_ORIGIN}</ZipOrigination>
+        <ZipDestination>${shippingPostalToUse}</ZipDestination>
+        <Pounds>${pounds}</Pounds>
+        <Ounces>${ounces}</Ounces>
+        <Container></Container>
+        <Width>${width || ''}</Width>
+        <Length>${length || ''}</Length>
+        <Height>${height || ''}</Height>
+        <Girth>${girth || ''}</Girth>
+        <Value>${price}</Value>
+        <Machinable>TRUE</Machinable>
+      </Package>
+      `;
+    }
   });
 
-  // const value = 1524;
-  const XML = `<RateV4Request USERID="${USER_ID}">
+  const XML = shippingInternational
+    ? `<IntlRateV2Request USERID="${USER_ID}">
   <Revision>2</Revision>
-   ${packagesXml}
-  </RateV4Request>`;
+  ${packagesXml}
+  </IntlRateV2Request>`
+    : `<RateV4Request USERID="${USER_ID}">
+   <Revision>2</Revision>
+    ${packagesXml}
+   </RateV4Request>`;
 
-  // TODO could do package 1-item in the same request
-  // 155 = tracking
-  // 108 = signature
-  const getUrl = `https://secure.shippingapis.com/ShippingAPI.dll?API=RateV4&XML=${encodeURI(XML)}`;
+  const getUrl = shippingInternational
+    ? `http://secure.shippingapis.com/ShippingAPI.dll?API=IntlRateV2&XML=${encodeURI(XML)}`
+    : `https://secure.shippingapis.com/ShippingAPI.dll?API=RateV4&XML=${encodeURI(XML)}`;
 
   const TRACKING_SERVICE = 155;
   const SIGNATURE_SERVICE = 108;
@@ -171,29 +204,50 @@ export const calculateShippingCosts = async (formFields, items) => {
     .post(getUrl)
     .then(result => {
       parseString(result.data, function(err, result) {
-        result.RateV4Response.Package.forEach(pack => {
-          try {
-            const postage = pack.Postage[0];
-            let shipping = postage.Rate[0];
+        if (result.IntlRateV2Response) {
+          result.IntlRateV2Response.Package.forEach(pack => {
+            try {
+              const serviceToUse = pack?.Service.find(x => {
+                return x.SvcDescription[0].startsWith('Priority Mail International');
+              });
 
-            const specialServices = postage.SpecialServices[0].SpecialService.reduce(
-              (arr, service) => {
-                arr[service.ServiceID] = service.Price[0];
-                return arr;
-              },
-              {}
-            );
+              const postage = serviceToUse.Postage[0];
+              const extraService = serviceToUse.ExtraServices[0].ExtraService.find(
+                s => s.ServiceID[0] === '108'
+              );
 
-            totalShipping +=
-              parseInt(shipping) +
-              parseInt(specialServices[INSURANCE_SERVICE]) +
-              parseInt(specialServices[SIGNATURE_SERVICE]) +
-              parseInt(specialServices[TRACKING_SERVICE]);
-          } catch (e) {
-            totalShipping = 100000;
-            console.log('Error - setting max shipping', e);
-          }
-        });
+              const insurance = extraService.Price[0];
+
+              totalShipping += parseInt(postage) + parseInt(insurance);
+            } catch (e) {
+              console.log(e);
+            }
+          });
+        } else {
+          result.RateV4Response.Package.forEach(pack => {
+            try {
+              const postage = pack.Postage[0];
+              let shipping = postage.Rate[0];
+
+              const specialServices = postage.SpecialServices[0].SpecialService.reduce(
+                (arr, service) => {
+                  arr[service.ServiceID] = service.Price[0];
+                  return arr;
+                },
+                {}
+              );
+
+              totalShipping +=
+                parseInt(shipping) +
+                parseInt(specialServices[INSURANCE_SERVICE]) +
+                parseInt(specialServices[SIGNATURE_SERVICE]) +
+                parseInt(specialServices[TRACKING_SERVICE]);
+            } catch (e) {
+              totalShipping = 100000;
+              console.log('Error - setting max shipping', e);
+            }
+          });
+        }
       });
     })
     .catch(err => {
@@ -211,8 +265,15 @@ export const validateAddress = async formFields => {
     shippingStreetAddress2,
     shippingPostal,
     shippingCity,
-    shippingState
+    shippingState,
+    shippingCountry
   } = formFields;
+
+  const shippingInternational = shippingCountry !== 'UnitedStates';
+
+  if (shippingInternational) {
+    return { address: null, error: false };
+  }
 
   const zip = shippingPostal.split('-');
   const zip5 = zip ? zip[0] : shippingPostal;

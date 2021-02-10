@@ -133,7 +133,7 @@ function ImageModal({ open, collectionId, handleClose, collection, details = {} 
     typeof modalDetails.shippingDetails.pounds === 'number' &&
     typeof modalDetails.shippingDetails.ounces === 'number';
 
-  const CAN_ADD_TO_CART = isAuthenticated && VALID_QUANTITY && VALID_SHIPPING_DETAILS;
+  const CAN_ADD_TO_CART = VALID_QUANTITY && VALID_SHIPPING_DETAILS;
 
   return (
     <Dialog

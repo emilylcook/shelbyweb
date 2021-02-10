@@ -74,15 +74,14 @@ export default function ButtonAppBar() {
             </div>
           </Grid>
         ))}
-        {isAuthenticated && (
-          <Grid item>
-            <Link to={itemsInCart ? '/cart' : '/'} onMouseEnter={() => setHoverOn(null)}>
-              <Badge badgeContent={itemsInCart} color="primary">
-                <ShoppingCartIcon className={classes.shoppingCartIcon} />
-              </Badge>
-            </Link>
-          </Grid>
-        )}
+        <Grid item>
+          <Link to={itemsInCart ? '/cart' : '/'} onMouseEnter={() => setHoverOn(null)}>
+            <Badge badgeContent={itemsInCart} color="primary">
+              <ShoppingCartIcon className={classes.shoppingCartIcon} />
+            </Badge>
+          </Link>
+        </Grid>
+
         {isAuthenticated && (
           <Grid item className={classes.navItem}>
             <div className={clsx(classes.listItemContainer)}>

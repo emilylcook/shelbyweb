@@ -1,5 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { Grid, makeStyles, CircularProgress, FormControlLabel, TextField } from '@material-ui/core';
+import {
+  Grid,
+  makeStyles,
+  CircularProgress,
+  FormControl,
+  Select,
+  FormControlLabel,
+  TextField,
+  InputLabel,
+  MenuItem
+} from '@material-ui/core';
 import Checkbox from '@material-ui/core/Checkbox';
 import Stepper from '@material-ui/core/Stepper';
 import Step from '@material-ui/core/Step';
@@ -48,28 +58,24 @@ export default function CheckoutScreen() {
   const steps = getSteps();
 
   const [formFields, setFormFields] = React.useState({ billingSameAsShipping: true });
-  const [discount, setDiscount] = useState('')
-  const [promoCode, setPromoCode] = useState('')
+  const [discount, setDiscount] = useState('');
+  const [promoCode, setPromoCode] = useState('');
 
-
-  const handleApplyPromo = (promo) => {
-    if (!promo){
-
-      setDiscount(0)
-      setPromoCode(null)
-      return
+  const handleApplyPromo = promo => {
+    if (!promo) {
+      setDiscount(0);
+      setPromoCode(null);
+      return;
     }
 
-    const {code,discount} = promo
-      setDiscount(discount)
-      setPromoCode(code)
-    
-  }
+    const { code, discount } = promo;
+    setDiscount(discount);
+    setPromoCode(code);
+  };
 
   const setFormField = (name, val) => {
     setFormFields({ ...formFields, [name]: val });
   };
-  
 
   const checkIfEqual = (string1, string2) => {
     if (!string1 && !string2) {
@@ -88,6 +94,7 @@ export default function CheckoutScreen() {
     let showRecommendAddressModal = false;
 
     setLoading(true);
+    const shippingInternational = formFields?.shippingCountry !== 'UnitedStates';
 
     if (activeStep === 1) {
       const itemsInCart = getItemsInCart();
@@ -98,46 +105,55 @@ export default function CheckoutScreen() {
         error = true;
       }
 
-      const validateAddressResult = await validateAddress(formFields);
+      let salesTaxRate = 0;
+      if (!shippingInternational) {
+        const validateAddressResult = await validateAddress(formFields);
 
-      if (validateAddressResult.error || !validateAddressResult.address) {
-        enqueueSnackbar('Unable to verify address, Please check and try again', {
-          variant: 'error',
-          autoHideDuration: 4500
-        });
-        error = true;
-      } else {
-        const { address1, address2, city, state, zip5, zip4 } = validateAddressResult.address;
-
-        const {
-          shippingStreetAddress,
-          shippingStreetAddress2 = null,
-          shippingPostal,
-          shippingCity,
-          shippingState
-        } = formFields;
-
-        if (
-          !error &&
-          (!checkIfEqual(shippingStreetAddress, address1) ||
-            !checkIfEqual(shippingStreetAddress2, address2) ||
-            !checkIfEqual(shippingCity, city) ||
-            !checkIfEqual(shippingState, state) ||
-            !checkIfEqual(shippingPostal, `${zip5}-${zip4}`))
-        ) {
-          showRecommendAddressModal = true;
+        if (validateAddressResult.error || !validateAddressResult.address) {
+          enqueueSnackbar('Unable to verify address, Please check and try again', {
+            variant: 'error',
+            autoHideDuration: 4500
+          });
+          error = true;
         } else {
-          showRecommendAddressModal = false;
+          const { address1, address2, city, state, zip5, zip4 } = validateAddressResult.address;
+
+          const {
+            shippingStreetAddress,
+            shippingStreetAddress2 = null,
+            shippingPostal,
+            shippingCity,
+            shippingState
+          } = formFields;
+
+          if (
+            !error &&
+            (!checkIfEqual(shippingStreetAddress, address1) ||
+              !checkIfEqual(shippingStreetAddress2, address2) ||
+              !checkIfEqual(shippingCity, city) ||
+              !checkIfEqual(shippingState, state) ||
+              !checkIfEqual(shippingPostal, `${zip5}-${zip4}`))
+          ) {
+            showRecommendAddressModal = true;
+          } else {
+            showRecommendAddressModal = false;
+          }
+
+          // IF showRecommendAddressModal
+          if (showRecommendAddressModal) {
+            setRecommendedAddress(validateAddressResult.address);
+          }
+          salesTaxRate = await getSalesRate(zip5, zip4);
+          setFormFields({ ...formFields, salesTaxRate, shippingCost, zip4 });
         }
-
-        // IF showRecommendAddressModal
-        if (showRecommendAddressModal) {
-          setRecommendedAddress(validateAddressResult.address);
-        }
-
-        const salesTaxRate = await getSalesRate(zip5, zip4);
-
-        setFormFields({ ...formFields, salesTaxRate, shippingCost, zip4 });
+      } else {
+        // international
+        setFormFields({
+          ...formFields,
+          salesTaxRate,
+          shippingCost,
+          zip4: formFields.shippingPostal
+        });
       }
     }
     if (!error && !showRecommendAddressModal) {
@@ -225,8 +241,8 @@ export default function CheckoutScreen() {
       totalAmount = parseFloat(totalAmount.toFixed(2));
     }
 
-    if (discount){
-      totalAmount = totalAmount - discount
+    if (discount) {
+      totalAmount = totalAmount - discount;
     }
 
     let lineItems = finalItems.map(art => {
@@ -251,12 +267,12 @@ export default function CheckoutScreen() {
       pending: false
     });
 
-    if (discount && promoCode){
+    if (discount && promoCode) {
       lineItems.push({
         label: `Promo ${promoCode}`,
         amount: -discount,
         pending: false
-      })
+      });
     }
 
     lineItems.push({
@@ -452,6 +468,28 @@ export default function CheckoutScreen() {
                 </Grid>
               );
             })}
+            <Grid item xs={12} className={classes.formItem}>
+              <FormControl variant="outlined" className={classes.selectFormControl}>
+                <InputLabel id="select-country">Country</InputLabel>
+                <Select
+                  fullWidth
+                  labelId="select-country-label"
+                  id="select-country"
+                  defaultValue={formFields['shippingCountry'] || 'UnitedStates'}
+                  onChange={event => {
+                    setFormField('shippingCountry', event.target.value);
+                  }}
+                  label="Country"
+                >
+                  <MenuItem value="UnitedStates">United States</MenuItem>
+                  <MenuItem value="Canada">Canada</MenuItem>
+                  <MenuItem disabled value="">
+                    *if you are outside of the US or Canada, please contact Shelby for purchasing
+                    options
+                  </MenuItem>
+                </Select>
+              </FormControl>
+            </Grid>
             <Grid item xs={12}>
               <Typography>Billing Address</Typography>
             </Grid>
@@ -492,7 +530,9 @@ export default function CheckoutScreen() {
             {error && (
               <Grid item xs={12}>
                 <Typography color="error">{error}</Typography>
-                <Typography>Please contact shelbykcook.art@gmail.com for assistance.</Typography>
+                <Typography>
+                  Please try again or contact shelbykcook.art@gmail.com for assistance.
+                </Typography>
               </Grid>
             )}
           </Grid>
@@ -503,6 +543,8 @@ export default function CheckoutScreen() {
         const shippingStreetAddress = formFields?.shippingStreetAddress2
           ? `${formFields?.shippingStreetAddress} ${formFields?.shippingStreetAddress2}`
           : formFields?.shippingStreetAddress;
+
+        const shippingInternational = formFields?.shippingCountry !== 'UnitedStates';
 
         return (
           <Grid container>
@@ -518,6 +560,12 @@ export default function CheckoutScreen() {
                 <br />
                 {shippingStreetAddress},<br />
                 {formFields?.shippingCity}, {formFields?.shippingState} {formFields?.shippingPostal}
+                {shippingInternational ? (
+                  <>
+                    <br />
+                    {formFields?.shippingCountry}
+                  </>
+                ) : null}
               </Typography>
             </Grid>
 
@@ -575,7 +623,7 @@ export default function CheckoutScreen() {
                 {activeStep !== 2 && (
                   <div className={classes.actionsContainer}>
                     <Button
-                      disabled={!canGoToNextStep || error || loading}
+                      disabled={!canGoToNextStep || loading}
                       variant="contained"
                       color="primary"
                       onClick={() =>
@@ -614,6 +662,7 @@ export default function CheckoutScreen() {
           completed={false}
           shipping={formFields?.shippingCost}
           salesTaxRate={formFields?.salesTaxRate}
+          shippingCountry={formFields?.shippingCountry}
         />
       </Grid>
     </Grid>
@@ -639,6 +688,7 @@ const useStyles = makeStyles(theme => ({
       bottom: 10
     }
   },
+  selectFormControl: { width: '100%', marginBottom: 15 },
   formItem: {
     paddingLeft: 10,
     paddingRight: 10

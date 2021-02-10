@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Grid, makeStyles,TextField } from '@material-ui/core';
+import { Grid, makeStyles, TextField } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import { useSnackbar } from 'notistack';
@@ -10,14 +10,15 @@ import { useHistory } from 'react-router';
 import { getItemsInCart, removeItemFromCart } from '../utils/useCartData';
 import { confirmItemIsAvailable } from '../utils/useCollectionData';
 
-const FREE_SHIPPING_CODE = 'VIPSHIPPING2021'
+const FREE_SHIPPING_CODE = 'VIPSHIPPING2021';
 
 export default function OrderSummary({
   completed = false,
   cartView = false,
   shipping = null,
   salesTaxRate = null,
-  onApplyPromo = null
+  onApplyPromo = null,
+  shippingCountry = 'UnitedStates'
 }) {
   const classes = useStyles({});
   const history = useHistory();
@@ -25,37 +26,37 @@ export default function OrderSummary({
   const [itemsInCart, setItemsInCart] = useState(getItemsInCart() || []);
   const { enqueueSnackbar } = useSnackbar();
 
-  const [promoCodeEntry, setPromoCodeEntry] = useState('')
-  const [promoCode, setPromoCode] = useState('')
+  const [promoCodeEntry, setPromoCodeEntry] = useState('');
+  const [promoCode, setPromoCode] = useState('');
 
+  const [freeShipping, setFreeShipping] = useState(false);
+  const [promoError, setPromoError] = useState(false);
 
-  const [freeShipping, setFreeShipping] = useState(false)
-  const [promoError, setPromoError] = useState(false)
-
-  const handleApplyPromo = ()=>{
-    if (promoCodeEntry === FREE_SHIPPING_CODE){
-      setFreeShipping(true)
-      setPromoError(false)
-    }
-    else {
-      setFreeShipping(false)
-      setPromoError(true)
+  const handleApplyPromo = () => {
+    if (promoCodeEntry === FREE_SHIPPING_CODE) {
+      setFreeShipping(true);
+      setPromoError(false);
+    } else {
+      setFreeShipping(false);
+      setPromoError(true);
     }
 
-    setPromoCode(promoCodeEntry)
-  }
+    setPromoCode(promoCodeEntry);
+  };
 
-  React.useEffect(()=>{
-    if(onApplyPromo){
-      if (freeShipping){
-        onApplyPromo({code: promoCode, discount: shipping})
-      }
-      else {
-        onApplyPromo(null)
+  React.useEffect(() => {
+    if (onApplyPromo) {
+      if (freeShipping) {
+        const discount = shippingCountry === 'shippingCountry' ? shipping : 10;
+
+        console.log(shippingCountry);
+        onApplyPromo({ code: promoCode, discount });
+      } else {
+        onApplyPromo(null);
       }
     }
     // eslint-disable-next-line
-  },[shipping, freeShipping])
+  }, [shipping, freeShipping, shippingCountry]);
 
   const verifyItemsInCart = async () => {
     if (itemsInCart && itemsInCart.length > 0) {
@@ -120,9 +121,11 @@ export default function OrderSummary({
   // let shipping = null;
   let totalAmount = parseFloat(subTotal);
 
-
   if (shipping && !freeShipping) {
     totalAmount += parseFloat(shipping);
+  } else if (shipping && shippingCountry !== 'UnitedStates') {
+    const discountedShipping = parseFloat(shipping) - 10;
+    totalAmount += discountedShipping;
   }
   if (taxes) {
     totalAmount += parseFloat(taxes);
@@ -175,36 +178,47 @@ export default function OrderSummary({
             );
           })}
 
-          <Grid item xs={12} >
-          {cartView ? null :
-            <Grid  container >
-              <Grid item xs={12} className={classes.promoCodeContainer}>
-              
+          <Grid item xs={12}>
+            {cartView ? null : (
+              <Grid container>
+                <Grid item xs={12} className={classes.promoCodeContainer}>
                   <TextField
                     className={classes.promoCodeTextfield}
-                      variant="outlined"
-                      label="Promo Code"
-                      placeholder="code"
-                      size='small'
-                      dense={true}
-                      onChange={event => {
-                        const text = event.target.value.toUpperCase();
-                        setPromoCodeEntry(text)
-                      }}
-                      defaultValue={''}
-                      fullWidth
-                    ></TextField>
-                    <Button onClick={handleApplyPromo} color="primary" variant="contained" className={classes.promoCodeApply}>
-                      Apply
-                    </Button>
+                    variant="outlined"
+                    label="Promo Code"
+                    placeholder="code"
+                    size="small"
+                    dense={true}
+                    onChange={event => {
+                      const text = event.target.value.toUpperCase();
+                      setPromoCodeEntry(text);
+                    }}
+                    defaultValue={''}
+                    fullWidth
+                  ></TextField>
+                  <Button
+                    onClick={handleApplyPromo}
+                    color="primary"
+                    variant="contained"
+                    className={classes.promoCodeApply}
+                  >
+                    Apply
+                  </Button>
                 </Grid>
                 <Grid item xs={12}>
-                  {freeShipping ? <Typography className={classes.promoSuccess}>Promo applied at shipping</Typography>: null}
-                  {promoError ? <Typography className={classes.errorMessage} color='error'>Promo not valid
-                  </Typography> : null}
+                  {freeShipping ? (
+                    <Typography className={classes.promoSuccess}>
+                      Promo applied at shipping
+                    </Typography>
+                  ) : null}
+                  {promoError ? (
+                    <Typography className={classes.errorMessage} color="error">
+                      Promo not valid
+                    </Typography>
+                  ) : null}
                 </Grid>
               </Grid>
-          }
+            )}
           </Grid>
 
           <Grid item xs={12} className={classes.costInfoContainer}>
@@ -234,14 +248,14 @@ export default function OrderSummary({
                     </Typography>
                   )}
                 </div>
-                {freeShipping ? 
-                 <div className={classes.row}>
+                {freeShipping ? (
+                  <div className={classes.row}>
                     <Typography className={classes.costLabel}>Promo</Typography>
                     <Typography className={classes.dollarAmount}>
-                      -${shipping} USD
+                      -${shippingCountry === 'shippingCountry' ? shipping : 10} USD
                     </Typography>
-                </div> : null
-                }
+                  </div>
+                ) : null}
                 <div className={classes.totalRow}>
                   <Typography className={classes.totalLabel}>Total</Typography>
                   {shipping >= 10000 ? (
@@ -272,20 +286,20 @@ export default function OrderSummary({
 }
 
 const useStyles = makeStyles(theme => ({
-  promoSuccess:{
-    marginTop:5,
-    color:'green'
-  }, 
-  errorMessage:{
-    marginTop:5,
+  promoSuccess: {
+    marginTop: 5,
+    color: 'green'
   },
-  promoCodeContainer:{
-    alignItems:'flex-end',
+  errorMessage: {
+    marginTop: 5
+  },
+  promoCodeContainer: {
+    alignItems: 'flex-end',
     display: 'flex'
   },
-  promoCodeApply:{
-    marginLeft:15,
-    height:39
+  promoCodeApply: {
+    marginLeft: 15,
+    height: 39
   },
   checkoutButtonContainer: {
     marginTop: 20,
@@ -388,7 +402,7 @@ const useStyles = makeStyles(theme => ({
     paddingLeft: 10,
     paddingRight: 10
   },
-  promoCodeTextfield:{flex:1},
+  promoCodeTextfield: { flex: 1 },
   textfield: { marginTop: 10, marginBottom: 20 },
   hidden: {
     visibility: 'hidden',

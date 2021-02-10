@@ -16,6 +16,10 @@ const navItems = {
     label: 'Artwork',
     subItems: [
       {
+        to: '/artwork/petiteBloom',
+        label: 'Petite Boom'
+      },
+      {
         to: '/artwork/nocturnes',
         label: 'Nocturnes'
       },
@@ -30,9 +34,13 @@ const navItems = {
       {
         to: '/artwork/EnPleinAir',
         label: 'En Plein Air'
+      },
+      {
+        to: '/artwork/studioSale',
+        label: 'Studio Sale'
       }
     ]
   }
-}
+};
 
-export default navItems
+export default navItems;
