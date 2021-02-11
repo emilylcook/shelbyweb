@@ -138,6 +138,7 @@ export const calculateShippingCosts = async (formFields, items) => {
     const { pounds, ounces, width, length, height, girth } = item?.shippingDetails;
     const { price, id } = item;
 
+    console.log('go');
     const twoWeeks = new Date(Date.now() + 12096e5);
     const year = twoWeeks.getFullYear();
 
@@ -146,6 +147,8 @@ export const calculateShippingCosts = async (formFields, items) => {
 
     const day = twoWeeks.getDay() < 10 ? `0${twoWeeks.getDay()}` : twoWeeks.getDay();
     const acceptanceDate = `${year}-${month}-${day}T13:15:00-06:00`;
+
+    console.log('acceptanceDate', acceptanceDate);
 
     if (shippingInternational) {
       packagesXml = `${packagesXml}
