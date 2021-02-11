@@ -101,7 +101,7 @@ const Artwork = ({ match }) => {
     setTimeout(function() {
       setLoading(false);
       setCollectionsLoaded([...collectionsLoaded, match.params.collection]);
-    }, 2000);
+    }, 2500);
   }
 
   return (
