@@ -40,7 +40,7 @@ const Artwork = ({ match }) => {
         .filter(x => !x.hidden);
 
       const moveToEndIndex = artInCollection.findIndex(x => x.name === 'Filter');
-      if (moveToEndIndex) {
+      if (moveToEndIndex > -1) {
         const copy = { ...artInCollection[moveToEndIndex] };
         artInCollection.splice(moveToEndIndex, 1);
 
@@ -177,7 +177,7 @@ const Artwork = ({ match }) => {
                     >
                       <img className={classes.masonaryItem} alt={name} src={path} />
 
-                      {info.status === 'Sold' && (
+                      {info?.status === 'Sold' && (
                         <div className={classes.sold}>
                           <Typography>Sold</Typography>
                         </div>
