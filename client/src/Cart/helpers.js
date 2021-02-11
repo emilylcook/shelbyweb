@@ -138,8 +138,14 @@ export const calculateShippingCosts = async (formFields, items) => {
     const { pounds, ounces, width, length, height, girth } = item?.shippingDetails;
     const { price, id } = item;
 
-    // TODO do this a week from now?
-    const acceptanceDate = '2021-02-24T13:15:00-06:00';
+    const twoWeeks = new Date(Date.now() + 12096e5);
+    const year = twoWeeks.getFullYear();
+
+    const month =
+      twoWeeks.getMonth() + 1 < 10 ? `0${twoWeeks.getMonth() + 1}` : twoWeeks.getMonth() + 1;
+
+    const day = twoWeeks.getDay() < 10 ? `0${twoWeeks.getDay()}` : twoWeeks.getDay();
+    const acceptanceDate = `${year}-${month}-${day}T13:15:00-06:00`;
 
     if (shippingInternational) {
       packagesXml = `${packagesXml}
