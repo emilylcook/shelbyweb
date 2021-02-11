@@ -35,7 +35,7 @@ const ButtonGroup = ({ art, next, previous, goToSlide, ...rest }: any) => {
   } = rest;
   const theme = useTheme();
 
-  const mobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const mobile = useMediaQuery(theme.breakpoints.down('xs'));
 
   const classes = useStyles();
 
