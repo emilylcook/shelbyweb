@@ -117,8 +117,7 @@ const About = () => {
               choosing not to sleep or are physically unable to.
             </Typography>
             <Typography paragraph>
-              Cook currently works and resides in Seattle, WA and spends her time travelling across
-              the world whenever she is able.
+              Cook currently works and resides in Seattle, WA with her cats, Mog and Ilya.
             </Typography>
           </Grid>
           <Grid item xs={12} sm={12} md={5} className={clsx(classes.section)}>
