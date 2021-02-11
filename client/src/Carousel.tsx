@@ -31,8 +31,9 @@ const ButtonGroup = ({ next, previous, goToSlide, ...rest }: any) => {
     carouselState: { currentSlide }
   } = rest;
 
-  //   console.log(rest);
   const classes = useStyles();
+
+  const CUSTOM_MAX = 2;
 
   return (
     <div className={classes.arrows}>
@@ -45,12 +46,14 @@ const ButtonGroup = ({ next, previous, goToSlide, ...rest }: any) => {
         ></button>
       )}
 
-      <button
-        onClick={() => next()}
-        aria-label="Go to next slide"
-        className="react-multiple-carousel__arrow react-multiple-carousel__arrow--right"
-        type="button"
-      ></button>
+      {currentSlide === CUSTOM_MAX ? null : (
+        <button
+          onClick={() => next()}
+          aria-label="Go to next slide"
+          className="react-multiple-carousel__arrow react-multiple-carousel__arrow--right"
+          type="button"
+        ></button>
+      )}
     </div>
   );
 };
@@ -59,12 +62,17 @@ const CarouselSlider = () => {
   const classes = useStyles();
 
   const [commissions, setCommissions] = React.useState<any>([]);
-  const { loading: loadingCollections, art, collections } = useCollectionData();
+  const { loading: loadingCollections, art } = useCollectionData();
 
   useEffect(() => {
     if (!loadingCollections) {
-      const arts = art.filter((x: any) => !x.hidden);
-      setCommissions(arts);
+      const arts = art
+        .filter((x: any) => !x.hidden)
+        .filter((x: any) => {
+          return x && x?.tags && x.tags.includes('commissions');
+        });
+
+      setCommissions(arts || []);
     }
     // eslint-disable-next-line
   }, [loadingCollections, art]);
@@ -77,14 +85,9 @@ const CarouselSlider = () => {
       arrows={false}
       draggable={false}
       responsive={responsive}
-      infinite={true}
+      infinite={false}
       autoPlay={false}
-      //   partialVisible={true}
-      //   slidesToSlide={3}
       centerMode={true}
-      //   keyBoardControl={true}
-      //   customTransition="all .5"
-      //   transitionDuration={500}
       containerClass="carousel-container"
       renderButtonGroupOutside={true}
       customButtonGroup={<ButtonGroup />}
@@ -92,12 +95,7 @@ const CarouselSlider = () => {
       {commissions.map((art: any) => {
         const { name, path } = art;
         return <img className={classes.sliderImage} alt={name} src={path} />;
-        // return <Image draggable={false} style={{ width: '100%', height: '100%' }} src={image} />;
       })}
-      {/* <div>Item 1</div>
-      <div>Item 2</div>
-      <div>Item 3</div>
-      <div>Item 4</div> */}
     </Carousel>
   );
 };

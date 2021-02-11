@@ -10,13 +10,10 @@ import WidthContainer from './WidthContainer';
 import { HorizontalTitle } from './common/';
 import { isFormSubmitDisabled } from './utils';
 import config from './config';
-import useCollectionData from './utils/useCollectionData';
 
 import Hero from './Hero';
 import heroImg from './assets/hero/Tofino3.jpg';
 import CarouselSlider from './Carousel';
-
-const SLIDESHOW_ITEMS = 3;
 
 const Commissions = () => {
   const classes = useStyles();
@@ -25,64 +22,6 @@ const Commissions = () => {
   const [emailSent, setEmailSent] = useState(false);
   const [loading, setLoading] = useState(false);
   const { enqueueSnackbar } = useSnackbar();
-
-  const [commissions, setCommissions] = useState(null);
-  const [artToShow, setArtToShow] = useState([]);
-  const { loading: loadingCollections, art, collections } = useCollectionData();
-
-  const [sliderIndex, setSliderIndex] = useState(0);
-
-  const setItemsToShow = startIndex => {
-    if (!commissions) {
-      return;
-    }
-    const length = commissions.length - 1;
-
-    let min = startIndex;
-
-    if (min > length) {
-      min = min - length - 1;
-    }
-
-    if (min < 0) {
-      min = min * -1;
-    }
-
-    setSliderIndex(min);
-
-    let items = [];
-    for (var s = 0; s < SLIDESHOW_ITEMS; s++) {
-      console.log('find', s);
-      let c = min + s;
-      if (c <= length) {
-        items.push(commissions[c]);
-      } else {
-        items.push(commissions[c - length - 1]);
-      }
-    }
-
-    setArtToShow(items || []);
-  };
-
-  useEffect(() => {
-    if (commissions) {
-      setItemsToShow(0);
-    }
-  }, [commissions]);
-
-  console.log('TODO, show these', artToShow);
-  console.log('sliderIndex', sliderIndex);
-
-  useEffect(() => {
-    if (!loadingCollections) {
-      const arts = art.filter(x => !x.hidden);
-      // const arts = art.filter(x => x.tags?.includes('commissions') && !x.hidden);
-
-      setCommissions(arts);
-      // setArtToShow(0, SLIDESHOW_ITEMS);
-    }
-    // eslint-disable-next-line
-  }, [loadingCollections, art]);
 
   const inputs = {
     name: {
@@ -189,32 +128,6 @@ const Commissions = () => {
       <WidthContainer className={classes.columnWrapper}>
         <Grid container>
           <Grid item xs={12} className={clsx(classes.header)}>
-            <CarouselSlider />
-            {/* <Grid container className={classes.sliderContainer}>
-              <div
-                className={classes.sliderLeft}
-                onClick={x => setItemsToShow(sliderIndex - SLIDESHOW_ITEMS)}
-              >
-                {'<'}
-              </div>
-              <div
-                className={classes.sliderRight}
-                onClick={x => setItemsToShow(sliderIndex + SLIDESHOW_ITEMS)}
-              >
-                {'>'}
-              </div>
-              {artToShow?.map(art => {
-                console.log(art);
-                const { path, name } = art;
-                return (
-                  <Grid key={name} item className={classes.sliderImageContainer}>
-                    <img className={classes.sliderImage} alt={name} src={path} />
-                  </Grid>
-                );
-              })}
-            </Grid> */}
-          </Grid>
-          <Grid item xs={12} className={clsx(classes.header)}>
             <HorizontalTitle title="Commissions" titleClass={classes.horizontalTitle} />
           </Grid>
 
@@ -308,6 +221,9 @@ const Commissions = () => {
                 </Button>
               </Grid>
             </Grid>
+          </Grid>
+          <Grid item xs={12} className={clsx(classes.header)}>
+            <CarouselSlider />
           </Grid>
         </Grid>
       </WidthContainer>
