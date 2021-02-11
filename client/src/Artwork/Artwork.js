@@ -198,7 +198,11 @@ const Artwork = ({ match }) => {
                         >
                           {info.type && <Typography>{info.type}</Typography>}
                           {info.size && <Typography>{info.size}</Typography>}
-                          {info.status && <Typography>{info.status}</Typography>}
+                          {info.status && (
+                            <Typography>
+                              {info.status === 'Available' ? `$${rest.price}` : info.status}
+                            </Typography>
+                          )}
                         </div>
                       </div>
                     </div>
