@@ -5,6 +5,9 @@ import Carousel from 'react-multi-carousel';
 import 'react-multi-carousel/lib/styles.css';
 import useCollectionData from './utils/useCollectionData';
 
+import useMediaQuery from '@material-ui/core/useMediaQuery';
+import { useTheme } from '@material-ui/core/styles';
+
 const responsive = {
   desktop: {
     breakpoint: { max: 3000, min: 1024 },
@@ -26,14 +29,17 @@ const responsive = {
   }
 };
 
-const ButtonGroup = ({ next, previous, goToSlide, ...rest }: any) => {
+const ButtonGroup = ({ art, next, previous, goToSlide, ...rest }: any) => {
   const {
     carouselState: { currentSlide }
   } = rest;
+  const theme = useTheme();
+
+  const mobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   const classes = useStyles();
 
-  const CUSTOM_MAX = 2;
+  const CUSTOM_MAX = mobile ? art.length - 1 : 2;
 
   return (
     <div className={classes.arrows}>
@@ -87,14 +93,18 @@ const CarouselSlider = () => {
       responsive={responsive}
       infinite={false}
       autoPlay={false}
-      centerMode={true}
+      // centerMode={true}
       containerClass="carousel-container"
       renderButtonGroupOutside={true}
-      customButtonGroup={<ButtonGroup />}
+      customButtonGroup={<ButtonGroup art={commissions} />}
     >
       {commissions.map((art: any) => {
         const { name, path } = art;
-        return <img className={classes.sliderImage} alt={name} src={path} />;
+        return (
+          <div className={classes.container}>
+            <img className={classes.sliderImage} alt={name} src={path} />
+          </div>
+        );
       })}
     </Carousel>
   );
@@ -103,6 +113,12 @@ const CarouselSlider = () => {
 export default CarouselSlider;
 
 const useStyles = makeStyles(theme => ({
+  container: {
+    [theme.breakpoints.down('xs')]: {
+      margin: 'auto',
+      textAlign: 'center'
+    }
+  },
   sliderImage: {
     height: '200px',
     width: 'auto'
@@ -115,12 +131,14 @@ const useStyles = makeStyles(theme => ({
     top: '-57%'
   },
   carousel: {
-    width: 875, // TODO change on mobile
-    margin: 'auto',
-    '& .react-multi-carousel-item': {
-      width: `auto !important`,
-      paddingLeft: 5,
-      paddingRight: 5
+    [theme.breakpoints.up('sm')]: {
+      width: 875,
+      margin: 'auto',
+      '& .react-multi-carousel-item': {
+        width: `auto !important`,
+        paddingLeft: 5,
+        paddingRight: 5
+      }
     }
   }
 }));
