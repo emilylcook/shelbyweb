@@ -93,6 +93,10 @@ export const getSalesRate = async (zip5, zip4) => {
   const value = await snapspot;
   const tax = value.val();
 
+  if (!tax) {
+    return 0;
+  }
+
   const combinedRate = tax[zip4];
 
   if (!combinedRate) {

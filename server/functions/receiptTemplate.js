@@ -12,7 +12,11 @@ function buildReceipt({
     lineItemsHtml = `${lineItemsHtml}
         <tr class="item">
           <td>${x.label}</td>
-          <td>$${x.amount.toFixed(2)}</td>
+          <td>${
+            x.amount < 0
+              ? `-$${Math.abs(x.amount.toFixed(2))}`
+              : `$${x.amount.toFixed(2)}`
+          }</td>
         </tr>`;
   });
 

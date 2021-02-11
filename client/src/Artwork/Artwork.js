@@ -35,9 +35,17 @@ const Artwork = ({ match }) => {
       );
       setCollection(selectedCollection);
 
-      const artInCollection = art
+      let artInCollection = art
         .filter(x => x && x.collections.includes(selectedCollection.id))
         .filter(x => !x.hidden);
+
+      const moveToEndIndex = artInCollection.findIndex(x => x.name === 'Filter');
+      if (moveToEndIndex) {
+        const copy = { ...artInCollection[moveToEndIndex] };
+        artInCollection.splice(moveToEndIndex, 1);
+
+        artInCollection.push(copy);
+      }
 
       setArtToShow(artInCollection);
     }

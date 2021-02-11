@@ -57,7 +57,10 @@ export default function CheckoutScreen() {
 
   const steps = getSteps();
 
-  const [formFields, setFormFields] = React.useState({ billingSameAsShipping: true });
+  const [formFields, setFormFields] = React.useState({
+    billingSameAsShipping: true,
+    shippingCountry: 'UnitedStates'
+  });
   const [discount, setDiscount] = useState('');
   const [promoCode, setPromoCode] = useState('');
 
@@ -94,7 +97,8 @@ export default function CheckoutScreen() {
     let showRecommendAddressModal = false;
 
     setLoading(true);
-    const shippingInternational = formFields?.shippingCountry !== 'UnitedStates';
+    const shippingInternational =
+      !!formFields.shippingCountry && formFields.shippingCountry !== 'UnitedStates';
 
     if (activeStep === 1) {
       const itemsInCart = getItemsInCart();
@@ -143,7 +147,9 @@ export default function CheckoutScreen() {
           if (showRecommendAddressModal) {
             setRecommendedAddress(validateAddressResult.address);
           }
+
           salesTaxRate = await getSalesRate(zip5, zip4);
+
           setFormFields({ ...formFields, salesTaxRate, shippingCost, zip4 });
         }
       } else {
@@ -288,7 +294,7 @@ export default function CheckoutScreen() {
       administrative_district_level_1: formFields?.shippingState,
       postal_code: formFields?.shippingPostal,
       address_line_1: formFields?.shippingStreetAddress,
-      address_line_2: formFields?.shippingStreetAddress2
+      address_line_2: formFields?.shippingStreetAddress2 || ''
     };
 
     const billingContact = formFields?.billingSameAsShipping
@@ -300,7 +306,7 @@ export default function CheckoutScreen() {
           administrative_district_level_1: formFields?.billingState,
           postal_code: formFields?.billingPostal,
           address_line_1: formFields?.billingStreetAddress,
-          address_line_2: formFields?.billingStreetAddress2
+          address_line_2: formFields?.billingStreetAddress2 || ''
         };
 
     const paymentRequestJson = {
@@ -309,7 +315,7 @@ export default function CheckoutScreen() {
       shippingContact,
       billingContact,
       currencyCode: 'USD',
-      countryCode: 'US',
+      countryCode: formFields.shippingCountry === 'Canada' ? 'CA' : 'US',
       total: totalAmount,
       lineItems
     };
@@ -483,7 +489,7 @@ export default function CheckoutScreen() {
                 >
                   <MenuItem value="UnitedStates">United States</MenuItem>
                   <MenuItem value="Canada">Canada</MenuItem>
-                  <MenuItem disabled value="">
+                  <MenuItem disabled value="" className={classes.dropdown}>
                     *if you are outside of the US or Canada, please contact Shelby for purchasing
                     options
                   </MenuItem>
@@ -670,6 +676,7 @@ export default function CheckoutScreen() {
 }
 
 const useStyles = makeStyles(theme => ({
+  dropdown: { whiteSpace: 'break-spaces' },
   label: {
     fontWeight: 600
   },
