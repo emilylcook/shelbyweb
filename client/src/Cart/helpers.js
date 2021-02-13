@@ -144,7 +144,7 @@ export const calculateShippingCosts = async (formFields, items) => {
     const month =
       twoWeeks.getMonth() + 1 < 10 ? `0${twoWeeks.getMonth() + 1}` : twoWeeks.getMonth() + 1;
 
-    const day = twoWeeks.getDay() < 10 ? `0${twoWeeks.getDay()}` : twoWeeks.getDay();
+    const day = twoWeeks.getDate() < 10 ? `0${twoWeeks.getDate()}` : twoWeeks.getDate();
     const acceptanceDate = `${year}-${month}-${day}T13:15:00-06:00`;
 
     if (shippingInternational) {
@@ -199,7 +199,7 @@ export const calculateShippingCosts = async (formFields, items) => {
    </RateV4Request>`;
 
   const getUrl = shippingInternational
-    ? `http://secure.shippingapis.com/ShippingAPI.dll?API=IntlRateV2&XML=${encodeURI(XML)}`
+    ? `https://secure.shippingapis.com/ShippingAPI.dll?API=IntlRateV2&XML=${encodeURI(XML)}`
     : `https://secure.shippingapis.com/ShippingAPI.dll?API=RateV4&XML=${encodeURI(XML)}`;
 
   const TRACKING_SERVICE = 155;

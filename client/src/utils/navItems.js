@@ -17,7 +17,7 @@ const navItems = {
     subItems: [
       {
         to: '/artwork/petiteBloom',
-        label: 'Petite Boom'
+        label: 'Petite Bloom'
       },
       {
         to: '/artwork/nocturnes',
