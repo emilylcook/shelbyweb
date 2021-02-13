@@ -248,11 +248,11 @@ export default function OrderSummary({
                     </Typography>
                   )}
                 </div>
-                {freeShipping ? (
+                {freeShipping && shippingCountry ? (
                   <div className={classes.row}>
                     <Typography className={classes.costLabel}>Promo</Typography>
                     <Typography className={classes.dollarAmount}>
-                      -${shippingCountry === 'shippingCountry' ? shipping : 10} USD
+                      -${shippingCountry === 'UnitedStates' ? shipping : 10} USD
                     </Typography>
                   </div>
                 ) : null}
