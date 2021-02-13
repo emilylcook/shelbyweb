@@ -129,19 +129,18 @@ export default function MobileNav() {
                 </ListItem>
               );
             })}
-            {isAuthenticated && (
-              <ListItem>
-                <ListItemText>
-                  <Link smooth to={itemsInCart && '/cart'} className={classes.listItem}>
-                    <Badge badgeContent={itemsInCart} color="primary">
-                      {' '}
-                      <Typography className={classes.listItemText}>Cart</Typography>
-                      <ShoppingCartIcon className={classes.shoppingCartIcon} />
-                    </Badge>
-                  </Link>
-                </ListItemText>
-              </ListItem>
-            )}
+
+            <ListItem>
+              <ListItemText>
+                <Link smooth to={itemsInCart && '/cart'} className={classes.listItem}>
+                  <Badge badgeContent={itemsInCart} color="primary">
+                    {' '}
+                    <Typography className={classes.listItemText}>Cart</Typography>
+                    <ShoppingCartIcon className={classes.shoppingCartIcon} />
+                  </Badge>
+                </Link>
+              </ListItemText>
+            </ListItem>
           </List>
         </div>
       </SwipeableDrawer>
