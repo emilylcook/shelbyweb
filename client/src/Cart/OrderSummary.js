@@ -47,7 +47,7 @@ export default function OrderSummary({
   React.useEffect(() => {
     if (onApplyPromo) {
       if (freeShipping) {
-        const discount = shippingCountry === 'shippingCountry' ? shipping : 10;
+        const discount = shippingCountry === 'UnitedStates' ? shipping : 10;
 
         console.log(shippingCountry);
         onApplyPromo({ code: promoCode, discount });
