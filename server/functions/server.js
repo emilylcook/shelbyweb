@@ -115,7 +115,7 @@ app.post("/checkout/", async function (req, res, next) {
 
     // send to user and shelby
     const mailOptions = {
-      to: "emilycookx@gmail.com",
+      to: email,
       cc: "shelbykcook.art@gmail.com",
       from: "no-reply@myemail.com",
       subject,
