@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { makeStyles } from '@material-ui/core';
 import Carousel from 'react-multi-carousel';
@@ -7,6 +7,7 @@ import useCollectionData from './utils/useCollectionData';
 
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { useTheme } from '@material-ui/core/styles';
+import ImageModal from './Artwork/ImageModal';
 
 const responsive = {
   desktop: {
@@ -69,6 +70,8 @@ const CarouselSlider = () => {
 
   const [commissions, setCommissions] = React.useState<any>([]);
   const { loading: loadingCollections, art } = useCollectionData();
+  const [imageModalOpen, setImageModalOpen] = useState(false);
+  const [imageModalDetails, setImageModalDetails] = useState({});
 
   useEffect(() => {
     if (!loadingCollections) {
@@ -84,29 +87,49 @@ const CarouselSlider = () => {
   }, [loadingCollections, art]);
 
   return (
-    <Carousel
-      swipeable={false}
-      className={classes.carousel}
-      ssr
-      arrows={false}
-      draggable={false}
-      responsive={responsive}
-      infinite={false}
-      autoPlay={false}
-      // centerMode={true}
-      containerClass="carousel-container"
-      renderButtonGroupOutside={true}
-      customButtonGroup={<ButtonGroup art={commissions} />}
-    >
-      {commissions.map((art: any) => {
-        const { name, path } = art;
-        return (
-          <div className={classes.container}>
-            <img className={classes.sliderImage} alt={name} src={path} />
-          </div>
-        );
-      })}
-    </Carousel>
+    <>
+      <ImageModal
+        collectionId={'commissionPAGE'}
+        commissionPage={true}
+        handleClose={() => {
+          setImageModalOpen(false);
+          setImageModalDetails({});
+        }}
+        collection={commissions}
+        details={imageModalDetails}
+        open={imageModalOpen}
+      />
+      <Carousel
+        swipeable={false}
+        className={classes.carousel}
+        ssr
+        arrows={false}
+        draggable={false}
+        responsive={responsive}
+        infinite={false}
+        autoPlay={false}
+        // centerMode={true}
+        containerClass="carousel-container"
+        renderButtonGroupOutside={true}
+        customButtonGroup={<ButtonGroup art={commissions} />}
+      >
+        {commissions.map((art: any) => {
+          const { name, path, info, ...rest } = art;
+          return (
+            <div
+              key={name}
+              className={classes.container}
+              onClick={() => {
+                setImageModalDetails({ path, name, info, ...rest });
+                setImageModalOpen(true);
+              }}
+            >
+              <img className={classes.sliderImage} alt={name} src={path} />
+            </div>
+          );
+        })}
+      </Carousel>
+    </>
   );
 };
 
@@ -121,7 +144,8 @@ const useStyles = makeStyles(theme => ({
   },
   sliderImage: {
     height: '200px',
-    width: 'auto'
+    width: 'auto',
+    cursor: 'pointer'
   },
   imageContainer: {
     position: 'relative'

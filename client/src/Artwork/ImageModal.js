@@ -29,7 +29,7 @@ function DialogTitle({ children, onClose }) {
   );
 }
 
-function ImageModal({ open, collectionId, handleClose, collection, details = {} }) {
+function ImageModal({ open, collectionId, handleClose, collection, details = {}, commissionPage }) {
   const classes = useStyles();
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('xs'));
@@ -152,16 +152,20 @@ function ImageModal({ open, collectionId, handleClose, collection, details = {} 
         }
       }}
     >
-      <IconButton
-        aria-label="previous"
-        className={classes.backControl}
-        onClick={() => setPrevious()}
-      >
-        <KeyboardArrowLeftIcon className={classes.icon} />
-      </IconButton>
-      <IconButton aria-label="mext" className={classes.nextControl} onClick={() => setNext()}>
-        <KeyboardArrowRightIcon className={classes.icon} />
-      </IconButton>
+      {commissionPage ? null : (
+        <>
+          <IconButton
+            aria-label="previous"
+            className={classes.backControl}
+            onClick={() => setPrevious()}
+          >
+            <KeyboardArrowLeftIcon className={classes.icon} />
+          </IconButton>
+          <IconButton aria-label="next" className={classes.nextControl} onClick={() => setNext()}>
+            <KeyboardArrowRightIcon className={classes.icon} />
+          </IconButton>
+        </>
+      )}
       <DialogTitle className={classes.title} onClose={handleClose}></DialogTitle>
       <DialogContent className={classes.content} classes={{ root: classes.contentRoot }}>
         <div>
@@ -173,13 +177,19 @@ function ImageModal({ open, collectionId, handleClose, collection, details = {} 
             <div className={classes.details}>
               {info.type && <Typography>{info.type}</Typography>}
               {info.size && <Typography>{info.size}</Typography>}
-              {info.status && info.status !== 'Available' && <Typography>{info.status}</Typography>}
-              {CAN_ADD_TO_CART && (
+              {commissionPage ? null : (
                 <>
-                  <Typography paragraph>${price}</Typography>
-                  <Button color="primary" variant="contained" onClick={addToCart}>
-                    Add To Cart
-                  </Button>
+                  {info.status && info.status !== 'Available' && (
+                    <Typography>{info.status}</Typography>
+                  )}
+                  {CAN_ADD_TO_CART && (
+                    <>
+                      <Typography paragraph>${price}</Typography>
+                      <Button color="primary" variant="contained" onClick={addToCart}>
+                        Add To Cart
+                      </Button>
+                    </>
+                  )}
                 </>
               )}
             </div>
