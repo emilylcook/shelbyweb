@@ -39,7 +39,7 @@ const ButtonGroup = ({ art, next, previous, goToSlide, ...rest }: any) => {
 
   const classes = useStyles();
 
-  const CUSTOM_MAX = mobile ? art.length - 1 : 2;
+  const CUSTOM_MAX = mobile ? art.length - 1 : 3;
 
   return (
     <div className={classes.arrows}>
@@ -52,7 +52,7 @@ const ButtonGroup = ({ art, next, previous, goToSlide, ...rest }: any) => {
         ></button>
       )}
 
-      {currentSlide === CUSTOM_MAX ? null : (
+      {currentSlide >= CUSTOM_MAX ? null : (
         <button
           onClick={() => next()}
           aria-label="Go to next slide"
