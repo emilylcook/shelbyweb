@@ -1,11 +1,196 @@
-import React, { useState, useEffect } from 'react'
-import { makeStyles } from '@material-ui/styles'
-import MuiDialogTitle from '@material-ui/core/DialogTitle'
-import { IconButton, Typography, Dialog, DialogContent, useMediaQuery } from '@material-ui/core'
-import CloseIcon from '@material-ui/icons/Close'
-import KeyboardArrowRightIcon from '@material-ui/icons/KeyboardArrowRight'
-import KeyboardArrowLeftIcon from '@material-ui/icons/KeyboardArrowLeft'
-import { useTheme } from '@material-ui/core/styles'
+import React, { useState, useEffect } from 'react';
+import { makeStyles } from '@material-ui/styles';
+import MuiDialogTitle from '@material-ui/core/DialogTitle';
+import {
+  IconButton,
+  Typography,
+  Button,
+  Dialog,
+  DialogContent,
+  useMediaQuery
+} from '@material-ui/core';
+import { useSnackbar } from 'notistack';
+import CloseIcon from '@material-ui/icons/Close';
+import KeyboardArrowRightIcon from '@material-ui/icons/KeyboardArrowRight';
+import KeyboardArrowLeftIcon from '@material-ui/icons/KeyboardArrowLeft';
+import { useTheme } from '@material-ui/core/styles';
+
+import { addProductToCart } from '../utils/useCartData';
+
+function DialogTitle({ children, onClose }) {
+  const classes = useStyles();
+  return (
+    <MuiDialogTitle disableTypography className={classes.titleRoot}>
+      <Typography variant="h6">{children}</Typography>
+      <IconButton aria-label="close" className={classes.closeButton} onClick={onClose}>
+        <CloseIcon className={classes.closeIcon} />
+      </IconButton>
+    </MuiDialogTitle>
+  );
+}
+
+function ImageModal({ open, collectionId, handleClose, collection, details = {} }) {
+  const classes = useStyles();
+  const theme = useTheme();
+  const fullScreen = useMediaQuery(theme.breakpoints.down('xs'));
+  const [modalDetails, setDetails] = useState(details);
+  const { enqueueSnackbar } = useSnackbar();
+
+  const { path, key, name, info = {}, price, quantity = 0 } = modalDetails;
+
+  useEffect(() => {
+    setDetails(details);
+  }, [details]);
+
+  function setNext() {
+    let nextKey = parseInt(key) + 1;
+
+    if (collection.length <= nextKey) {
+      nextKey = 0;
+    }
+
+    const nextImage = collection[nextKey];
+
+    setDetails({
+      path: nextImage.path,
+      key: nextKey,
+      name: nextImage.name,
+      info: nextImage.info || {},
+      quantity: nextImage.quantity || 0,
+      price: nextImage?.price,
+      id: nextImage.id,
+      shippingDetails: nextImage.shippingDetails
+    });
+  }
+
+  function setPrevious() {
+    let prevKey = parseInt(key) - 1;
+
+    if (prevKey < 0) {
+      prevKey = collection.length - 1;
+    }
+
+    const nextImage = collection[prevKey];
+
+    setDetails({
+      shippingDetails: nextImage.shippingDetails,
+      path: nextImage.path,
+      key: prevKey,
+      name: nextImage.name,
+      info: nextImage.info || {},
+      quantity: nextImage.quantity || 0,
+      price: nextImage?.price,
+      id: nextImage.id
+    });
+  }
+
+  function onKeyPress(event) {
+    if (event.keyCode === 37) {
+      // left arrow
+      setPrevious();
+    } else if (event.keyCode === 39) {
+      // right arrow
+      setNext();
+    }
+  }
+
+  const addToCart = () => {
+    const item = {
+      shippingDetails: modalDetails.shippingDetails,
+      id: modalDetails.id,
+      collectionId: collectionId,
+      quantity: 1,
+      price: modalDetails.price,
+      name: modalDetails.name,
+      path: modalDetails.path,
+      info: modalDetails.info
+    };
+
+    const result = addProductToCart(item);
+
+    if (result.success) {
+      enqueueSnackbar('Added to cart!', {
+        variant: 'success',
+        autoHideDuration: 4500
+      });
+    } else {
+      enqueueSnackbar('Item already in your cart', {
+        variant: 'error',
+        autoHideDuration: 4500
+      });
+    }
+  };
+
+  const VALID_QUANTITY = quantity > 0 && price;
+  const VALID_SHIPPING_DETAILS =
+    modalDetails &&
+    modalDetails.shippingDetails &&
+    typeof modalDetails.shippingDetails.length === 'number' &&
+    typeof modalDetails.shippingDetails.height === 'number' &&
+    typeof modalDetails.shippingDetails.width === 'number' &&
+    typeof modalDetails.shippingDetails.pounds === 'number' &&
+    typeof modalDetails.shippingDetails.ounces === 'number';
+
+  const CAN_ADD_TO_CART = VALID_QUANTITY && VALID_SHIPPING_DETAILS;
+
+  return (
+    <Dialog
+      fullScreen={fullScreen}
+      classes={{ root: classes.root }}
+      open={open}
+      onClose={handleClose}
+      maxWidth="xl"
+      onKeyDown={onKeyPress}
+      BackdropProps={{
+        classes: {
+          root: classes.backdrop
+        }
+      }}
+      PaperProps={{
+        classes: {
+          root: classes.elevation
+        }
+      }}
+    >
+      <IconButton
+        aria-label="previous"
+        className={classes.backControl}
+        onClick={() => setPrevious()}
+      >
+        <KeyboardArrowLeftIcon className={classes.icon} />
+      </IconButton>
+      <IconButton aria-label="mext" className={classes.nextControl} onClick={() => setNext()}>
+        <KeyboardArrowRightIcon className={classes.icon} />
+      </IconButton>
+      <DialogTitle className={classes.title} onClose={handleClose}></DialogTitle>
+      <DialogContent className={classes.content} classes={{ root: classes.contentRoot }}>
+        <div>
+          <img className={classes.image} alt={name} src={path} />
+          <div className={classes.details}>
+            <Typography className={classes.title}>
+              <b>{name}</b>
+            </Typography>
+            <div className={classes.details}>
+              {info.type && <Typography>{info.type}</Typography>}
+              {info.size && <Typography>{info.size}</Typography>}
+              {info.status && info.status !== 'Available' && <Typography>{info.status}</Typography>}
+              {CAN_ADD_TO_CART && (
+                <>
+                  <Typography paragraph>${price}</Typography>
+                  <Button color="primary" variant="contained" onClick={addToCart}>
+                    Add To Cart
+                  </Button>
+                </>
+              )}
+            </div>
+          </div>
+        </div>
+      </DialogContent>
+    </Dialog>
+  );
+}
+
+export default ImageModal;
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -87,122 +272,4 @@ const useStyles = makeStyles(theme => ({
     justifyContent: 'center',
     alignItems: 'center'
   }
-}))
-
-function DialogTitle({ children, onClose }) {
-  const classes = useStyles()
-  return (
-    <MuiDialogTitle disableTypography className={classes.titleRoot}>
-      <Typography variant="h6">{children}</Typography>
-      <IconButton aria-label="close" className={classes.closeButton} onClick={onClose}>
-        <CloseIcon className={classes.closeIcon} />
-      </IconButton>
-    </MuiDialogTitle>
-  )
-}
-
-function ImageModal({ open, handleClose, collection, details = {} }) {
-  const classes = useStyles()
-  const theme = useTheme()
-  const fullScreen = useMediaQuery(theme.breakpoints.down('xs'))
-  const [modalDetais, setDetails] = useState(details)
-
-  const { path, key, name, info = {} } = modalDetais
-
-  useEffect(() => {
-    setDetails(details)
-  }, [details])
-
-  function setNext() {
-    let nextKey = parseInt(key) + 1
-
-    if (collection.length <= nextKey) {
-      nextKey = 0
-    }
-
-    const nextImage = collection[nextKey]
-
-    setDetails({
-      path: nextImage.path,
-      key: nextKey,
-      name: nextImage.name,
-      info: nextImage.info || {}
-    })
-  }
-
-  function setPrevious() {
-    let prevKey = parseInt(key) - 1
-
-    if (prevKey < 0) {
-      prevKey = collection.length - 1
-    }
-
-    const nextImage = collection[prevKey]
-
-    setDetails({
-      path: nextImage.path,
-      key: prevKey,
-      name: nextImage.name,
-      info: nextImage.info || {}
-    })
-  }
-
-  function onKeyPress(event) {
-    if (event.keyCode === 37) {
-      // left arrow
-      setPrevious()
-    } else if (event.keyCode === 39) {
-      // right arrow
-      setNext()
-    }
-  }
-  return (
-    <Dialog
-      fullScreen={fullScreen}
-      classes={{ root: classes.root, elevation: classes.elevation }}
-      open={open}
-      onClose={handleClose}
-      maxWidth="xl"
-      onKeyDown={onKeyPress}
-      BackdropProps={{
-        classes: {
-          root: classes.backdrop
-        }
-      }}
-      PaperProps={{
-        classes: {
-          root: classes.elevation
-        }
-      }}
-    >
-      <IconButton
-        aria-label="previous"
-        className={classes.backControl}
-        onClick={() => setPrevious()}
-      >
-        <KeyboardArrowLeftIcon className={classes.icon} />
-      </IconButton>
-      <IconButton aria-label="mext" className={classes.nextControl} onClick={() => setNext()}>
-        <KeyboardArrowRightIcon className={classes.icon} />
-      </IconButton>
-      <DialogTitle className={classes.title} onClose={handleClose}></DialogTitle>
-      <DialogContent className={classes.content} classes={{ root: classes.contentRoot }}>
-        <div>
-          <img className={classes.image} alt={name} src={path} />
-          <div className={classes.details}>
-            <Typography className={classes.title}>
-              <b>{name}</b>
-            </Typography>
-            <div className={classes.details}>
-              {info.type && <Typography>{info.type}</Typography>}
-              {info.size && <Typography>{info.size}</Typography>}
-              {info.status && <Typography>{info.status}</Typography>}
-            </div>
-          </div>
-        </div>
-      </DialogContent>
-    </Dialog>
-  )
-}
-
-export default ImageModal
+}));

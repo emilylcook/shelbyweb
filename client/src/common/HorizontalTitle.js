@@ -1,8 +1,8 @@
-import React from 'react'
-import { makeStyles } from '@material-ui/core/styles'
-import clsx from 'clsx'
+import React from 'react';
+import { makeStyles } from '@material-ui/core/styles';
+import clsx from 'clsx';
 
-import { Typography } from '@material-ui/core'
+import { Typography } from '@material-ui/core';
 
 const useStyles = makeStyles(theme => ({
   horizontalTtileContainer: {
@@ -35,10 +35,10 @@ const useStyles = makeStyles(theme => ({
   spacer: {
     marginBottom: 20
   }
-}))
+}));
 
-const HorizontalTitle = ({ title, includeSpacer, titleClass }) => {
-  const classes = useStyles()
+const HorizontalTitle = ({ title, includeSpacer, titleClass = null }) => {
+  const classes = useStyles();
 
   return (
     <div className={clsx(classes.horizontalTtileContainer, { [classes.spacer]: includeSpacer })}>
@@ -46,7 +46,7 @@ const HorizontalTitle = ({ title, includeSpacer, titleClass }) => {
         <span className={clsx(classes.horizontalTitle, titleClass)}>{title}</span>
       </Typography>
     </div>
-  )
-}
+  );
+};
 
-export default HorizontalTitle
+export default HorizontalTitle;

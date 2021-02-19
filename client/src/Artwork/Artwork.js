@@ -1,89 +1,107 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react';
 
-import { makeStyles } from '@material-ui/core/styles'
-import { Typography, Grid } from '@material-ui/core'
+import { makeStyles } from '@material-ui/core/styles';
+import { Typography, Grid } from '@material-ui/core';
 
-import clsx from 'clsx'
+import clsx from 'clsx';
 
-import { HorizontalTitle, Progress } from '../common/'
-import WidthContainer from '../WidthContainer'
-import ImageModal from './ImageModal'
-import useCollectionData from '../utils/useCollectionData'
+import { HorizontalTitle, Progress } from '../common/';
+import WidthContainer from '../WidthContainer';
+import ImageModal from './ImageModal';
+import useCollectionData from '../utils/useCollectionData';
 
 const Artwork = ({ match }) => {
-  const classes = useStyles()
-  const [hoverOn, setHoverOn] = useState(null)
+  const classes = useStyles();
+  const [hoverOn, setHoverOn] = useState(null);
 
-  const [imageModalOpen, setImageModalOpen] = useState(false)
-  const [imageModalDetails, setImageModalDetails] = useState({})
-  const [selectedFilters, setSelectedFilters] = useState(new Set())
-  const [hideArtwork, setHideArtwork] = useState(true)
+  const [imageModalOpen, setImageModalOpen] = useState(false);
+  const [imageModalDetails, setImageModalDetails] = useState({});
+  const [selectedFilters, setSelectedFilters] = useState(new Set());
+  const [hideArtwork, setHideArtwork] = useState(true);
 
-  const [collection, setCollection] = useState(null)
-  const [loading, setLoading] = useState(true)
-  const [collectionsLoaded, setCollectionsLoaded] = useState([])
+  const [collection, setCollection] = useState(null);
+  const [artToShow, setArtToShow] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [collectionsLoaded, setCollectionsLoaded] = useState([]);
 
-  const hideModal = false // useMediaQuery(theme.breakpoints.down('xs'))
+  const hideModal = false; // useMediaQuery(theme.breakpoints.down('xs'))
 
-  const { loading: loadingCollections, collections } = useCollectionData()
+  const { loading: loadingCollections, art, collections } = useCollectionData();
 
   useEffect(() => {
     if (!loadingCollections) {
-      const selectedCollection = collections.find(x => x.id === match.params.collection)
-      setCollection(selectedCollection)
+      const selectedCollection = collections.find(
+        x => x.id.toLowerCase() === match.params.collection.toLowerCase()
+      );
+      setCollection(selectedCollection);
+
+      let artInCollection = art
+        .filter(x => x && x.collections.includes(selectedCollection.id))
+        .filter(x => !x.hidden);
+
+      const moveToEndIndex = artInCollection.findIndex(x => x.name === 'Filter');
+      if (moveToEndIndex > -1) {
+        const copy = { ...artInCollection[moveToEndIndex] };
+        artInCollection.splice(moveToEndIndex, 1);
+
+        artInCollection.push(copy);
+      }
+
+      setArtToShow(artInCollection);
     }
-  }, [match, loadingCollections, collections])
+    // eslint-disable-next-line
+  }, [match, loadingCollections, collections]);
 
   useEffect(() => {
-    setHideArtwork(true)
+    setHideArtwork(true);
     if (!collectionsLoaded.includes(match.params.collection)) {
-      setLoading(true)
+      setLoading(true);
     }
     setTimeout(function() {
-      setHideArtwork(false)
-      setSelectedFilters(new Set())
-    }, 100)
-  }, [match, collectionsLoaded])
+      setHideArtwork(false);
+      setSelectedFilters(new Set());
+    }, 100);
+  }, [match, collectionsLoaded]);
 
   function handleFilter(filter) {
-    const selected = selectedFilters.has(filter)
+    const selected = selectedFilters.has(filter);
 
-    let singleFilterSet = new Set()
+    let singleFilterSet = new Set();
     if (!selected) {
-      singleFilterSet.add(filter)
+      singleFilterSet.add(filter);
     }
 
-    setSelectedFilters(new Set(singleFilterSet))
+    setSelectedFilters(new Set(singleFilterSet));
   }
 
   function clearFilters() {
-    setSelectedFilters(new Set())
+    setSelectedFilters(new Set());
   }
 
   if (!collection) {
-    return null
+    return null;
   }
 
-  const { filters } = collection
+  const { filters } = collection;
 
-  let art = collection.art
+  let _art = artToShow;
 
   function filteredArt(art) {
     return art.filter(a => {
       // must contain all set
-      const array = [...selectedFilters]
-      return array.every(f => a.tags.includes(f))
-    })
+      const array = [...selectedFilters];
+      return array.every(f => a.tags.includes(f));
+    });
   }
 
-  art = selectedFilters.size > 0 ? filteredArt(art) : art
+  _art = selectedFilters.size > 0 ? filteredArt(_art) : _art;
 
   // todo need to keep track of each location?
   if (loading) {
     setTimeout(function() {
-      setLoading(false)
-      setCollectionsLoaded([...collectionsLoaded, match.params.collection])
-    }, 1000)
+      setLoading(false);
+      setCollectionsLoaded([...collectionsLoaded, match.params.collection]);
+    }, 2500);
   }
 
   return (
@@ -110,7 +128,7 @@ const Artwork = ({ match }) => {
               </Grid>
 
               {filters.map(filter => {
-                const isActive = selectedFilters.has(filter.toLowerCase())
+                const isActive = selectedFilters.has(filter.toLowerCase());
 
                 return (
                   <Grid
@@ -121,7 +139,7 @@ const Artwork = ({ match }) => {
                   >
                     {filter}
                   </Grid>
-                )
+                );
               })}
             </Grid>
           )}
@@ -135,8 +153,8 @@ const Artwork = ({ match }) => {
               [classes.hidden]: hideArtwork || loading
             })}
           >
-            {Object.entries(art).map(([key, { path, name, info }]) => {
-              const isHovered = hoverOn === key
+            {Object.entries(_art).map(([key, { path, name, info, ...rest }]) => {
+              const isHovered = hoverOn === key;
               return (
                 <div key={key}>
                   <div className={classes.marginBottom}>
@@ -144,22 +162,22 @@ const Artwork = ({ match }) => {
                       className={clsx(classes.tile, { [classes.tileHover]: isHovered })}
                       onMouseEnter={() => {
                         if (!hideModal) {
-                          setHoverOn(key)
+                          setHoverOn(key);
                         }
                       }}
                       onClick={() => {
                         if (hideModal) {
-                          setHoverOn(!isHovered ? key : null)
+                          setHoverOn(!isHovered ? key : null);
                         } else {
-                          setImageModalDetails({ path, key, name, info })
-                          setImageModalOpen(true)
+                          setImageModalDetails({ path, key, name, info, ...rest });
+                          setImageModalOpen(true);
                         }
                       }}
                       onMouseLeave={() => setHoverOn(null)}
                     >
                       <img className={classes.masonaryItem} alt={name} src={path} />
 
-                      {info.status === 'Sold' && (
+                      {info?.status === 'Sold' && (
                         <div className={classes.sold}>
                           <Typography>Sold</Typography>
                         </div>
@@ -180,32 +198,37 @@ const Artwork = ({ match }) => {
                         >
                           {info.type && <Typography>{info.type}</Typography>}
                           {info.size && <Typography>{info.size}</Typography>}
-                          {info.status && <Typography>{info.status}</Typography>}
+                          {info.status && (
+                            <Typography>
+                              {info.status === 'Available' ? `$${rest.price}` : info.status}
+                            </Typography>
+                          )}
                         </div>
                       </div>
                     </div>
                   </div>
                 </div>
-              )
+              );
             })}
           </div>
           {/* <Grid container className={classes.container}></Grid> */}
         </WidthContainer>
       </div>
       <ImageModal
+        collectionId={match.params.collection}
         handleClose={() => {
-          setImageModalOpen(false)
-          setImageModalDetails({})
+          setImageModalOpen(false);
+          setImageModalDetails({});
         }}
-        collection={art}
+        collection={_art}
         details={imageModalDetails}
         open={imageModalOpen}
       />
     </>
-  )
-}
+  );
+};
 
-export default Artwork
+export default Artwork;
 
 const useStyles = makeStyles(theme => ({
   imageContainer: {
@@ -360,4 +383,4 @@ const useStyles = makeStyles(theme => ({
       marginBottom: 0
     }
   }
-}))
+}));

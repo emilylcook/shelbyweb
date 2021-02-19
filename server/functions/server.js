@@ -5,25 +5,186 @@ const express = require("express");
 const cors = require("cors");
 const bodyParser = require("body-parser");
 const request = require("request-promise-native");
+const crypto = require("crypto");
+
+const squareConnect = require("square-connect");
+
+const buildReceipt = require("./receiptTemplate");
 
 const app = express();
 app.use(bodyParser.json());
 
 var corsOptions = {
-  origin: function(origin, callback) {
-    if ("https://shelbykcook.com" === origin || !origin) {
-      // if ("http://localhost:3000" === origin || !origin) {
+  origin: function (origin, callback) {
+    const allowedOrigin = functions.config().origin.allowed;
+    if (allowedOrigin === origin || !origin) {
       callback(null, true);
     } else {
       console.log("ORIGIN NOT ALLOWED:" + origin);
       callback(new Error("Not allowed by CORS"));
     }
-  }
+  },
 };
 
 app.use(cors(corsOptions));
 
-app.post("/signup/", async function(req, res, next) {
+const defaultClient = squareConnect.ApiClient.instance;
+
+// Configure OAuth2 access token for authorization: oauth2
+const oauth2 = defaultClient.authentications["oauth2"];
+
+const ENV = functions.config().env.name;
+
+oauth2.accessToken =
+  ENV === "DEV"
+    ? functions.config().sandbox.squareaccesstoken
+    : functions.config().square.squareaccesstoken;
+
+// Set 'basePath' to switch between sandbox env and production env
+// sandbox: https://connect.squareupsandbox.com
+// production: https://connect.squareup.com
+
+defaultClient.basePath =
+  ENV === "DEV"
+    ? "https://connect.squareupsandbox.com" // DEV
+    : "https://connect.squareup.com"; // PRODUCTION
+
+app.post("/checkout/", async function (req, res, next) {
+  const {
+    email,
+    shippingContact: shipping_address,
+    billingContact: billing_address,
+    currencyCode,
+    countryCode,
+    total,
+    lineItems,
+    nonce,
+  } = req.body;
+
+  // const request_params = req.body;
+
+  // length of idempotency_key should be less than 45
+  const idempotency_key = crypto.randomBytes(22).toString("hex");
+
+  // Charge the customer's card
+  const payments_api = new squareConnect.PaymentsApi();
+
+  const totalInCents = parseInt((total * 100).toFixed(0));
+
+  const request_body = {
+    source_id: nonce,
+    billing_address,
+    buyer_email_address: email,
+    amount_money: {
+      amount: totalInCents,
+      currency: "USD",
+    },
+    idempotency_key: idempotency_key,
+  };
+
+  try {
+    const response = await payments_api.createPayment(request_body);
+
+    let last_four = "";
+    let receipt_number = "";
+
+    if (
+      response &&
+      response.payment &&
+      response.payment.card_details &&
+      response.payment.card_details.card
+    ) {
+      last_four = response.payment.card_details.card.last_4;
+      receipt_number = response.payment.receipt_number;
+    }
+
+    const mailBody = buildReceipt({
+      lineItems,
+      total,
+      shipping_address,
+      billing_address,
+      last_four: last_four,
+      receipt_number: receipt_number,
+    });
+
+    const ENV = functions.config().env.name;
+    let subject =
+      ENV === "DEV"
+        ? `DEV - Order confirmation from Shelby K Cook Art`
+        : `Order confirmation from Shelby K Cook Art`;
+
+    // send to user and shelby
+    const mailOptions = {
+      to: email,
+      cc: "shelbykcook.art@gmail.com",
+      from: "no-reply@myemail.com",
+      subject,
+      text: JSON.stringify(mailBody),
+      html: mailBody,
+    };
+
+    var sesAccessKey = functions.config().api.email;
+    var sesSecretKey = functions.config().api.password;
+
+    var transporter = nodemailer.createTransport(
+      smtpTransport({
+        service: "gmail",
+        auth: {
+          user: sesAccessKey,
+          pass: sesSecretKey,
+        },
+      })
+    );
+
+    transporter.sendMail(mailOptions, function (error, info) {
+      if (error) {
+        console.log("errorEmail", error);
+      }
+    });
+
+    return res.status(200).send({
+      message: "Payment Successful",
+      orderNumber: response.payment.receipt_number,
+    });
+  } catch (error) {
+    console.log("-----ERROR------");
+    console.log(error.response.text);
+
+    let errorCode = -1;
+    at;
+    try {
+      const errorJson = JSON.parse(error.response.text);
+      errorCode = errorJson.errors[0].code;
+    } catch (e) {}
+
+    let errorMessage = "Unable to complete order";
+    switch (errorCode) {
+      case "CARD_TOKEN_USED":
+        errorMessage = "Unable to complete payment";
+        break;
+      case "CVV_FAILURE":
+        errorMessage = "Invalid CVV number";
+        break;
+      case "ADDRESS_VERIFICATION_FAILURE":
+        errorMessage = "Invalid billing address";
+        break;
+      case "INVALID_EXPIRATION":
+        errorMessage = "Invalid expiration";
+        break;
+      case "GENERIC_DECLINE":
+        errorMessage = "Card was declined";
+        break;
+      default:
+        errorMessage = "Unable to complete payment";
+    }
+
+    return res.status(400).send({
+      message: errorMessage,
+    });
+  }
+});
+
+app.post("/signup/", async function (req, res, next) {
   const { email } = req.body;
   const LIST_ID = functions.config().mailchimp.listid;
   const ACCESS_TOKEN = functions.config().mailchimp.access_token;
@@ -32,26 +193,26 @@ app.post("/signup/", async function(req, res, next) {
   const authRequest = request.defaults({
     headers: {
       "User-Agent": "workplace_app",
-      Authorization: `Basic ${ACCESS_TOKEN}`
+      Authorization: `Basic ${ACCESS_TOKEN}`,
     },
-    json: true
+    json: true,
   });
 
   const body = {
     email_address: email,
-    status: "subscribed"
+    status: "subscribed",
   };
 
   const options = {
     method: "POST",
     uri: `${BASE_URL}/lists/${LIST_ID}/members`,
-    body
+    body,
   };
 
   try {
     await authRequest(options);
     return res.status(200).send({
-      message: "Subscribed to newsletter!"
+      message: "Subscribed to newsletter!",
     });
   } catch (e) {
     console.error("Error from mailchimp API:");
@@ -59,17 +220,17 @@ app.post("/signup/", async function(req, res, next) {
 
     if (e.error.title === "Member Exists") {
       return res.status(200).send({
-        message: "Email is already subscribed."
+        message: "Email is already subscribed.",
       });
     }
 
     return res.status(500).send({
-      message: e.message
+      message: e.message,
     });
   }
 });
 
-app.post("/sendEmail/", function(req, res, next) {
+app.post("/sendEmail/", function (req, res, next) {
   const { name, email, paintingSize, inspiration, questions } = req.body;
 
   var text = `<div>
@@ -100,8 +261,8 @@ app.post("/sendEmail/", function(req, res, next) {
       service: "gmail",
       auth: {
         user: sesAccessKey,
-        pass: sesSecretKey
-      }
+        pass: sesSecretKey,
+      },
     })
   );
 
@@ -111,18 +272,18 @@ app.post("/sendEmail/", function(req, res, next) {
     from: "no-reply@myemail.com",
     subject: `Shelbywebcommission: ${name} sent you a new message`,
     text: text,
-    html: text
+    html: text,
   };
 
-  return transporter.sendMail(mailOptions, function(error, info) {
+  return transporter.sendMail(mailOptions, function (error, info) {
     if (error) {
       console.log(error.message);
       return res.status(500).send({
-        message: error.message
+        message: error.message,
       });
     }
     return res.status(200).send({
-      message: "success"
+      message: "success",
     });
   });
 });

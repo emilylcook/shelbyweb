@@ -1,28 +1,31 @@
-import React from 'react'
-import { Provider } from 'react-redux'
-import { PersistGate } from 'redux-persist/integration/react'
-import { ConnectedRouter } from 'connected-react-router'
-import { MuiThemeProvider, createMuiTheme, makeStyles } from '@material-ui/core/styles'
-import { SnackbarProvider } from 'notistack'
+import React from 'react';
+import { Provider } from 'react-redux';
+import { PersistGate } from 'redux-persist/integration/react';
+import { ConnectedRouter } from 'connected-react-router';
+import { MuiThemeProvider, createMuiTheme, makeStyles } from '@material-ui/core/styles';
+import { SnackbarProvider } from 'notistack';
 
-import useCollectionData from './utils/useCollectionData'
-import themeConfig from './theme'
-import App from './App'
+import { CookiesProvider } from 'react-cookie';
 
-const theme = createMuiTheme(themeConfig)
+import useCollectionData from './utils/useCollectionData';
+import themeConfig from './theme';
+import App from './App';
+import { AuthProvider } from './utils/useAuth';
+
+const theme = createMuiTheme(themeConfig);
 
 const useStyles = makeStyles(() => ({
   success: { backgroundColor: '#4f5a4d' },
-  error: { backgroundColor: 'blue' },
+  error: { backgroundColor: '#975151' },
   warning: { backgroundColor: 'green' },
   info: { backgroundColor: 'yellow' }
-}))
+}));
 
 export default function Root({ store, history, persistor }) {
-  const classes = useStyles()
+  const classes = useStyles();
 
   // Initialize Collections
-  useCollectionData()
+  useCollectionData();
 
   return (
     <Provider store={store}>
@@ -38,11 +41,15 @@ export default function Root({ store, history, persistor }) {
               }}
               maxSnack={1}
             >
-              <App />
+              <CookiesProvider>
+                <AuthProvider>
+                  <App />
+                </AuthProvider>
+              </CookiesProvider>
             </SnackbarProvider>
           </ConnectedRouter>
         </PersistGate>
       </MuiThemeProvider>
     </Provider>
-  )
+  );
 }

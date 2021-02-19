@@ -1,19 +1,26 @@
-import React from 'react'
-import { Route, Switch, Redirect } from 'react-router-dom'
-import CssBaseline from '@material-ui/core/CssBaseline'
-import { makeStyles } from '@material-ui/core/styles'
-import '@fortawesome/fontawesome-free/css/all.css'
+import React from 'react';
+import { Route, Switch, Redirect } from 'react-router-dom';
+import CssBaseline from '@material-ui/core/CssBaseline';
+import { makeStyles } from '@material-ui/core/styles';
+import '@fortawesome/fontawesome-free/css/all.css';
 
-import Home from './Home/'
+import Home from './Home/';
 // import Connect from './Connect'
-import About from './About'
-import Footer from './Footer'
-import Artwork from './Artwork/'
-import Header from './Header'
-import Commissions from './Commissions'
-import { useScrollRestoration } from './utils'
+import About from './About';
+import Footer from './Footer';
+import Artwork from './Artwork/';
+import Header from './Header';
+import Commissions from './Commissions';
+import { useScrollRestoration } from './utils';
 
-import getAllImages from './Artwork/imagesForPreload'
+import getAllImages from './Artwork/imagesForPreload';
+import CheckoutScreen from './Cart/CheckoutScreen';
+import CheckoutSuccessScreen from './Cart/CheckoutSuccessScreen';
+import ShoppingCartScreen from './Cart/ShoppingCartScreen';
+import LoginForm from './LoginForm';
+import LogOutScreen from './LogoutScreen';
+import ManageArt from './Admin/ManageArt';
+import ManageCollections from './Admin/ManageCollections';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -45,10 +52,10 @@ const useStyles = makeStyles(theme => ({
   hidden: {
     display: 'none'
   }
-}))
+}));
 
 const PreloadImages = classes => {
-  let allImages = getAllImages()
+  let allImages = getAllImages();
   return (
     <div id="preload" className={classes.hidden} style={{ display: 'none' }}>
       {allImages.map(item => (
@@ -61,12 +68,12 @@ const PreloadImages = classes => {
         />
       ))}
     </div>
-  )
-}
+  );
+};
 
 const App = () => {
-  useScrollRestoration()
-  const classes = useStyles()
+  useScrollRestoration();
+  const classes = useStyles();
 
   return (
     <div>
@@ -81,10 +88,19 @@ const App = () => {
           <div className={classes.body}>
             <Switch>
               <Route path="/" exact component={Home} />
+              {/* admin routes */}
+
+              <Route path="/admin/manage" component={ManageArt} />
+              <Route path="/admin/manage-collections" component={ManageCollections} />
+              {/* normal routes */}
               <Route path="/about" exact component={About} />
-              {/* <Route path="/connect" exact component={Connect} /> */}
               <Route path="/commissions" exact component={Commissions} />
               <Route path="/artwork/:collection" component={Artwork} />
+              <Route path="/cart" component={ShoppingCartScreen} />
+              <Route exact={true} path="/checkout" component={CheckoutScreen} />
+              <Route exact={true} path="/checkout/success" component={CheckoutSuccessScreen} />
+              <Route path="/login" component={LoginForm} />
+              <Route path="/logout" component={LogOutScreen} />
               <Redirect to="/" />
             </Switch>
           </div>
@@ -93,7 +109,7 @@ const App = () => {
         </main>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default App
+export default App;
