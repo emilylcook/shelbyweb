@@ -20,10 +20,6 @@ const navItems = {
         label: 'Petite Bloom'
       },
       {
-        to: '/artwork/nocturnes',
-        label: 'Nocturnes'
-      },
-      {
         to: '/artwork/treelines',
         label: 'Treelines'
       },
