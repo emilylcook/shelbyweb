@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 
 import { makeStyles } from '@material-ui/core/styles';
 import { Typography, Grid } from '@material-ui/core';
+import useAuth from '../utils/useAuth';
 
 import clsx from 'clsx';
 
@@ -13,6 +14,11 @@ import useCollectionData from '../utils/useCollectionData';
 const Artwork = ({ match }) => {
   const classes = useStyles();
   const [hoverOn, setHoverOn] = useState(null);
+  const { isAuthenticated } = useAuth();
+
+  const queryString = window.location.search;
+  const params = new URLSearchParams(queryString);
+  const testFlagEnabled = !!params.get('testFlag');
 
   const [imageModalOpen, setImageModalOpen] = useState(false);
   const [imageModalDetails, setImageModalDetails] = useState({});
@@ -35,9 +41,11 @@ const Artwork = ({ match }) => {
       );
       setCollection(selectedCollection);
 
+      const canSeeTestArt = isAuthenticated || testFlagEnabled;
+
       let artInCollection = art
         .filter(x => x && x.collections.includes(selectedCollection.id))
-        .filter(x => !x.hidden);
+        .filter(x => !x.hidden && (canSeeTestArt || !x.testOnly));
 
       const moveToEndIndex = artInCollection.findIndex(x => x.name === 'Filter');
       if (moveToEndIndex > -1) {

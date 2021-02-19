@@ -30,6 +30,12 @@ export const artMainFields: { [fieldName: string]: FormField } = {
     label: 'Hidden',
     InputComponent: CheckboxField
   },
+  testOnly: {
+    gridWidth: { xs: 12, sm: 6, md: 4 },
+    name: 'testOnly',
+    label: 'Test Flag',
+    InputComponent: CheckboxField
+  },
   path: {
     gridWidth: { xs: 12, sm: 6, md: 4 },
     name: 'path',

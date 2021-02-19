@@ -69,6 +69,7 @@ function EditArtModal({ open, art, handleClose }: any) {
     let saveableArt = {
       ...values,
       hidden: values.hidden ? true : false,
+      testOnly: values.testOnly ? true : false,
       quantity: checkInt(values.quantity),
       price: checkInt(values.price),
       shippingDetails: {
@@ -91,7 +92,6 @@ function EditArtModal({ open, art, handleClose }: any) {
 
       saveableArt.image = imageName;
 
-      console.log('imageName', imageName);
       await uploadImage({ file: imageFile, name: imageName });
     }
 

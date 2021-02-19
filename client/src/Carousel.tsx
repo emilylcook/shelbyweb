@@ -73,7 +73,7 @@ const CarouselSlider = () => {
   useEffect(() => {
     if (!loadingCollections) {
       const arts = art
-        .filter((x: any) => !x.hidden)
+        .filter((x: any) => !x.hidden && !x.testOnly)
         .filter((x: any) => {
           return x && x?.tags && x.tags.includes('commissions');
         });
