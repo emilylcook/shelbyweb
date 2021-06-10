@@ -25,7 +25,7 @@ const PreloadImages = (classes: any) => {
   let allImages = getAllImages();
   return (
     <div id="preload" className={classes.hidden} style={{ display: 'none' }}>
-      {allImages.map(item => (
+      {allImages.map((item: any) => (
         <img
           key={item}
           className={classes.hidden}

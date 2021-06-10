@@ -10,10 +10,26 @@ import { HorizontalTitle, Progress } from '../common';
 import WidthContainer from '../common/WidthContainer';
 import ImageModal from './ImageModal';
 import useCollectionData from '../utils/useCollectionData';
+import { IArtwork } from './types';
 
-const Artwork = ({ match }) => {
+type ArtworkProps = {
+  match: any;
+};
+
+type TImageModal = {
+  path?: string;
+  key?: string;
+  name?: string;
+  info?: any;
+  quantity?: number;
+  price?: number;
+  i?: string;
+  shippingDetails?: any;
+};
+
+const Artwork = ({ match }: ArtworkProps) => {
   const classes = useStyles();
-  const [hoverOn, setHoverOn] = useState(null);
+  const [hoverOn, setHoverOn] = useState<string | null>(null);
   const { isAuthenticated } = useAuth();
 
   const queryString = window.location.search;
@@ -21,14 +37,15 @@ const Artwork = ({ match }) => {
   const testFlagEnabled = !!params.get('testFlag');
 
   const [imageModalOpen, setImageModalOpen] = useState(false);
-  const [imageModalDetails, setImageModalDetails] = useState({});
-  const [selectedFilters, setSelectedFilters] = useState(new Set());
+  const [imageModalDetails, setImageModalDetails] = useState<TImageModal | null>(null);
+  const [selectedFilters, setSelectedFilters] = useState<any>(new Set());
   const [hideArtwork, setHideArtwork] = useState(true);
 
-  const [collection, setCollection] = useState(null);
-  const [artToShow, setArtToShow] = useState(null);
+  const [collection, setCollection] = useState<any>(null);
+  const [artToShow, setArtToShow] = useState<IArtwork | null>(null);
+
   const [loading, setLoading] = useState(true);
-  const [collectionsLoaded, setCollectionsLoaded] = useState([]);
+  const [collectionsLoaded, setCollectionsLoaded] = useState<any[]>([]);
 
   const hideModal = false; // useMediaQuery(theme.breakpoints.down('xs'))
 
@@ -44,10 +61,10 @@ const Artwork = ({ match }) => {
       const canSeeTestArt = isAuthenticated || testFlagEnabled;
 
       let artInCollection = art
-        .filter(x => x && x.collections.includes(selectedCollection.id))
-        .filter(x => !x.hidden && (canSeeTestArt || !x.testOnly));
+        .filter((x: any) => x && x.collections.includes(selectedCollection.id))
+        .filter((x: any) => !x.hidden && (canSeeTestArt || !x.testOnly));
 
-      const moveToEndIndex = artInCollection.findIndex(x => x.name === 'Filter');
+      const moveToEndIndex = artInCollection.findIndex((x: any) => x.name === 'Filter');
       if (moveToEndIndex > -1) {
         const copy = { ...artInCollection[moveToEndIndex] };
         artInCollection.splice(moveToEndIndex, 1);
@@ -71,7 +88,7 @@ const Artwork = ({ match }) => {
     }, 100);
   }, [match, collectionsLoaded]);
 
-  function handleFilter(filter) {
+  function handleFilter(filter: any) {
     const selected = selectedFilters.has(filter);
 
     let singleFilterSet = new Set();
@@ -92,10 +109,10 @@ const Artwork = ({ match }) => {
 
   const { filters } = collection;
 
-  let _art = artToShow;
+  let _art: IArtwork | null = artToShow;
 
-  function filteredArt(art) {
-    return art.filter(a => {
+  function filteredArt(art: any) {
+    return art.filter((a: any) => {
       // must contain all set
       const array = [...selectedFilters];
       return array.every(f => a.tags.includes(f));
@@ -115,7 +132,7 @@ const Artwork = ({ match }) => {
   return (
     <>
       <div className={classes.content}>
-        <WidthContainer className={classes.mainContent}>
+        <WidthContainer>
           <div className={classes.titleSection}>
             <HorizontalTitle
               title={collection?.title}
@@ -135,7 +152,7 @@ const Artwork = ({ match }) => {
                 All
               </Grid>
 
-              {filters.map(filter => {
+              {filters.map((filter: any) => {
                 const isActive = selectedFilters.has(filter.toLowerCase());
 
                 return (
@@ -161,63 +178,64 @@ const Artwork = ({ match }) => {
               [classes.hidden]: hideArtwork || loading
             })}
           >
-            {Object.entries(_art).map(([key, { path, name, info, ...rest }]) => {
-              const isHovered = hoverOn === key;
-              return (
-                <div key={key}>
-                  <div className={classes.marginBottom}>
-                    <div
-                      className={clsx(classes.tile, { [classes.tileHover]: isHovered })}
-                      onMouseEnter={() => {
-                        if (!hideModal) {
-                          setHoverOn(key);
-                        }
-                      }}
-                      onClick={() => {
-                        if (hideModal) {
-                          setHoverOn(!isHovered ? key : null);
-                        } else {
-                          setImageModalDetails({ path, key, name, info, ...rest });
-                          setImageModalOpen(true);
-                        }
-                      }}
-                      onMouseLeave={() => setHoverOn(null)}
-                    >
-                      <img className={classes.masonaryItem} alt={name} src={path} />
+            {_art &&
+              Object.entries(_art).map(([key, { path, name, info, ...rest }]) => {
+                const isHovered = hoverOn === key;
+                return (
+                  <div key={key}>
+                    <div className={classes.marginBottom}>
+                      <div
+                        className={clsx(classes.tile, { [classes.tileHover]: isHovered })}
+                        onMouseEnter={() => {
+                          if (!hideModal) {
+                            setHoverOn(key);
+                          }
+                        }}
+                        onClick={() => {
+                          if (hideModal) {
+                            setHoverOn(!isHovered ? key : null);
+                          } else {
+                            setImageModalDetails({ path, key, name, info, ...rest });
+                            setImageModalOpen(true);
+                          }
+                        }}
+                        onMouseLeave={() => setHoverOn(null)}
+                      >
+                        <img className={classes.masonaryItem} alt={name} src={path} />
 
-                      {info?.status === 'Sold' && (
-                        <div className={classes.sold}>
-                          <Typography>Sold</Typography>
-                        </div>
-                      )}
+                        {info?.status === 'Sold' && (
+                          <div className={classes.sold}>
+                            <Typography>Sold</Typography>
+                          </div>
+                        )}
 
-                      <div className={classes.details}>
-                        <Typography
-                          className={clsx(classes.paragraph, classes.title, {
-                            [classes.paragraphHover]: isHovered
-                          })}
-                        >
-                          {name}
-                        </Typography>
-                        <div
-                          className={clsx(classes.paragraph, classes.info, {
-                            [classes.paragraphHover]: isHovered
-                          })}
-                        >
-                          {info.type && <Typography>{info.type}</Typography>}
-                          {info.size && <Typography>{info.size}</Typography>}
-                          {info.status && (
-                            <Typography>
-                              {info.status === 'Available' ? `$${rest.price}` : info.status}
-                            </Typography>
-                          )}
+                        <div className={classes.details}>
+                          <Typography
+                            className={clsx(classes.paragraph, classes.title, {
+                              [classes.paragraphHover]: isHovered
+                            })}
+                          >
+                            {name}
+                          </Typography>
+                          <div
+                            className={clsx(classes.paragraph, classes.info, {
+                              [classes.paragraphHover]: isHovered
+                            })}
+                          >
+                            {info.type && <Typography>{info.type}</Typography>}
+                            {info.size && <Typography>{info.size}</Typography>}
+                            {info.status && (
+                              <Typography>
+                                {info.status === 'Available' ? `$${rest.price}` : info.status}
+                              </Typography>
+                            )}
+                          </div>
                         </div>
                       </div>
                     </div>
                   </div>
-                </div>
-              );
-            })}
+                );
+              })}
           </div>
           {/* <Grid container className={classes.container}></Grid> */}
         </WidthContainer>

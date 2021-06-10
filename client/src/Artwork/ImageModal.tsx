@@ -7,7 +7,8 @@ import {
   Button,
   Dialog,
   DialogContent,
-  useMediaQuery
+  useMediaQuery,
+  Theme
 } from '@material-ui/core';
 import { useSnackbar } from 'notistack';
 import CloseIcon from '@material-ui/icons/Close';
@@ -17,11 +18,14 @@ import { useTheme } from '@material-ui/core/styles';
 
 import { addProductToCart } from '../utils/useCartData';
 
-function DialogTitle({ children, onClose }) {
+type DialogTitleProps = {
+  onClose: () => void;
+};
+
+function DialogTitle({ onClose }: DialogTitleProps) {
   const classes = useStyles();
   return (
-    <MuiDialogTitle disableTypography className={classes.titleRoot}>
-      <Typography variant="h6">{children}</Typography>
+    <MuiDialogTitle disableTypography>
       <IconButton aria-label="close" className={classes.closeButton} onClick={onClose}>
         <CloseIcon className={classes.closeIcon} />
       </IconButton>
@@ -29,14 +33,30 @@ function DialogTitle({ children, onClose }) {
   );
 }
 
-function ImageModal({ open, collectionId, handleClose, collection, details = {}, commissionPage }) {
+type ImageModalProps = {
+  open: boolean;
+  collectionId: string;
+  handleClose: () => void;
+  collection: any;
+  details: any;
+  commissionPage?: boolean;
+};
+
+function ImageModal({
+  open,
+  collectionId,
+  handleClose,
+  collection,
+  details = {},
+  commissionPage
+}: ImageModalProps) {
   const classes = useStyles();
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('xs'));
   const [modalDetails, setDetails] = useState(details);
   const { enqueueSnackbar } = useSnackbar();
 
-  const { path, key, name, info = {}, price, quantity = 0 } = modalDetails;
+  const { path, key, name, info = {}, price, quantity = 0 } = modalDetails ?? {};
 
   useEffect(() => {
     setDetails(details);
@@ -84,7 +104,7 @@ function ImageModal({ open, collectionId, handleClose, collection, details = {},
     });
   }
 
-  function onKeyPress(event) {
+  function onKeyPress(event: any) {
     if (event.keyCode === 37) {
       // left arrow
       setPrevious();
@@ -166,12 +186,12 @@ function ImageModal({ open, collectionId, handleClose, collection, details = {},
           </IconButton>
         </>
       )}
-      <DialogTitle className={classes.title} onClose={handleClose}></DialogTitle>
-      <DialogContent className={classes.content} classes={{ root: classes.contentRoot }}>
+      <DialogTitle onClose={handleClose}></DialogTitle>
+      <DialogContent classes={{ root: classes.contentRoot }}>
         <div>
           <img className={classes.image} alt={name} src={path} />
           <div className={classes.details}>
-            <Typography className={classes.title}>
+            <Typography>
               <b>{name}</b>
             </Typography>
             <div className={classes.details}>
@@ -202,7 +222,7 @@ function ImageModal({ open, collectionId, handleClose, collection, details = {},
 
 export default ImageModal;
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme: Theme) => ({
   root: {
     maxWidth: 'none'
   },
@@ -239,7 +259,8 @@ const useStyles = makeStyles(theme => ({
     position: 'fixed',
     right: 10,
     top: 10,
-    color: 'white'
+    color: 'white',
+    zIndex: 1000
   },
   details: {
     marginTop: 10,
@@ -256,19 +277,19 @@ const useStyles = makeStyles(theme => ({
     borderTop: 'thin solid #d5d5d5',
     height: '99vh'
   },
-
   backControl: {
     position: 'absolute',
     top: '50%',
+    zIndex: 1000,
     left: 0,
     color: 'white',
     [theme.breakpoints.down('xs')]: {
       top: '65%'
     }
   },
-
   nextControl: {
     position: 'absolute',
+    zIndex: 1000,
     top: '50%',
     right: 0,
     color: 'white',
