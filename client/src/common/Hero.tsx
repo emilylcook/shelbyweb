@@ -21,7 +21,13 @@ function Hero({ heroImg, grayscale = '34%', subText, children, title }: HeroProp
     <div>
       <div className={clsx(classes.root, classes.heroImageStyle)}>
         {children ? (
-          children
+          <WidthContainer fullWidth={true}>
+            <Grid container spacing={0} className={classes.container}>
+              <Grid item md={5} sm={6} xs={11} className={classes.heroOverlay}>
+                {children}
+              </Grid>
+            </Grid>
+          </WidthContainer>
         ) : title ? (
           <WidthContainer fullWidth={true}>
             <Grid container spacing={0} className={classes.container}>
