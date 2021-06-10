@@ -14,7 +14,7 @@ import clsx from 'clsx';
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 import Badge from '@material-ui/core/Badge';
 
-import { navItems } from '../utils';
+import { navItems } from '../utils/isFormSubmitDisabled';
 import Logo from './Logo';
 import { getNumberOfItemsInCart } from '../utils/useCartData';
 
@@ -37,7 +37,7 @@ export default function MobileNav() {
     // eslint-disable-next-line
   }, []);
 
-  function handleClick(name) {
+  function handleClick(name: string) {
     const isOpen = open.has(name);
     let newSet = open;
 
@@ -59,7 +59,6 @@ export default function MobileNav() {
           aria-controls="menu-appbar"
           aria-haspopup="true"
           onClick={event => setDrawerOpenState(true)}
-          className={classes.menuButton}
         >
           <MenuIcon className={classes.menuIcon} />
         </Button>
@@ -91,7 +90,6 @@ export default function MobileNav() {
                       e.stopPropagation();
                       handleClick(key);
                     }}
-                    classes={{ root: classes.listItemContainer }}
                     className={clsx({ [classes.isOpen]: isOpen })}
                   >
                     <ListItemText primary={label} classes={{ root: classes.listItemText }} />
@@ -120,7 +118,7 @@ export default function MobileNav() {
               ) : (
                 <ListItem key={key} button>
                   <ListItemText>
-                    <Link smooth to={to} className={classes.listItem}>
+                    <Link smooth to={to ?? '/'} className={classes.listItem}>
                       <Typography className={classes.listItemText}>{label}</Typography>
                     </Link>
                   </ListItemText>
@@ -130,9 +128,8 @@ export default function MobileNav() {
 
             <ListItem>
               <ListItemText>
-                <Link smooth to={itemsInCart && '/cart'} className={classes.listItem}>
+                <Link smooth to={itemsInCart ? '/cart' : '/'} className={classes.listItem}>
                   <Badge badgeContent={itemsInCart} color="primary">
-                    {' '}
                     <Typography className={classes.listItemText}>Cart</Typography>
                     <ShoppingCartIcon className={classes.shoppingCartIcon} />
                   </Badge>
@@ -142,7 +139,6 @@ export default function MobileNav() {
           </List>
         </div>
       </SwipeableDrawer>
-      <div className={classes.grow} />
     </>
   );
 }

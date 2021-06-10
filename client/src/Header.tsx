@@ -7,24 +7,14 @@ import Toolbar from '@material-ui/core/Toolbar';
 import { MobileNav, DesktopNav } from './Navigation';
 import WidthContainer from './common/WidthContainer';
 
-const useStyles = makeStyles(theme => ({
-  root: {
-    backgroundColor: 'white',
-    boxShadow: 'none'
-  },
-  navContainerRootMobile: {
-    // justifyContent: 'flex-end'
-  }
-}));
-
-export default function ButtonAppBar() {
+export default function Header() {
   const classes = useStyles();
 
   return (
     <>
       <AppBar position="absolute" className={classes.root}>
-        <div className={classes.nav}>
-          <Hidden className={classes.desktop} only={['xs', 'sm']}>
+        <div>
+          <Hidden only={['xs', 'sm']}>
             <WidthContainer>
               <Toolbar disableGutters>
                 <DesktopNav />
@@ -39,7 +29,14 @@ export default function ButtonAppBar() {
           </Hidden>
         </div>
       </AppBar>
-      <div className={classes.bgImage}></div>
     </>
   );
 }
+
+const useStyles = makeStyles(theme => ({
+  root: {
+    backgroundColor: 'white',
+    boxShadow: 'none'
+  },
+  navContainerRootMobile: {}
+}));

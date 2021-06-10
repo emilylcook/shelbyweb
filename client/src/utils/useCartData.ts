@@ -1,16 +1,13 @@
 import firebase from '../firebase';
 
-// TODO maybe add a time stamp when we add to local storage
-// if pulling and an hour or more later clear cart
-
-export function addProductToCart(item) {
+export function addProductToCart(item: any) {
   let productsString = localStorage.getItem('products');
   let products = [];
   if (productsString) {
     products = JSON.parse(productsString);
   }
 
-  if (products.findIndex(x => x.id === item.id) > -1) {
+  if (products.findIndex((x: any) => x.id === item.id) > -1) {
     return { success: false, error: 'Item already in cart!' };
   } else {
     products.push(item);
@@ -26,7 +23,7 @@ export function addProductToCart(item) {
 
 function checkCartIsValid() {
   const expiresOnString = localStorage.getItem('cartExpires');
-  const expiresOn = new Date(JSON.parse(expiresOnString));
+  const expiresOn = new Date(JSON.parse(expiresOnString ?? '{}'));
 
   const now = new Date();
   const validCart = expiresOn > now;
@@ -62,13 +59,13 @@ export function getNumberOfItemsInCart() {
   return products.length || 0;
 }
 
-export function removeItemFromCart(id) {
+export function removeItemFromCart(id: any) {
   let productsString = localStorage.getItem('products');
   let products = [];
   if (productsString) {
     products = JSON.parse(productsString);
 
-    const itemToRemove = products.findIndex(x => x.id === id);
+    const itemToRemove = products.findIndex((x: any) => x.id === id);
 
     if (itemToRemove > -1) {
       products.splice(itemToRemove, 1);
@@ -84,7 +81,7 @@ export function clearCart() {
   localStorage.setItem('products', JSON.stringify([]));
 }
 
-export const getSalesRate = async (zip5, zip4) => {
+export const getSalesRate = async (zip5: any, zip4: any) => {
   const snapspot = firebase
     .database()
     .ref('/salesTax/' + zip5)
@@ -106,7 +103,7 @@ export const getSalesRate = async (zip5, zip4) => {
   return combinedRate;
 };
 
-export const addOrderToDatabase = async ({ orderNumber, order }) => {
+export const addOrderToDatabase = async ({ orderNumber, order }: any) => {
   const data = { ...order, orderNumber };
 
   const collection = process.env.NODE_ENV !== 'production' ? 'devOrders' : 'Orders';

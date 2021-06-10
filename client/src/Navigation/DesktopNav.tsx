@@ -7,7 +7,7 @@ import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 import Badge from '@material-ui/core/Badge';
 import clsx from 'clsx';
 
-import { navItems } from '../utils';
+import { navItems } from '../utils/isFormSubmitDisabled';
 import Logo from './Logo';
 import { getNumberOfItemsInCart } from '../utils/useCartData';
 import useAuth from '../utils/useAuth';

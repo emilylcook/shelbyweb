@@ -4,8 +4,8 @@ import firebase from '../firebase';
 export default function useArtData() {
   const [loadingArt, setLoadingArt] = useState(true);
   const [loadingCollections, setLoadingCollections] = useState(true);
-  const [collections, setCollections] = useState([]);
-  const [art, setArt] = useState([]);
+  const [collections, setCollections] = useState<any[]>([]);
+  const [art, setArt] = useState<any>([]);
 
   // initial load
   React.useEffect(() => {
@@ -18,13 +18,13 @@ export default function useArtData() {
 
   const clearArtData = () => {
     if (collections.length > 0) {
-      setCollections();
+      setCollections([]);
       setArt([]);
     }
   };
 
   const loadCollections = () => {
-    let collections = [];
+    let collections: any[] = [];
     firebase
       .database()
       .ref('newCollection')
@@ -43,7 +43,7 @@ export default function useArtData() {
     const storageRef = firebase.storage().ref();
 
     if (!art || art.length === 0) {
-      let arts = [];
+      let arts: any[] = [];
       firebase
         .database()
         .ref('arts')
@@ -79,7 +79,7 @@ export default function useArtData() {
     }
   };
 
-  const saveArt = async ({ artId, isNew, item }) => {
+  const saveArt = async ({ artId, isNew, item }: any) => {
     let updatedArt = [...art];
 
     if (isNew) {
@@ -93,7 +93,7 @@ export default function useArtData() {
 
       updatedArt.push(newArt);
     } else {
-      var updates = {};
+      var updates: any = {};
       updates['/arts/' + artId] = item;
 
       await firebase
@@ -112,7 +112,7 @@ export default function useArtData() {
     return updatedArt;
   };
 
-  const saveCollection = async ({ collectionId, isNew, item }) => {
+  const saveCollection = async ({ collectionId, isNew, item }: any) => {
     let updatedCollections = [...collections];
 
     if (isNew) {
@@ -126,7 +126,7 @@ export default function useArtData() {
 
       updatedCollections.push(newCollection);
     } else {
-      var updates = {};
+      var updates: any = {};
       updates['/newCollection/' + collectionId] = item;
 
       await firebase
@@ -157,7 +157,7 @@ export default function useArtData() {
   };
 }
 
-export const getDownloadUrl = async imageName => {
+export const getDownloadUrl = async (imageName: string) => {
   const storageRef = firebase.storage().ref();
 
   return await storageRef
@@ -168,7 +168,7 @@ export const getDownloadUrl = async imageName => {
     });
 };
 
-export async function removeItemFromCollection(artId, quantity = 1) {
+export async function removeItemFromCollection(artId: any, quantity: number = 1) {
   try {
     const snapshot = firebase
       .database()
@@ -192,7 +192,7 @@ export async function removeItemFromCollection(artId, quantity = 1) {
     }
 
     // Write the new post's data simultaneously in the posts list and the user's post list.
-    var updates = {};
+    var updates: any = {};
     updates['/arts/' + artId] = item;
 
     await firebase
@@ -210,8 +210,8 @@ export async function removeItemFromCollection(artId, quantity = 1) {
   // (trigger set art reload?)
 }
 
-export async function confirmItemIsAvailable(collectionId, artId) {
-  let item = {};
+export async function confirmItemIsAvailable(collectionId: any, artId: any) {
+  let item: any = {};
 
   try {
     const snapshot = firebase
@@ -224,14 +224,14 @@ export async function confirmItemIsAvailable(collectionId, artId) {
 
     item = art;
 
-    return !!item && item.quantity > 0;
+    return !!item && item?.quantity > 0;
   } catch (e) {
     console.log(e);
     return true;
   }
 }
 
-export const uploadImage = async ({ file, name }) => {
+export const uploadImage = async ({ file, name }: any) => {
   const storageRef = firebase.storage().ref();
   try {
     const imageRef = storageRef.child(`images/${name}`);

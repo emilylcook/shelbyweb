@@ -8,7 +8,7 @@ import { useSnackbar } from 'notistack';
 
 import WidthContainer from '../common/WidthContainer';
 import { HorizontalTitle } from '../common';
-import { isFormSubmitDisabled } from '../utils';
+import { isFormSubmitDisabled } from '../utils/isFormSubmitDisabled';
 import config from '../config';
 
 import Hero from '../common/Hero';

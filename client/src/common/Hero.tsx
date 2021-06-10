@@ -16,7 +16,7 @@ export type HeroProps = {
 
 function Hero({ heroImg, grayscale = '34%', subText, children, title }: HeroProps) {
   const classes = useStyles({ heroImg, grayscale });
-  console.log(title);
+
   return (
     <div>
       <div className={clsx(classes.root, classes.heroImageStyle)}>

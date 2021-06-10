@@ -1,10 +1,10 @@
-import React from 'react'
-import { makeStyles, lighten } from '@material-ui/core/styles'
-import { Icon, Typography, Grid } from '@material-ui/core'
-import clsx from 'clsx'
+import React from 'react';
+import { makeStyles, lighten } from '@material-ui/core/styles';
+import { Icon, Typography, Grid } from '@material-ui/core';
+import clsx from 'clsx';
 
-export default function ButtonAppBar() {
-  const classes = useStyles()
+export default function Footer() {
+  const classes = useStyles();
 
   return (
     <div className={classes.footer}>
@@ -34,7 +34,7 @@ export default function ButtonAppBar() {
         </Grid>
       </Grid>
     </div>
-  )
+  );
 }
 
 const useStyles = makeStyles(theme => ({
@@ -76,4 +76,4 @@ const useStyles = makeStyles(theme => ({
   emailText: {
     fontSize: 15
   }
-}))
+}));

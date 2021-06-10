@@ -1,8 +1,8 @@
 import { useScrollRestoration } from './scrollRestoration';
 import navItems from './navItems';
 
-const isFormSubmitDisabled = (inputs, formState) => {
-  const requiredFields = Object.entries(inputs).reduce((acc, val) => {
+const isFormSubmitDisabled = (inputs: any, formState: any) => {
+  const requiredFields = Object.entries(inputs).reduce((acc: any[], val: any) => {
     if (val[1].validator.required) {
       const name = val[1].name;
       acc.push(name);
@@ -19,7 +19,7 @@ const isFormSubmitDisabled = (inputs, formState) => {
     return formState.errors[e]; // note: both true and undefined represent a valid input
   });
 
-  const disableSubmit = !touchedRequiredFields || errors > 0;
+  const disableSubmit = !touchedRequiredFields || errors;
 
   return disableSubmit;
 };

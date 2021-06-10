@@ -4,13 +4,13 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import { makeStyles } from '@material-ui/core/styles';
 import '@fortawesome/fontawesome-free/css/all.css';
 
-import HomeScreen from './Home/';
+import HomeScreen from './Home';
 import AboutScreen from './AboutScreen';
 import Footer from './Footer';
 import ArtworkScreen from './Artwork';
 import Header from './Header';
 import CommissionsScreen from './Commissions/CommissionsScreen';
-import { useScrollRestoration } from './utils';
+import { useScrollRestoration } from './utils/isFormSubmitDisabled';
 
 import getAllImages from './Artwork/imagesForPreload';
 import CheckoutScreen from './Cart/CheckoutScreen';
@@ -21,39 +21,7 @@ import LogOutScreen from './Auth/LogoutScreen';
 import ManageArt from './Admin/ManageArt';
 import ManageCollections from './Admin/ManageCollections';
 
-const useStyles = makeStyles(theme => ({
-  root: {
-    display: 'flex',
-    flexDirection: 'column',
-    minHeight: '100vh',
-    zIndex: 10
-    // backgroundColor: '#e8e8e8'
-  },
-  content: {
-    display: 'flex',
-    flexDirection: 'row',
-    flexGrow: 1
-  },
-  container: {
-    //padding: '15px 15px 60px 15px',
-    top: 64,
-    overflow: 'hidden',
-    position: 'relative',
-    width: '100%',
-    zIndex: 10,
-    [theme.breakpoints.down('sm')]: {
-      top: 54
-    }
-  },
-  body: {
-    minHeight: 'calc(100vh - 50px)'
-  },
-  hidden: {
-    display: 'none'
-  }
-}));
-
-const PreloadImages = classes => {
+const PreloadImages = (classes: any) => {
   let allImages = getAllImages();
   return (
     <div id="preload" className={classes.hidden} style={{ display: 'none' }}>
@@ -113,3 +81,35 @@ const App = () => {
 };
 
 export default App;
+
+const useStyles = makeStyles(theme => ({
+  root: {
+    display: 'flex',
+    flexDirection: 'column',
+    minHeight: '100vh',
+    zIndex: 10
+    // backgroundColor: '#e8e8e8'
+  },
+  content: {
+    display: 'flex',
+    flexDirection: 'row',
+    flexGrow: 1
+  },
+  container: {
+    //padding: '15px 15px 60px 15px',
+    top: 64,
+    overflow: 'hidden',
+    position: 'relative',
+    width: '100%',
+    zIndex: 10,
+    [theme.breakpoints.down('sm')]: {
+      top: 54
+    }
+  },
+  body: {
+    minHeight: 'calc(100vh - 50px)'
+  },
+  hidden: {
+    display: 'none'
+  }
+}));
