@@ -1,34 +1,34 @@
-import React, { useState, useEffect } from 'react'
-import { makeStyles } from '@material-ui/core/styles'
-import { useSnackbar } from 'notistack'
-import axios from 'axios'
-import { Button, Grid, Typography, TextField } from '@material-ui/core'
+import React, { useState, useEffect } from 'react';
+import { makeStyles } from '@material-ui/core/styles';
+import { useSnackbar } from 'notistack';
+import axios from 'axios';
+import { Button, Grid, Typography, TextField } from '@material-ui/core';
 
-import config from './config'
+import config from '../config';
 
 const Newsletter = () => {
-  const classes = useStyles()
-  const [email, setEmail] = useState(null)
-  const [loading, setLoading] = useState(false)
-  const [subscribed, setSubscribed] = useState(false)
-  const [message, setMessage] = useState(false)
-  const { enqueueSnackbar } = useSnackbar()
+  const classes = useStyles();
+  const [email, setEmail] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [subscribed, setSubscribed] = useState<string | boolean>(false);
+  const [message, setMessage] = useState(false);
+  const { enqueueSnackbar } = useSnackbar();
 
   function subscribe() {
-    setLoading(true)
+    setLoading(true);
     axios
       .post(`${config.API}/signup`, {
         email
       })
       .then(function(response) {
-        setMessage(response.data.message)
-        setSubscribed(true)
-        setLoading(false)
+        setMessage(response.data.message);
+        setSubscribed(true);
+        setLoading(false);
       })
       .catch(function(error) {
-        setSubscribed('error')
-        setLoading(false)
-      })
+        setSubscribed('error');
+        setLoading(false);
+      });
   }
 
   useEffect(() => {
@@ -36,19 +36,19 @@ const Newsletter = () => {
       enqueueSnackbar(message, {
         variant: 'success',
         autoHideDuration: 4500
-      })
+      });
 
-      setSubscribed(false)
+      setSubscribed(false);
     } else if (subscribed === 'error') {
       enqueueSnackbar('Unable to sign up to newsletter', {
         variant: 'error',
         autoHideDuration: 4500
-      })
-      setSubscribed(false)
+      });
+      setSubscribed(false);
     }
-  }, [subscribed, enqueueSnackbar, message])
+  }, [subscribed, enqueueSnackbar, message]);
 
-  const emailRegex = /[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,3}/
+  const emailRegex = /[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,3}/;
 
   return (
     <div className={classes.newsLetterContainer}>
@@ -70,12 +70,12 @@ const Newsletter = () => {
             placeholder="enter your email"
             margin="dense"
             onChange={event => {
-              setEmail(event.target.value)
+              setEmail(event.target.value);
             }}
           ></TextField>
 
           <Button
-            disabled={!emailRegex.test(email) || loading}
+            disabled={!emailRegex.test(email ?? '') || loading}
             variant="contained"
             color="primary"
             className={classes.button}
@@ -91,10 +91,10 @@ const Newsletter = () => {
         </Grid>
       </Grid>
     </div>
-  )
-}
+  );
+};
 
-export default Newsletter
+export default Newsletter;
 
 const useStyles = makeStyles(theme => ({
   newsLetterContainer: {
@@ -147,4 +147,4 @@ const useStyles = makeStyles(theme => ({
     opacity: 0.8,
     marginTop: 10
   }
-}))
+}));

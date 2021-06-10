@@ -12,9 +12,9 @@ import Logo from './Logo';
 import { getNumberOfItemsInCart } from '../utils/useCartData';
 import useAuth from '../utils/useAuth';
 
-export default function ButtonAppBar() {
+export default function DesktopNav() {
   const classes = useStyles();
-  const [hoverOn, setHoverOn] = useState(null);
+  const [hoverOn, setHoverOn] = useState<string | null>(null);
   const [itemsInCart, setItemsInCart] = useState();
   const { isAuthenticated } = useAuth();
 
@@ -64,7 +64,7 @@ export default function ButtonAppBar() {
               ) : (
                 <Link
                   key={key}
-                  to={to}
+                  to={to ?? '/'}
                   onMouseEnter={() => setHoverOn(key)}
                   className={classes.listItem}
                 >
@@ -220,5 +220,6 @@ const useStyles = makeStyles(theme => ({
   homeLink: {
     textDecoration: 'none',
     color: 'inherit'
-  }
+  },
+  navItem: {}
 }));

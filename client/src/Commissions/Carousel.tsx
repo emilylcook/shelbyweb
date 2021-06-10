@@ -3,11 +3,11 @@ import React, { useEffect, useState } from 'react';
 import { makeStyles } from '@material-ui/core';
 import Carousel from 'react-multi-carousel';
 import 'react-multi-carousel/lib/styles.css';
-import useCollectionData from './utils/useCollectionData';
+import useCollectionData from '../utils/useCollectionData';
 
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { useTheme } from '@material-ui/core/styles';
-import ImageModal from './Artwork/ImageModal';
+import ImageModal from '../Artwork/ImageModal';
 
 const responsive = {
   desktop: {

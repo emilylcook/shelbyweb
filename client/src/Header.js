@@ -1,11 +1,11 @@
-import React from 'react'
-import { makeStyles } from '@material-ui/core/styles'
-import AppBar from '@material-ui/core/AppBar'
-import Hidden from '@material-ui/core/Hidden'
-import Toolbar from '@material-ui/core/Toolbar'
+import React from 'react';
+import { makeStyles } from '@material-ui/core/styles';
+import AppBar from '@material-ui/core/AppBar';
+import Hidden from '@material-ui/core/Hidden';
+import Toolbar from '@material-ui/core/Toolbar';
 
-import { MobileNav, DesktopNav } from './Navigation'
-import WidthContainer from './WidthContainer'
+import { MobileNav, DesktopNav } from './Navigation';
+import WidthContainer from './common/WidthContainer';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -15,10 +15,10 @@ const useStyles = makeStyles(theme => ({
   navContainerRootMobile: {
     // justifyContent: 'flex-end'
   }
-}))
+}));
 
 export default function ButtonAppBar() {
-  const classes = useStyles()
+  const classes = useStyles();
 
   return (
     <>
@@ -41,5 +41,5 @@ export default function ButtonAppBar() {
       </AppBar>
       <div className={classes.bgImage}></div>
     </>
-  )
+  );
 }

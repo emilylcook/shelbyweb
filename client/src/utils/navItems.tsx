@@ -1,4 +1,15 @@
-const navItems = {
+export type TNavItem = {
+  to?: string;
+  label: string;
+  subItems?: TSubItem[];
+};
+
+export type TSubItem = {
+  to: string;
+  label: string;
+};
+
+const navItems: { [fieldName: string]: TNavItem } = {
   home: {
     to: '/',
     label: 'Home'
@@ -30,11 +41,11 @@ const navItems = {
       {
         to: '/artwork/EnPleinAir',
         label: 'En Plein Air'
-      },
-      {
-        to: '/artwork/studioSale',
-        label: 'Studio Sale'
       }
+      // {
+      //   to: '/artwork/studioSale',
+      //   label: 'Studio Sale'
+      // }
     ]
   }
 };

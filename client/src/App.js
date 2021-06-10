@@ -4,21 +4,20 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import { makeStyles } from '@material-ui/core/styles';
 import '@fortawesome/fontawesome-free/css/all.css';
 
-import Home from './Home/';
-// import Connect from './Connect'
-import About from './About';
+import HomeScreen from './Home/';
+import AboutScreen from './AboutScreen';
 import Footer from './Footer';
-import Artwork from './Artwork/';
+import ArtworkScreen from './Artwork';
 import Header from './Header';
-import Commissions from './Commissions';
+import CommissionsScreen from './Commissions/CommissionsScreen';
 import { useScrollRestoration } from './utils';
 
 import getAllImages from './Artwork/imagesForPreload';
 import CheckoutScreen from './Cart/CheckoutScreen';
 import CheckoutSuccessScreen from './Cart/CheckoutSuccessScreen';
 import ShoppingCartScreen from './Cart/ShoppingCartScreen';
-import LoginForm from './LoginForm';
-import LogOutScreen from './LogoutScreen';
+import LoginScreen from './Auth/LoginScreen';
+import LogOutScreen from './Auth/LogoutScreen';
 import ManageArt from './Admin/ManageArt';
 import ManageCollections from './Admin/ManageCollections';
 
@@ -87,19 +86,20 @@ const App = () => {
 
           <div className={classes.body}>
             <Switch>
-              <Route path="/" exact component={Home} />
+              <Route path="/" exact component={HomeScreen} />
               {/* admin routes */}
 
               <Route path="/admin/manage" component={ManageArt} />
               <Route path="/admin/manage-collections" component={ManageCollections} />
+
               {/* normal routes */}
-              <Route path="/about" exact component={About} />
-              <Route path="/commissions" exact component={Commissions} />
-              <Route path="/artwork/:collection" component={Artwork} />
+              <Route path="/about" exact component={AboutScreen} />
+              <Route path="/commissions" exact component={CommissionsScreen} />
+              <Route path="/artwork/:collection" component={ArtworkScreen} />
               <Route path="/cart" component={ShoppingCartScreen} />
               <Route exact={true} path="/checkout" component={CheckoutScreen} />
               <Route exact={true} path="/checkout/success" component={CheckoutSuccessScreen} />
-              <Route path="/login" component={LoginForm} />
+              <Route path="/login" component={LoginScreen} />
               <Route path="/logout" component={LogOutScreen} />
               <Redirect to="/" />
             </Switch>

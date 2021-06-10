@@ -2,10 +2,30 @@ import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import clsx from 'clsx';
 
-import { Typography } from '@material-ui/core';
+import { Theme, Typography } from '@material-ui/core';
 
-const useStyles = makeStyles(theme => ({
-  horizontalTtileContainer: {
+export type HorizontalTitleProps = {
+  title: string;
+  includeSpacer?: boolean;
+  titleClass?: any;
+};
+
+const HorizontalTitle = ({ title, includeSpacer, titleClass = null }: HorizontalTitleProps) => {
+  const classes = useStyles();
+
+  return (
+    <div className={clsx(classes.horizontalTitleContainer, { [classes.spacer]: includeSpacer })}>
+      <Typography className={classes.horizontalLine}>
+        <span className={clsx(classes.horizontalTitle, titleClass)}>{title}</span>
+      </Typography>
+    </div>
+  );
+};
+
+export default HorizontalTitle;
+
+const useStyles = makeStyles((theme: Theme) => ({
+  horizontalTitleContainer: {
     position: 'relative',
     textAlign: 'center',
     paddingLeft: 20,
@@ -36,17 +56,3 @@ const useStyles = makeStyles(theme => ({
     marginBottom: 20
   }
 }));
-
-const HorizontalTitle = ({ title, includeSpacer, titleClass = null }) => {
-  const classes = useStyles();
-
-  return (
-    <div className={clsx(classes.horizontalTtileContainer, { [classes.spacer]: includeSpacer })}>
-      <Typography className={classes.horizontalLine}>
-        <span className={clsx(classes.horizontalTitle, titleClass)}>{title}</span>
-      </Typography>
-    </div>
-  );
-};
-
-export default HorizontalTitle;

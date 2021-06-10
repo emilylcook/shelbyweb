@@ -1,3 +1,3 @@
-import Artwork from './Artwork'
+import ArtworkScreen from './ArtworkScreen';
 
-export default Artwork
+export default ArtworkScreen;

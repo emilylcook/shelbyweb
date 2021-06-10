@@ -18,7 +18,7 @@ import VisibilityOff from '@material-ui/icons/VisibilityOff';
 
 import { useHistory } from 'react-router-dom';
 
-import useAuth from './utils/useAuth';
+import useAuth from '../utils/useAuth';
 
 export default function LoginForm() {
   const { logIn, user } = useAuth();

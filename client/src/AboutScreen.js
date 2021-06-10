@@ -3,9 +3,9 @@ import { makeStyles, lighten } from '@material-ui/core/styles';
 import { Icon, Typography, Avatar, Grid } from '@material-ui/core';
 import clsx from 'clsx';
 
-import WidthContainer from './WidthContainer';
-import Hero from './Hero';
-import { HorizontalTitle } from './common/';
+import WidthContainer from './common/WidthContainer';
+import Hero from './common/Hero';
+import { HorizontalTitle } from './common';
 
 import heroImg from './assets/hero/about_me_01.jpg';
 import avatarImg from './assets/hero/about_me_avatar.jpg';

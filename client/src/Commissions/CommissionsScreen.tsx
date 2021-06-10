@@ -6,14 +6,15 @@ import axios from 'axios';
 import { useFormState } from 'react-use-form-state';
 import { useSnackbar } from 'notistack';
 
-import WidthContainer from './WidthContainer';
-import { HorizontalTitle } from './common/';
-import { isFormSubmitDisabled } from './utils';
-import config from './config';
+import WidthContainer from '../common/WidthContainer';
+import { HorizontalTitle } from '../common';
+import { isFormSubmitDisabled } from '../utils';
+import config from '../config';
 
-import Hero from './Hero';
-import heroImg from './assets/hero/Tofino3.jpg';
+import Hero from '../common/Hero';
+import heroImg from '../assets/hero/Tofino3.jpg';
 import CarouselSlider from './Carousel';
+import { materialUiValidWidth, muVariants } from '../utils/constants';
 
 const Commissions = () => {
   const classes = useStyles();
@@ -32,7 +33,9 @@ const Commissions = () => {
       variant: 'outlined',
       validator: {
         required: true
-      }
+      },
+      rows: undefined,
+      rowsMax: undefined
     },
     email: {
       gridWidth: { xs: 12 },
@@ -42,7 +45,9 @@ const Commissions = () => {
       variant: 'outlined',
       validator: {
         required: true
-      }
+      },
+      rows: undefined,
+      rowsMax: undefined
     },
     paintingSize: {
       gridWidth: { xs: 12 },
@@ -52,7 +57,9 @@ const Commissions = () => {
       variant: 'outlined',
       validator: {
         required: true
-      }
+      },
+      rows: undefined,
+      rowsMax: undefined
     },
     inspiration: {
       gridWidth: { xs: 12 },
@@ -123,9 +130,9 @@ const Commissions = () => {
   }
 
   return (
-    <div className={classes.content}>
+    <div>
       <Hero heroImg={heroImg} />
-      <WidthContainer className={classes.columnWrapper}>
+      <WidthContainer>
         <Grid container>
           <Grid item xs={12} className={clsx(classes.header)}>
             <HorizontalTitle title="Commissions" titleClass={classes.horizontalTitle} />
@@ -186,18 +193,26 @@ const Commissions = () => {
             </Typography>
           </Grid>
 
-          <Grid item xs={12} sm={12} md={12} className={classes.form}>
+          <Grid item xs={12} sm={12} md={12}>
             <Grid container>
               {Object.entries(inputs).map(([index, { gridWidth, name, inputType, ...rest }]) => (
-                <Grid key={index} item {...gridWidth} className={classes.field}>
+                <Grid
+                  key={index}
+                  item
+                  xs={gridWidth.xs as materialUiValidWidth}
+                  className={classes.field}
+                >
                   <TextField
                     {...inputType({
                       name,
                       validateOnBlur: true
                     })}
                     name={name}
+                    label={rest.label}
+                    variant={rest.variant as muVariants}
+                    {...(rest?.rows ? { rows: rest.rows } : {})}
+                    {...(rest?.rowsMax ? { rows: rest.rowsMax } : {})}
                     fullWidth
-                    {...rest}
                     error={formState.errors[name] ? true : false}
                     helperText={formState.errors[name]}
                   />
@@ -234,35 +249,6 @@ const Commissions = () => {
 export default Commissions;
 
 const useStyles = makeStyles(theme => ({
-  sliderLeft: {
-    fontSize: 40,
-    fontWeight: 'bold',
-    position: 'absolute',
-    top: '50%',
-    left: 0,
-    cursor: 'pointer',
-    transform: 'translateY(-50%)'
-  },
-  sliderRight: {
-    fontSize: 40,
-    fontWeight: 'bold',
-    position: 'absolute',
-    top: '50%',
-    cursor: 'pointer',
-    right: 10,
-    transform: 'translateY(-50%)'
-  },
-  sliderContainer: { position: 'relative', justifyContent: 'center' },
-  sliderImageContainer: {
-    paddingLeft: 20,
-    paddingRight: 20,
-    height: 250,
-    width: 250
-  },
-  sliderImage: {
-    height: 225,
-    width: 225
-  },
   root: {
     display: 'flex' /* or inline-flex */,
     minHeight: '100%'
@@ -275,9 +261,6 @@ const useStyles = makeStyles(theme => ({
     marginBottom: 50
   },
   field: { marginBottom: 20 },
-  subTitle: {
-    marginBottom: '15px'
-  },
   horizontalTitle: {
     fontSize: '2rem'
   },
@@ -294,15 +277,15 @@ const useStyles = makeStyles(theme => ({
     letterSpacing: 2,
     fontVariant: 'small-caps'
   },
-  getStarted: {
-    fontStyle: 'italic',
-    fontSize: '1rem',
-    fontWeight: 500
-  },
   inquiries: {
     fontStyle: 'italic',
     fontSize: '.8rem',
     letterSpacing: 1,
     opacity: 0.8
+  },
+  getStarted: {
+    fontStyle: 'italic',
+    fontSize: '1rem',
+    fontWeight: 500
   }
 }));

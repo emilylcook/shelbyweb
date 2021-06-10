@@ -6,8 +6,8 @@ import useAuth from '../utils/useAuth';
 
 import clsx from 'clsx';
 
-import { HorizontalTitle, Progress } from '../common/';
-import WidthContainer from '../WidthContainer';
+import { HorizontalTitle, Progress } from '../common';
+import WidthContainer from '../common/WidthContainer';
 import ImageModal from './ImageModal';
 import useCollectionData from '../utils/useCollectionData';
 

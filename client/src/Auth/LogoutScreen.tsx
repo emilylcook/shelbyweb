@@ -2,7 +2,7 @@ import React from 'react';
 import { useHistory } from 'react-router-dom';
 import { Typography } from '@material-ui/core';
 
-import useAuth from './utils/useAuth';
+import useAuth from '../utils/useAuth';
 
 export default function LogOutScreen() {
   const history = useHistory();
