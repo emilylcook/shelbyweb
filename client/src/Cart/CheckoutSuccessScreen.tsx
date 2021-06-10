@@ -3,6 +3,7 @@ import { Grid, Typography, makeStyles } from '@material-ui/core';
 
 import treelineImage from '../assets/treeline.png';
 import useArtData from '../utils/useCollectionData';
+import { Theme } from '../theme/types/createPalette';
 
 export default function CheckoutSuccessScreen() {
   const classes = useStyles({});
@@ -36,7 +37,7 @@ export default function CheckoutSuccessScreen() {
   );
 }
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme: Theme) => ({
   title: {
     letterSpacing: '2px',
     fontWeight: 500,

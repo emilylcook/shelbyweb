@@ -43,7 +43,17 @@ import { removeItemFromCollection } from '../utils/useCollectionData';
 import AddressModal from './AddressModal';
 import config from '../config';
 import { confirmItemIsAvailable } from '../utils/useCollectionData';
+import { materialUiValidWidth } from '../utils/constants';
 
+declare global {
+  interface Window {
+    SqPaymentForm: any;
+  }
+}
+
+window.SqPaymentForm = window.SqPaymentForm || {};
+
+// TODO BREAK SMALLER
 export default function CheckoutScreen() {
   const classes = useStyles({});
   const history = useHistory();
@@ -57,14 +67,15 @@ export default function CheckoutScreen() {
 
   const steps = getSteps();
 
-  const [formFields, setFormFields] = React.useState({
+  // TODO TYPE
+  const [formFields, setFormFields] = React.useState<any>({
     billingSameAsShipping: true,
     shippingCountry: 'UnitedStates'
   });
-  const [discount, setDiscount] = useState('');
-  const [promoCode, setPromoCode] = useState('');
+  const [discount, setDiscount] = useState<number>(0);
+  const [promoCode, setPromoCode] = useState<string | null>('');
 
-  const handleApplyPromo = promo => {
+  const handleApplyPromo = (promo: any) => {
     if (!promo) {
       setDiscount(0);
       setPromoCode(null);
@@ -76,11 +87,11 @@ export default function CheckoutScreen() {
     setPromoCode(code);
   };
 
-  const setFormField = (name, val) => {
+  const setFormField = (name: any, val: any) => {
     setFormFields({ ...formFields, [name]: val });
   };
 
-  const checkIfEqual = (string1, string2) => {
+  const checkIfEqual = (string1: any, string2: any) => {
     if (!string1 && !string2) {
       return true;
     }
@@ -111,7 +122,8 @@ export default function CheckoutScreen() {
 
       let salesTaxRate = 0;
       if (!shippingInternational) {
-        const validateAddressResult = await validateAddress(formFields);
+        // TODO TYPE
+        const validateAddressResult: any = await validateAddress(formFields);
 
         if (validateAddressResult.error || !validateAddressResult.address) {
           enqueueSnackbar('Unable to verify address, Please check and try again', {
@@ -169,7 +181,7 @@ export default function CheckoutScreen() {
     setLoading(false);
   };
 
-  const handleSelectAddress = address => {
+  const handleSelectAddress = (address: any) => {
     if (address) {
       const { address1, address2, city, state, zip5, zip4 } = address;
 
@@ -196,7 +208,7 @@ export default function CheckoutScreen() {
 
     if (finalItems && finalItems.length > 0) {
       await Promise.all(
-        finalItems.map(async x => {
+        finalItems.map(async (x: any) => {
           const availableInDatabase = await confirmItemIsAvailable(x.collectionId, x.id);
 
           if (!availableInDatabase) {
@@ -226,19 +238,19 @@ export default function CheckoutScreen() {
       }, 4500);
     }
 
-    const pricesInCart = finalItems?.flatMap(x => x.price);
-    let subTotal = pricesInCart
-      .reduce(function(a, b) {
+    const pricesInCart = finalItems?.flatMap((x: any) => x.price);
+    let subTotal: any = pricesInCart
+      .reduce(function(a: any, b: any) {
         return a + b;
       }, 0)
       .toFixed(2);
 
     subTotal = parseFloat(subTotal);
 
-    const shipping = formFields?.shippingCost || 0;
-    const taxes = parseFloat((subTotal * formFields.salesTaxRate).toFixed(2));
+    const shipping: any = formFields?.shippingCost || 0;
+    const taxes: any = parseFloat((subTotal * formFields.salesTaxRate).toFixed(2));
 
-    let totalAmount = parseFloat(subTotal);
+    let totalAmount: any = parseFloat(subTotal);
     if (shipping) {
       totalAmount += parseFloat(shipping);
     }
@@ -251,7 +263,7 @@ export default function CheckoutScreen() {
       totalAmount = totalAmount - discount;
     }
 
-    let lineItems = finalItems.map(art => {
+    let lineItems = finalItems.map((art: any) => {
       return {
         id: art.id,
         type: 'art',
@@ -325,8 +337,8 @@ export default function CheckoutScreen() {
       .then(function(response) {
         if (response.status === 200) {
           lineItems
-            .filter(x => x && x?.type === 'art')
-            .forEach(item => {
+            .filter((x: any) => x && x?.type === 'art')
+            .forEach((item: any) => {
               removeItemFromCollection(item.id, 1);
             });
           // clear out
@@ -426,7 +438,7 @@ export default function CheckoutScreen() {
     return ['Email', 'Shipping & Billing', 'Payment', 'Review & Purchase'];
   }
 
-  function getStepContent(step) {
+  function getStepContent(step: any) {
     switch (step) {
       case 0:
         return (
@@ -459,7 +471,13 @@ export default function CheckoutScreen() {
             </Grid>
             {shippingAddressFields.map(x => {
               return (
-                <Grid item key={x.key} xs={x.xs} sm={x.sm} className={classes.formItem}>
+                <Grid
+                  item
+                  key={x.key}
+                  xs={x.xs as materialUiValidWidth}
+                  sm={x.sm as materialUiValidWidth}
+                  className={classes.formItem}
+                >
                   <TextField
                     className={classes.textfield}
                     variant="outlined"
@@ -518,7 +536,13 @@ export default function CheckoutScreen() {
             {!formFields.billingSameAsShipping &&
               billingAddressFields.map(x => {
                 return (
-                  <Grid item key={x.key} xs={x.xs} sm={x.sm} className={classes.formItem}>
+                  <Grid
+                    item
+                    key={x.key}
+                    xs={x.xs as materialUiValidWidth}
+                    sm={x.sm as materialUiValidWidth}
+                    className={classes.formItem}
+                  >
                     <TextField
                       className={classes.textfield}
                       variant="outlined"
@@ -546,11 +570,11 @@ export default function CheckoutScreen() {
       case 2:
         return <Square handleSquare={handleSquare} paymentForm={window.SqPaymentForm} />;
       case 3:
-        const shippingStreetAddress = formFields?.shippingStreetAddress2
+        const shippingStreetAddress: any = formFields?.shippingStreetAddress2
           ? `${formFields?.shippingStreetAddress} ${formFields?.shippingStreetAddress2}`
           : formFields?.shippingStreetAddress;
 
-        const shippingInternational = formFields?.shippingCountry !== 'UnitedStates';
+        const shippingInternational: any = formFields?.shippingCountry !== 'UnitedStates';
 
         return (
           <Grid container>
@@ -594,7 +618,7 @@ export default function CheckoutScreen() {
     return <CircularProgress />;
   }
 
-  const handleSquare = nonce => {
+  const handleSquare = (nonce: any) => {
     setFormField('nonce', nonce);
     handleNext();
   };
@@ -610,12 +634,7 @@ export default function CheckoutScreen() {
 
       <Grid item xs={12} sm={6}>
         {/* <Square paymentForm={window.SqPaymentForm} /> */}
-        <Stepper
-          activeStep={activeStep}
-          orientation="vertical"
-          connector={null}
-          className={classes.stepper}
-        >
+        <Stepper activeStep={activeStep} orientation="vertical" className={classes.stepper}>
           {steps.map((label, index) => (
             <Step key={label} className={clsx(classes.step, classes.container)}>
               <StepLabel
@@ -665,6 +684,7 @@ export default function CheckoutScreen() {
       <Grid item xs={12} sm={6} className={classes.container}>
         <OrderSummary
           onApplyPromo={handleApplyPromo}
+          cartView={false}
           completed={false}
           shipping={formFields?.shippingCost}
           salesTaxRate={formFields?.salesTaxRate}
@@ -680,6 +700,7 @@ const useStyles = makeStyles(theme => ({
   label: {
     fontWeight: 600
   },
+  value: {},
   reviewRow: { marginBottom: 10 },
   row: { display: 'flex' },
   removeButton: {

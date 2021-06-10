@@ -1,4 +1,4 @@
-export function getConfig(handleReturnNonce) {
+export function getConfig(handleReturnNonce: any) {
   // Initialize the payment form elements
   return {
     //TODO: Replace with your sandbox application ID
@@ -38,8 +38,8 @@ export function getConfig(handleReturnNonce) {
        * callback function: cardNonceResponseReceived
        * Triggered when: SqPaymentForm completes a card nonce request
        */
-      cardNonceResponseReceived: function(errors, nonce, cardData) {
-        const errorList = document.getElementById('errors');
+      cardNonceResponseReceived: function(errors: any, nonce: any, cardData: any) {
+        const errorList: any = document.getElementById('errors');
         if (errors) {
           let error_html = '';
           for (var i = 0; i < errors.length; i++) {

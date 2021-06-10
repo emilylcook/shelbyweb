@@ -12,14 +12,23 @@ import { confirmItemIsAvailable } from '../utils/useCollectionData';
 
 const FREE_SHIPPING_CODE = 'VIPSHIPPING2021';
 
+export type OrderSummaryProps = {
+  completed: boolean;
+  cartView: boolean;
+  shipping?: any;
+  salesTaxRate?: any;
+  onApplyPromo?: (promo: any) => void;
+  shippingCountry?: string;
+};
+
 export default function OrderSummary({
   completed = false,
   cartView = false,
   shipping = null,
   salesTaxRate = null,
-  onApplyPromo = null,
+  onApplyPromo,
   shippingCountry = 'UnitedStates'
-}) {
+}: OrderSummaryProps) {
   const classes = useStyles({});
   const history = useHistory();
 
@@ -60,7 +69,7 @@ export default function OrderSummary({
 
   const verifyItemsInCart = async () => {
     if (itemsInCart && itemsInCart.length > 0) {
-      itemsInCart.forEach(async x => {
+      itemsInCart.forEach(async (x: any) => {
         const availableInDatabase = await confirmItemIsAvailable(x.collectionId, x.id);
 
         if (!availableInDatabase) {
@@ -84,7 +93,7 @@ export default function OrderSummary({
     }, 4500);
   }
 
-  const removeItem = async (id, showMessage = true) => {
+  const removeItem = async (id: any, showMessage = true) => {
     const result = await removeItemFromCart(id);
 
     if (result) {
@@ -110,16 +119,16 @@ export default function OrderSummary({
     }
   };
 
-  const pricesInCart = itemsInCart?.flatMap(x => x.price);
+  const pricesInCart = itemsInCart?.flatMap((x: any) => x.price);
   let subTotal = pricesInCart
-    .reduce(function(a, b) {
+    .reduce(function(a: any, b: any) {
       return a + b;
     }, 0)
     .toFixed(2);
 
-  let taxes = salesTaxRate ? (subTotal * salesTaxRate).toFixed(2) : null;
+  let taxes: any = salesTaxRate ? (subTotal * salesTaxRate).toFixed(2) : null;
   // let shipping = null;
-  let totalAmount = parseFloat(subTotal);
+  let totalAmount: any = parseFloat(subTotal);
 
   if (shipping && !freeShipping) {
     totalAmount += parseFloat(shipping);
@@ -145,7 +154,7 @@ export default function OrderSummary({
         <Typography className={classes.info}>There is nothing in your cart!</Typography>
       ) : (
         <>
-          {itemsInCart.map(item => {
+          {itemsInCart.map((item: any) => {
             const { id, name, path, info, price, quantity } = item;
 
             const details = `${info.size} - ${info.type}`;
@@ -188,7 +197,6 @@ export default function OrderSummary({
                     label="Promo Code"
                     placeholder="code"
                     size="small"
-                    dense={true}
                     onChange={event => {
                       const text = event.target.value.toUpperCase();
                       setPromoCodeEntry(text);
@@ -239,7 +247,7 @@ export default function OrderSummary({
                 <div className={classes.row}>
                   <Typography className={classes.costLabel}>Shipping</Typography>
                   {shipping >= 10000 ? (
-                    <Typography color="Error" className={classes.dollarAmount}>
+                    <Typography color="error" className={classes.dollarAmount}>
                       Error
                     </Typography>
                   ) : (
@@ -259,7 +267,7 @@ export default function OrderSummary({
                 <div className={classes.totalRow}>
                   <Typography className={classes.totalLabel}>Total</Typography>
                   {shipping >= 10000 ? (
-                    <Typography color="Error" className={classes.dollarAmount}>
+                    <Typography color="error" className={classes.dollarAmount}>
                       Error
                     </Typography>
                   ) : (

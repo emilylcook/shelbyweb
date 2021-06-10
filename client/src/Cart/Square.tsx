@@ -6,10 +6,14 @@ import clsx from 'clsx';
 import getConfig from './config';
 import squareLogo from '../assets/squareLogo.jpg';
 
-const Square = ({ paymentForm, handleSquare }) => {
+export type SquareProps = {
+  paymentForm: any;
+  handleSquare: (nounce: string) => void;
+};
+const Square = ({ paymentForm, handleSquare }: SquareProps) => {
   const classes = useStyles({});
 
-  const handleReturnNonce = nonce => {
+  const handleReturnNonce = (nonce: string) => {
     handleSquare(nonce);
   };
 

@@ -116,7 +116,7 @@ export const billingAddressFields = [
 
 const USER_ID = config.USPS_USER_ID;
 
-export const calculateShippingCosts = async (formFields, items) => {
+export const calculateShippingCosts = async (formFields: any, items: any) => {
   const { shippingPostal, shippingCountry = 'UnitedStates' } = formFields;
 
   console.log(shippingCountry);
@@ -130,7 +130,7 @@ export const calculateShippingCosts = async (formFields, items) => {
 
   const shippingInternational = shippingCountry !== 'UnitedStates';
 
-  items.forEach(item => {
+  items.forEach((item: any) => {
     if (!item.shippingDetails) {
       throw Error('Shipping details not provided on item');
     }
@@ -209,17 +209,17 @@ export const calculateShippingCosts = async (formFields, items) => {
   await axios
     .post(getUrl)
     .then(result => {
-      parseString(result.data, function(err, result) {
+      parseString(result.data, function(err: any, result: any) {
         if (result.IntlRateV2Response) {
-          result.IntlRateV2Response.Package.forEach(pack => {
+          result.IntlRateV2Response.Package.forEach((pack: any) => {
             try {
-              const serviceToUse = pack?.Service.find(x => {
+              const serviceToUse = pack?.Service.find((x: any) => {
                 return x.SvcDescription[0].startsWith('Priority Mail International');
               });
 
               const postage = serviceToUse.Postage[0];
               const extraService = serviceToUse.ExtraServices[0].ExtraService.find(
-                s => s.ServiceID[0] === '108'
+                (s: any) => s.ServiceID[0] === '108'
               );
 
               const insurance = extraService.Price[0];
@@ -230,13 +230,13 @@ export const calculateShippingCosts = async (formFields, items) => {
             }
           });
         } else {
-          result.RateV4Response.Package.forEach(pack => {
+          result.RateV4Response.Package.forEach((pack: any) => {
             try {
               const postage = pack.Postage[0];
               let shipping = postage.Rate[0];
 
               const specialServices = postage.SpecialServices[0].SpecialService.reduce(
-                (arr, service) => {
+                (arr: any, service: any) => {
                   arr[service.ServiceID] = service.Price[0];
                   return arr;
                 },
@@ -265,7 +265,7 @@ export const calculateShippingCosts = async (formFields, items) => {
   return totalShipping;
 };
 
-export const validateAddress = async formFields => {
+export const validateAddress = async (formFields: any) => {
   const {
     shippingStreetAddress,
     shippingStreetAddress2,
@@ -306,7 +306,7 @@ export const validateAddress = async formFields => {
   await axios
     .post(getUrl)
     .then(result => {
-      parseString(result.data, function(err, response) {
+      parseString(result.data, function(err: any, response: any) {
         if (response.Error) {
           address = false;
           error = response.Error[0].Description;
