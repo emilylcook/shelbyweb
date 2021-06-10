@@ -2,17 +2,15 @@ import React from 'react';
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
 import { ConnectedRouter } from 'connected-react-router';
-import { MuiThemeProvider, createMuiTheme, makeStyles } from '@material-ui/core/styles';
+import { MuiThemeProvider, makeStyles } from '@material-ui/core/styles';
 import { SnackbarProvider } from 'notistack';
 
 import { CookiesProvider } from 'react-cookie';
 
 import useCollectionData from './utils/useCollectionData';
-import themeConfig from './theme';
+import theme from './theme/';
 import App from './App';
 import { AuthProvider } from './utils/useAuth';
-
-const theme = createMuiTheme(themeConfig);
 
 const useStyles = makeStyles(() => ({
   success: { backgroundColor: '#4f5a4d' },
@@ -21,7 +19,7 @@ const useStyles = makeStyles(() => ({
   info: { backgroundColor: 'yellow' }
 }));
 
-export default function Root({ store, history, persistor }) {
+export default function Root({ store, history, persistor }: any) {
   const classes = useStyles();
 
   // Initialize Collections
