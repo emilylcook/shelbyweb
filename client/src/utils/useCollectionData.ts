@@ -7,6 +7,8 @@ export default function useArtData() {
   const [collections, setCollections] = useState<any[]>([]);
   const [art, setArt] = useState<any>([]);
 
+  const artCollection = process.env.NODE_ENV !== 'production' ? 'devArts' : 'arts';
+
   // initial load
   React.useEffect(() => {
     if (collections.length === 0) {
@@ -46,7 +48,7 @@ export default function useArtData() {
       let arts: any[] = [];
       firebase
         .database()
-        .ref('arts')
+        .ref(artCollection)
         .once('value', async snapshot => {
           snapshot.forEach(collectionValues => {
             var artt = collectionValues.val();
@@ -88,13 +90,13 @@ export default function useArtData() {
       // Update art
       await firebase
         .database()
-        .ref(`arts/${artId}`)
+        .ref(`${artCollection}/${artId}`)
         .set(newArt);
 
       updatedArt.push(newArt);
     } else {
       var updates: any = {};
-      updates['/arts/' + artId] = item;
+      updates[`/${artCollection}/` + artId] = item;
 
       await firebase
         .database()
@@ -170,17 +172,22 @@ export const getDownloadUrl = async (imageName: string) => {
 
 export async function removeItemFromCollection(artId: any, quantity: number = 1) {
   try {
+
+  const artCollection = process.env.NODE_ENV !== 'production' ? 'devArts' : 'arts';
+
     const snapshot = firebase
       .database()
-      .ref('/arts/' + artId)
+      .ref(`/${artCollection}/` + artId)
       .once('value');
 
     const value = await snapshot;
     const art = value.val();
 
     let item = art;
+    let updateItem :any = {}
 
     item.quantity = item.quantity - quantity;
+
 
     if (item.quantity === 0) {
       item.info.status = 'Sold';
@@ -191,14 +198,12 @@ export async function removeItemFromCollection(artId: any, quantity: number = 1)
       }
     }
 
-    // Write the new post's data simultaneously in the posts list and the user's post list.
-    var updates: any = {};
-    updates['/arts/' + artId] = item;
+    updateItem.quantity =  item.quantity
+    updateItem.info = item.info
+    updateItem.tags = item.tags
 
-    await firebase
-      .database()
-      .ref()
-      .update(updates);
+     await firebase.database().ref(`/${artCollection}/` + artId).update(updateItem)
+  
 
     return true;
   } catch (e) {
@@ -212,11 +217,13 @@ export async function removeItemFromCollection(artId: any, quantity: number = 1)
 
 export async function confirmItemIsAvailable(collectionId: any, artId: any) {
   let item: any = {};
+  const artCollection = process.env.NODE_ENV !== 'production' ? 'devArts' : 'arts';
+
 
   try {
     const snapshot = firebase
       .database()
-      .ref('/arts/' + artId)
+      .ref(`/${artCollection}/` + artId)
       .once('value');
 
     const value = await snapshot;

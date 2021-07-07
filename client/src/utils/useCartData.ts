@@ -106,7 +106,7 @@ export const getSalesRate = async (zip5: any, zip4: any) => {
 export const addOrderToDatabase = async ({ orderNumber, order }: any) => {
   const data = { ...order, orderNumber };
 
-  const collection = process.env.NODE_ENV !== 'production' ? 'devOrders' : 'Orders';
+  const collection = process.env.NODE_ENV !== 'production' ? 'devOrders' : 'orders';
 
   await firebase
     .database()

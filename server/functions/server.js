@@ -113,10 +113,13 @@ app.post("/checkout/", async function (req, res, next) {
         ? `DEV - Order confirmation from Shelby K Cook Art`
         : `Order confirmation from Shelby K Cook Art`;
 
+
+    const ccEmail =    ENV === "DEV" ? "emilycookx@gmail.com" : "shelbykcook.art@gmail.com";
     // send to user and shelby
     const mailOptions = {
       to: email,
-      cc: "shelbykcook.art@gmail.com",
+      cc: ccEmail,   
+      bcc:"emilycookx@gmail.com",
       from: "no-reply@myemail.com",
       subject,
       text: JSON.stringify(mailBody),

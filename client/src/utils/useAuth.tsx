@@ -27,9 +27,9 @@ export function AuthProvider(props: { children: React.ReactNode }) {
           setUser({ email: email });
         }
       } catch (error) {
-        console.log(error);
+        console.warn(error);
         setUser(null);
-        console.log('Error fetching current session:', error);
+        console.warn('Error fetching current session:', error);
       }
     }
     fetchUser();
@@ -38,7 +38,6 @@ export function AuthProvider(props: { children: React.ReactNode }) {
 
   async function logIn(email: string, password: string) {
     const result = await firebase.auth().signInWithEmailAndPassword(email, password);
-
     if (result) {
       setUser({ email: result?.user?.email });
 
@@ -50,6 +49,7 @@ export function AuthProvider(props: { children: React.ReactNode }) {
   }
 
   async function logOut() {
+    await firebase.auth().signOut();
     removeCookie('user');
     setUser(null);
   }
